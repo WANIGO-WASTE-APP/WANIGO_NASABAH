@@ -1,0 +1,2 @@
+D:/ZeroDrive/FileCoding/Github/WANIGO_NASABAH/android/app/.cxx/Debug/6vs5m3c7/x86_64/CMakeFiles/edit_cache.dir
+D:/ZeroDrive/FileCoding/Github/WANIGO_NASABAH/android/app/.cxx/Debug/6vs5m3c7/x86_64/CMakeFiles/rebuild_cache.dir

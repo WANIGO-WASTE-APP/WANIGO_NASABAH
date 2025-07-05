@@ -46,6 +46,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
   // Logo builder dengan fallback ke text jika gambar tidak ditemukan
   Widget _buildAppBarLogo() {
     return Image.asset(
+
       'assets/images/appbar_logo.png',
       height: 25,
       fit: BoxFit.contain,

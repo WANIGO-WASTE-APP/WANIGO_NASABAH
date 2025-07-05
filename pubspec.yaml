@@ -12,22 +12,25 @@ dependencies:
  
   # UI dan navigasi
   cupertino_icons: ^1.0.5
-  wanigo_ui: ^0.0.1  # Paket dari pub.dev - tetap menggunakan versi ini
+  wanigo_ui: ^0.0.1  # Paket UI khusus WANIGO
   get: ^4.6.5  # GetX state management
   flutter_screenutil: ^5.8.4
   flutter_svg: ^2.0.7
+  table_calendar: ^3.0.0
+  gap: ^3.0.1
+  path: ^1.8.0
  
   # Networking dan API
   dio: ^5.3.2
   http_parser: ^4.0.2
-  http: ^0.13.5  # Pastikan package http terdaftar
-
+  http: ^0.13.5
+ 
   # Penyimpanan lokal
   flutter_secure_storage: ^9.2.4
   shared_preferences: ^2.2.0
  
   # Format data
-  intl: ^0.18.1  # Menurunkan ke versi yang lebih stabil
+  intl: ^0.18.1  # Hanya perlu satu entri intl
  
   # Media
   cached_network_image: ^3.2.3
@@ -46,9 +49,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
  
-  # Assets - Perbaikan Path Asset
+  # Assets
   assets:
-    - assets/images/  # Path ini benar, jangan tambahkan "assets/" lagi ketika menggunakan Image.asset
+    - assets/images/
     - assets/icons/
     - assets/lottie/
     
