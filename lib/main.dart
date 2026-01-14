@@ -5,7 +5,7 @@ import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/routes/app_routes.dart';
 import 'package:wanigo_nasabah/routes/app_pages.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
-
+import 'package:wanigo_nasabah/core/config/alice_config.dart';
 
 void main() {
   if (kDebugMode) {
@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
+          navigatorKey: alice.getNavigatorKey(),
           title: 'Wanigo Nasabah',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
@@ -126,7 +127,23 @@ class MyApp extends StatelessWidget {
                   FocusManager.instance.primaryFocus?.unfocus();
                 }
               },
-              child: widget,
+              child: Stack(
+                children: [
+                  widget!,
+                  if (kDebugMode)
+                    Positioned(
+                      bottom: 100,
+                      right: 16,
+                      child: FloatingActionButton(
+                        heroTag: 'alice_floating_button',
+                        onPressed: () {
+                          alice.showInspector();
+                        },
+                        child: const Icon(Icons.bug_report),
+                      ),
+                    ),
+                ],
+              ),
             );
           },
         );

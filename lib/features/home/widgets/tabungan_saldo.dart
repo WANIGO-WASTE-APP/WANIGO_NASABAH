@@ -65,9 +65,10 @@ class TabunganCard extends StatelessWidget {
                     backgroundColor: Colors.white,
                     foregroundColor: AppColors.blue600,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(999.r), // Radius melengkung 999
+                      borderRadius: BorderRadius.circular(999.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r), // Padding dikurangi
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 12.r, vertical: 8.r), // Padding dikurangi
                   ),
                   child: Text(
                     'Cek Tabungan',
@@ -80,7 +81,8 @@ class TabunganCard extends StatelessWidget {
                 // Tampilkan image langsung, tanpa background putih di belakangnya
                 Image.asset(
                   'assets/images/trash_recycle.png',
-                  width: 80.r, // Ukuran gambar disesuaikan dengan container sebelumnya
+                  width: 80
+                      .r, // Ukuran gambar disesuaikan dengan container sebelumnya
                   height: 80.r,
                   fit: BoxFit.contain, // Pastikan gambar terlihat seluruhnya
                   errorBuilder: (context, error, stackTrace) {
@@ -88,7 +90,8 @@ class TabunganCard extends StatelessWidget {
                     return Icon(
                       Icons.recycling,
                       size: 80.r, // Ukuran icon juga disesuaikan
-                      color: Colors.white, // Warna icon diubah ke putih agar kontras dengan background card
+                      color: Colors
+                          .white, // Warna icon diubah ke putih agar kontras dengan background card
                     );
                   },
                 ),

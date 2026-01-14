@@ -25,6 +25,8 @@ dependencies:
   http_parser: ^4.0.2
   http: ^1.6.0
   alice: ^1.0.0
+  alice_dio: ^1.0.7
+
  
   # Penyimpanan lokal
   flutter_secure_storage: ^10.0.0

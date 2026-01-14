@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:get/get.dart';
-import 'package:wanigo_ui/wanigo_ui.dart' hide GlobalAppBar; // Hide GlobalAppBar from wanigo_ui
+import 'package:wanigo_ui/wanigo_ui.dart'
+    hide GlobalAppBar; // Hide GlobalAppBar from wanigo_ui
 import 'package:wanigo_nasabah/features/profile/controllers/profile_step_controller.dart';
 import 'package:wanigo_nasabah/routes/app_routes.dart';
 import 'package:wanigo_nasabah/widgets/global_app_bar.dart'; // Import the custom GlobalAppBar
@@ -14,11 +15,11 @@ class ProfileStep1Screen extends GetView<ProfileStepController> {
   Widget build(BuildContext context) {
     // Make sure ProfileStepController is properly initialized
     final ProfileStepController controller = Get.find<ProfileStepController>();
-    
+
     if (kDebugMode) {
       print("DEBUG - Building ProfileStep1Screen");
     }
-    
+
     return ProfileStepBase(
       currentStep: 1,
       totalSteps: 3,
@@ -27,101 +28,101 @@ class ProfileStep1Screen extends GetView<ProfileStepController> {
         // 1. Jenis kelamin
         _buildQuestion("1. Jenis kelamin Anda?"),
         const SizedBox(height: 16),
-        
+
         // Gender Options
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Laki-laki",
-                variant: ButtonVariant.large,
-                style: controller.jenisKelamin.value == "Laki-laki" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisKelamin("Laki-laki"),
-              )),
+                    text: "Laki-laki",
+                    variant: ButtonVariant.large,
+                    style: controller.jenisKelamin.value == "Laki-laki"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller.setJenisKelamin("Laki-laki"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Perempuan",
-                variant: ButtonVariant.large,
-                style: controller.jenisKelamin.value == "Perempuan" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisKelamin("Perempuan"),
-              )),
+                    text: "Perempuan",
+                    variant: ButtonVariant.large,
+                    style: controller.jenisKelamin.value == "Perempuan"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller.setJenisKelamin("Perempuan"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // 2. Usia
         _buildQuestion("2. Berapakah usia anda saat ini?"),
         const SizedBox(height: 16),
-        
+
         // Age Options (2 rows of 2)
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Dibawah 18 tahun",
-                variant: ButtonVariant.large,
-                style: controller.usia.value == "Dibawah 18 tahun" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setUsia("Dibawah 18 tahun"),
-              )),
+                    text: "Dibawah 18 tahun",
+                    variant: ButtonVariant.large,
+                    style: controller.usia.value == "Dibawah 18 tahun"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller.setUsia("Dibawah 18 tahun"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "18 hingga 34 tahun",
-                variant: ButtonVariant.large,
-                style: controller.usia.value == "18 hingga 34 tahun" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setUsia("18 hingga 34 tahun"),
-              )),
+                    text: "18 hingga 34 tahun",
+                    variant: ButtonVariant.large,
+                    style: controller.usia.value == "18 hingga 34 tahun"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller.setUsia("18 hingga 34 tahun"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "34 hingga 54 tahun",
-                variant: ButtonVariant.large,
-                style: controller.usia.value == "34 hingga 54 tahun" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setUsia("34 hingga 54 tahun"),
-              )),
+                    text: "34 hingga 54 tahun",
+                    variant: ButtonVariant.large,
+                    style: controller.usia.value == "34 hingga 54 tahun"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller.setUsia("34 hingga 54 tahun"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Di atas 54 tahun",
-                variant: ButtonVariant.large,
-                style: controller.usia.value == "Di atas 54 tahun" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setUsia("Di atas 54 tahun"),
-              )),
+                    text: "Di atas 54 tahun",
+                    variant: ButtonVariant.large,
+                    style: controller.usia.value == "Di atas 54 tahun"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller.setUsia("Di atas 54 tahun"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // 3. Profesi
         _buildQuestion("3. Apa nama profesi anda saat ini?"),
         const SizedBox(height: 16),
-        
+
         // PERBAIKAN: Ganti GlobalTextField dengan TextField standar
         // untuk mengatasi masalah hanya bisa menampilkan 1 huruf
         Container(
@@ -133,15 +134,16 @@ class ProfileStep1Screen extends GetView<ProfileStepController> {
             controller: controller.profesiController,
             decoration: InputDecoration(
               hintText: "Masukkan nama profesi anda saat ini",
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               border: InputBorder.none,
             ),
             onChanged: (value) => controller.setProfesi(value),
           ),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Next Button
         Obx(() {
           final isValid = controller.isStep1Valid();
@@ -157,7 +159,7 @@ class ProfileStep1Screen extends GetView<ProfileStepController> {
       ],
     );
   }
-  
+
   Widget _buildQuestion(String text) {
     return GlobalText(
       text: text,
@@ -175,11 +177,11 @@ class ProfileStep2Screen extends GetView<ProfileStepController> {
   Widget build(BuildContext context) {
     // Make sure ProfileStepController is properly initialized
     final ProfileStepController controller = Get.find<ProfileStepController>();
-    
+
     if (kDebugMode) {
       print("DEBUG - Building ProfileStep2Screen");
     }
-    
+
     return ProfileStepBase(
       currentStep: 2,
       totalSteps: 3,
@@ -188,100 +190,109 @@ class ProfileStep2Screen extends GetView<ProfileStepController> {
         // 1. Apakah tahu cara memilah sampah
         _buildQuestion("1. Apakah anda tahu cara memilah sampah?"),
         const SizedBox(height: 16),
-        
+
         // Knowledge Options
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Sudah tahu",
-                variant: ButtonVariant.large,
-                style: controller.tahuMemilahSampah.value == "Sudah tahu" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setTahuMemilahSampah("Sudah tahu"),
-              )),
+                    text: "Sudah tahu",
+                    variant: ButtonVariant.large,
+                    style: controller.tahuMemilahSampah.value == "Sudah tahu"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setTahuMemilahSampah("Sudah tahu"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Belum tahu",
-                variant: ButtonVariant.large,
-                style: controller.tahuMemilahSampah.value == "Belum tahu" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setTahuMemilahSampah("Belum tahu"),
-              )),
+                    text: "Belum tahu",
+                    variant: ButtonVariant.large,
+                    style: controller.tahuMemilahSampah.value == "Belum tahu"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setTahuMemilahSampah("Belum tahu"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // 2. Motivasi
         _buildQuestion("2. Apa motivasi anda memilah sampah?"),
         const SizedBox(height: 16),
-        
+
         // Motivation Options
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Menghasilkan uang",
-                variant: ButtonVariant.large,
-                style: controller.motivasiMemilahSampah.value == "Menghasilkan uang" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setMotivasiMemilahSampah("Menghasilkan uang"),
-              )),
+                    text: "Menghasilkan uang",
+                    variant: ButtonVariant.large,
+                    style: controller.motivasiMemilahSampah.value ==
+                            "Menghasilkan uang"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller
+                        .setMotivasiMemilahSampah("Menghasilkan uang"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Menjaga lingkungan",
-                variant: ButtonVariant.large,
-                style: controller.motivasiMemilahSampah.value == "Menjaga lingkungan" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setMotivasiMemilahSampah("Menjaga lingkungan"),
-              )),
+                    text: "Menjaga lingkungan",
+                    variant: ButtonVariant.large,
+                    style: controller.motivasiMemilahSampah.value ==
+                            "Menjaga lingkungan"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () => controller
+                        .setMotivasiMemilahSampah("Menjaga lingkungan"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // 3. Status nasabah bank sampah
-        _buildQuestion("3. Apakah sudah menjadi nasabah bank sampah mitra WANIGO sebelumnya?"),
+        _buildQuestion(
+            "3. Apakah sudah menjadi nasabah bank sampah mitra WANIGO sebelumnya?"),
         const SizedBox(height: 16),
-        
+
         // Bank Sampah Status Options
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Iya, Sudah",
-                variant: ButtonVariant.large,
-                style: controller.nasabahBankSampah.value == "Iya, sudah" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setNasabahBankSampah("Iya, sudah"),
-              )),
+                    text: "Iya, Sudah",
+                    variant: ButtonVariant.large,
+                    style: controller.nasabahBankSampah.value == "Iya, sudah"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setNasabahBankSampah("Iya, sudah"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Tidak, Belum",
-                variant: ButtonVariant.large,
-                style: controller.nasabahBankSampah.value == "Tidak, belum" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setNasabahBankSampah("Tidak, belum"),
-              )),
+                    text: "Tidak, Belum",
+                    variant: ButtonVariant.large,
+                    style: controller.nasabahBankSampah.value == "Tidak, belum"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setNasabahBankSampah("Tidak, belum"),
+                  )),
             ),
           ],
         ),
-        
+
         // Kode Bank Sampah (Conditional)
         Obx(() => controller.nasabahBankSampah.value == "Iya, sudah"
             ? Column(
@@ -304,7 +315,8 @@ class ProfileStep2Screen extends GetView<ProfileStepController> {
                       controller: controller.kodeBankSampahController,
                       decoration: InputDecoration(
                         hintText: "Masukkan kode bank sampah mitra WANIGO",
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         border: InputBorder.none,
                       ),
                       onChanged: (value) => controller.setKodeBankSampah(value),
@@ -312,11 +324,10 @@ class ProfileStep2Screen extends GetView<ProfileStepController> {
                   ),
                 ],
               )
-            : const SizedBox.shrink()
-        ),
-        
+            : const SizedBox.shrink()),
+
         const SizedBox(height: 24),
-        
+
         // Next Button
         GlobalButton(
           text: "Lanjutkan",
@@ -326,7 +337,7 @@ class ProfileStep2Screen extends GetView<ProfileStepController> {
       ],
     );
   }
-  
+
   Widget _buildQuestion(String text) {
     return GlobalText(
       text: text,
@@ -344,11 +355,11 @@ class ProfileStep3Screen extends GetView<ProfileStepController> {
   Widget build(BuildContext context) {
     // Make sure ProfileStepController is properly initialized
     final ProfileStepController controller = Get.find<ProfileStepController>();
-    
+
     if (kDebugMode) {
       print("DEBUG - Building ProfileStep3Screen");
     }
-    
+
     return ProfileStepBase(
       currentStep: 3,
       totalSteps: 3,
@@ -357,166 +368,181 @@ class ProfileStep3Screen extends GetView<ProfileStepController> {
         // 1. Frekuensi memilah sampah
         _buildQuestion("1. Seberapa sering Anda memilah sampah?"),
         const SizedBox(height: 16),
-        
+
         // Frequency Options (2 rows of 2)
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Setiap hari",
-                variant: ButtonVariant.large,
-                style: controller.frekuensiMemilahSampah.value == "Setiap hari" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setFrekuensiMemilahSampah("Setiap hari"),
-              )),
+                    text: "Setiap hari",
+                    variant: ButtonVariant.large,
+                    style:
+                        controller.frekuensiMemilahSampah.value == "Setiap hari"
+                            ? ButtonStyle.primary
+                            : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setFrekuensiMemilahSampah("Setiap hari"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Setiap minggu",
-                variant: ButtonVariant.large,
-                style: controller.frekuensiMemilahSampah.value == "Setiap minggu" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setFrekuensiMemilahSampah("Setiap minggu"),
-              )),
+                    text: "Setiap minggu",
+                    variant: ButtonVariant.large,
+                    style: controller.frekuensiMemilahSampah.value ==
+                            "Setiap minggu"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setFrekuensiMemilahSampah("Setiap minggu"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Setiap bulan",
-                variant: ButtonVariant.large,
-                style: controller.frekuensiMemilahSampah.value == "Setiap bulan" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setFrekuensiMemilahSampah("Setiap bulan"),
-              )),
+                    text: "Setiap bulan",
+                    variant: ButtonVariant.large,
+                    style: controller.frekuensiMemilahSampah.value ==
+                            "Setiap bulan"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setFrekuensiMemilahSampah("Setiap bulan"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Sangat jarang",
-                variant: ButtonVariant.large,
-                style: controller.frekuensiMemilahSampah.value == "Sangat jarang" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setFrekuensiMemilahSampah("Sangat jarang"),
-              )),
+                    text: "Sangat jarang",
+                    variant: ButtonVariant.large,
+                    style: controller.frekuensiMemilahSampah.value ==
+                            "Sangat jarang"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setFrekuensiMemilahSampah("Sangat jarang"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // 2. Jenis sampah
         _buildQuestion("2. Jenis sampah yang paling sering dikelola?"),
         const SizedBox(height: 16),
-        
+
         // Waste Type Options (3 rows of 2)
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Plastik",
-                variant: ButtonVariant.large,
-                style: controller.jenisSampahDikelola.value == "Plastik" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisSampahDikelola("Plastik"),
-              )),
+                    text: "Plastik",
+                    variant: ButtonVariant.large,
+                    style: controller.jenisSampahDikelola.value == "Plastik"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setJenisSampahDikelola("Plastik"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Kertas/kardus",
-                variant: ButtonVariant.large,
-                style: controller.jenisSampahDikelola.value == "Kertas/Kardus" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisSampahDikelola("Kertas/Kardus"),
-              )),
+                    text: "Kertas/kardus",
+                    variant: ButtonVariant.large,
+                    style:
+                        controller.jenisSampahDikelola.value == "Kertas/Kardus"
+                            ? ButtonStyle.primary
+                            : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setJenisSampahDikelola("Kertas/Kardus"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Kaca / Logam",
-                variant: ButtonVariant.large,
-                style: controller.jenisSampahDikelola.value == "Kaca/Logam" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisSampahDikelola("Kaca/Logam"),
-              )),
+                    text: "Kaca / Logam",
+                    variant: ButtonVariant.large,
+                    style: controller.jenisSampahDikelola.value == "Kaca/Logam"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setJenisSampahDikelola("Kaca/Logam"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Elektronik",
-                variant: ButtonVariant.large,
-                style: controller.jenisSampahDikelola.value == "Elektronik" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisSampahDikelola("Elektronik"),
-              )),
+                    text: "Elektronik",
+                    variant: ButtonVariant.large,
+                    style: controller.jenisSampahDikelola.value == "Elektronik"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setJenisSampahDikelola("Elektronik"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         Row(
           children: [
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Organik",
-                variant: ButtonVariant.large,
-                style: controller.jenisSampahDikelola.value == "Organik" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisSampahDikelola("Organik"),
-              )),
+                    text: "Organik",
+                    variant: ButtonVariant.large,
+                    style: controller.jenisSampahDikelola.value == "Organik"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setJenisSampahDikelola("Organik"),
+                  )),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Obx(() => GlobalButton(
-                text: "Lainnya",
-                variant: ButtonVariant.large,
-                style: controller.jenisSampahDikelola.value == "Lainnya" 
-                    ? ButtonStyle.primary 
-                    : ButtonStyle.secondary,
-                onPressed: () => controller.setJenisSampahDikelola("Lainnya"),
-              )),
+                    text: "Lainnya",
+                    variant: ButtonVariant.large,
+                    style: controller.jenisSampahDikelola.value == "Lainnya"
+                        ? ButtonStyle.primary
+                        : ButtonStyle.secondary,
+                    onPressed: () =>
+                        controller.setJenisSampahDikelola("Lainnya"),
+                  )),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Submit Button
         GlobalButton(
           text: "Lanjutkan",
           variant: ButtonVariant.large,
           onPressed: () => controller.saveStep3AndFinish(),
         ),
-        
+
         // Padding bawah untuk memberikan ruang
         const SizedBox(height: 30),
       ],
     );
   }
-  
+
   Widget _buildQuestion(String text) {
     return GlobalText(
       text: text,
@@ -534,11 +560,11 @@ class ProfileCompletionScreen extends GetView<ProfileStepController> {
   Widget build(BuildContext context) {
     // Make sure ProfileStepController is properly initialized
     final ProfileStepController controller = Get.find<ProfileStepController>();
-    
+
     if (kDebugMode) {
       print("DEBUG - Building ProfileCompletionScreen");
     }
-    
+
     return BaseWidgetContainer(
       backgroundColor: Colors.white,
       appBar: GlobalAppBar(
@@ -554,7 +580,8 @@ class ProfileCompletionScreen extends GetView<ProfileStepController> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, // PENTING: Tengahkan konten
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // PENTING: Tengahkan konten
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Party icon
@@ -574,44 +601,46 @@ class ProfileCompletionScreen extends GetView<ProfileStepController> {
                       );
                     },
                   ),
-                  
-                  const SizedBox(height: 20),
-                  
+
+                  const SizedBox(height: 29),
+
                   // Heading
                   GlobalText(
                     text: 'Selamat! Profil Insight\nAnda Telah Selesai',
-                    variant: TextVariant.h4,
+                    variant: TextVariant.h3,
                     textAlign: TextAlign.center,
+                    color: AppColors.gray600,
                   ),
-                  
-                  const SizedBox(height: 20),
-                  
+
+                  const SizedBox(height: 29),
+
                   // Insight Result
                   GlobalText(
                     text: 'Hasil Insight Diperoleh:',
                     variant: TextVariant.mediumSemiBold,
                     textAlign: TextAlign.center,
+                    color: AppColors.gray900,
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Result card
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppColors.blue100,
-                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: GlobalText(
-                      text: 'Terima kasih telah menyelesaikan pertanyaan di WANIGO! Insight. Kami melihat Anda memiliki semangat tinggi dalam memilah sampah. Jangan khawatir, WANIGO! menyediakan berbagai fitur untuk membantu perjalanan Anda!',
-                      variant: TextVariant.smallRegular,
+                      text:
+                          'Terima kasih telah menyelesaikan pertanyaan di WANIGO! Insight. Kami melihat Anda memiliki semangat tinggi dalam memilah sampah. Jangan khawatir, WANIGO! menyediakan berbagai fitur untuk membantu perjalanan Anda!',
+                      variant: TextVariant.smallMedium,
                       textAlign: TextAlign.center,
-                      color: AppColors.gray600,
+                      color: AppColors.gray900,
                     ),
                   ),
-                  
-                  const Spacer(), // PENTING: Menggunakan spacer untuk mendorong button ke bawah
-                  
+
+                  const SizedBox(height: 48),
+
                   // Start button - PERBAIKAN UTAMA di sini untuk mengatasi masalah navigasi
                   GlobalButton(
                     text: 'Mulai Jelajahi Fitur WANIGO!',
@@ -624,13 +653,13 @@ class ProfileCompletionScreen extends GetView<ProfileStepController> {
                       Get.offAllNamed(Routes.home);
                     },
                   ),
-                  
+
                   const SizedBox(height: 20),
                 ],
               ),
             ),
           ),
-          
+
           // Bottom decoration - DI LUAR Expanded untuk memastikan selalu di bawah
           // dengan ukuran yang konsisten (tidak dipaksa meregang untuk mengisi ruang kosong)
           Image.asset(
@@ -713,14 +742,15 @@ class ProfileStepBase extends StatelessWidget {
                               ),
                             ),
                           ),
-                          
+
                           // White dot at the end of progress
                           Positioned(
                             right: 0,
                             top: 0,
                             bottom: 0,
                             child: Opacity(
-                              opacity: progress > 0.95 ? 1 : 0, // Only show at 100%
+                              opacity:
+                                  progress > 0.95 ? 1 : 0, // Only show at 100%
                               child: Center(
                                 child: Container(
                                   width: 16,
@@ -737,10 +767,12 @@ class ProfileStepBase extends StatelessWidget {
                               ),
                             ),
                           ),
-                          
+
                           // White dot for current progress
                           Positioned(
-                            left: (MediaQuery.of(context).size.width - 40) * progress - 8,
+                            left: (MediaQuery.of(context).size.width - 40) *
+                                    progress -
+                                8,
                             top: 0,
                             bottom: 0,
                             child: Opacity(
@@ -764,9 +796,9 @@ class ProfileStepBase extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 20),
-                    
+
                     // Step Title
                     RichText(
                       text: TextSpan(
@@ -792,9 +824,9 @@ class ProfileStepBase extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Form content
                     ...children,
                   ],
@@ -802,7 +834,7 @@ class ProfileStepBase extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // PERUBAHAN UTAMA: Bottom decoration di luar area scroll
           // DENGAN TINGGI TETAP untuk memastikan konsistensi tampilan
           Image.asset(

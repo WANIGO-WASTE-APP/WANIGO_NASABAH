@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:math' as math; // Gunakan dart:math bukan Math langsung
 import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:wanigo_nasabah/core/config/alice_config.dart';
+import 'package:alice_dio/alice_dio_adapter.dart';
 
 class HttpClient {
   // Token key in secure storage
@@ -10,6 +13,16 @@ class HttpClient {
 
   // Secure storage instance
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  late final Dio _dio;
+
+  HttpClient() {
+    _dio = Dio();
+
+    // Alice Interceptor
+    final aliceAdapter = AliceDioAdapter();
+    alice.addAdapter(aliceAdapter);
+    _dio.interceptors.add(aliceAdapter);
+  }
 
   // Default timeout untuk HTTP requests
   static const Duration defaultTimeout = Duration(seconds: 45);
@@ -127,10 +140,12 @@ class HttpClient {
       }
 
       final startTime = DateTime.now();
-      final http.Response response = await http
+      final Response dioResponse = await _dio
           .get(
-        Uri.parse(url),
-        headers: headers,
+        url,
+        options: Options(
+          headers: headers,
+        ),
       )
           .timeout(timeout, onTimeout: () {
         throw Exception(
@@ -144,6 +159,11 @@ class HttpClient {
         print(
             "DEBUG - GET Request completed in ${requestDuration.inMilliseconds}ms");
       }
+
+      final dynamic data = dioResponse.data;
+      final String bodyString = data is String ? data : json.encode(data ?? {});
+      final http.Response response =
+          http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
     } catch (e) {
@@ -212,11 +232,13 @@ class HttpClient {
       }
 
       final startTime = DateTime.now();
-      final http.Response response = await http
+      final Response dioResponse = await _dio
           .post(
-        Uri.parse(url),
-        headers: headers,
-        body: encodedBody,
+        url,
+        data: encodedBody,
+        options: Options(
+          headers: headers,
+        ),
       )
           .timeout(timeout, onTimeout: () {
         throw Exception(
@@ -230,6 +252,11 @@ class HttpClient {
         print(
             "DEBUG - POST Request completed in ${requestDuration.inMilliseconds}ms");
       }
+
+      final dynamic data = dioResponse.data;
+      final String bodyString = data is String ? data : json.encode(data ?? {});
+      final http.Response response =
+          http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
     } catch (e) {
@@ -290,11 +317,13 @@ class HttpClient {
       }
 
       final startTime = DateTime.now();
-      final http.Response response = await http
+      final Response dioResponse = await _dio
           .put(
-        Uri.parse(url),
-        headers: headers,
-        body: encodedBody,
+        url,
+        data: encodedBody,
+        options: Options(
+          headers: headers,
+        ),
       )
           .timeout(timeout, onTimeout: () {
         throw Exception(
@@ -308,6 +337,11 @@ class HttpClient {
         print(
             "DEBUG - PUT Request completed in ${requestDuration.inMilliseconds}ms");
       }
+
+      final dynamic data = dioResponse.data;
+      final String bodyString = data is String ? data : json.encode(data ?? {});
+      final http.Response response =
+          http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
     } catch (e) {
@@ -364,10 +398,12 @@ class HttpClient {
       }
 
       final startTime = DateTime.now();
-      final http.Response response = await http
+      final Response dioResponse = await _dio
           .delete(
-        Uri.parse(url),
-        headers: headers,
+        url,
+        options: Options(
+          headers: headers,
+        ),
       )
           .timeout(timeout, onTimeout: () {
         throw Exception(
@@ -381,6 +417,11 @@ class HttpClient {
         print(
             "DEBUG - DELETE Request completed in ${requestDuration.inMilliseconds}ms");
       }
+
+      final dynamic data = dioResponse.data;
+      final String bodyString = data is String ? data : json.encode(data ?? {});
+      final http.Response response =
+          http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
     } catch (e) {
@@ -441,11 +482,13 @@ class HttpClient {
       }
 
       final startTime = DateTime.now();
-      final http.Response response = await http
+      final Response dioResponse = await _dio
           .patch(
-        Uri.parse(url),
-        headers: headers,
-        body: encodedBody,
+        url,
+        data: encodedBody,
+        options: Options(
+          headers: headers,
+        ),
       )
           .timeout(timeout, onTimeout: () {
         throw Exception(
@@ -459,6 +502,11 @@ class HttpClient {
         print(
             "DEBUG - PATCH Request completed in ${requestDuration.inMilliseconds}ms");
       }
+
+      final dynamic data = dioResponse.data;
+      final String bodyString = data is String ? data : json.encode(data ?? {});
+      final http.Response response =
+          http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
     } catch (e) {

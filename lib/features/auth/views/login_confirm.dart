@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:wanigo_ui/wanigo_ui.dart' hide GlobalAppBar, ButtonStyle; // Hide GlobalAppBar dari wanigo_ui
+import 'package:wanigo_ui/wanigo_ui.dart'
+    hide GlobalAppBar, ButtonStyle; // Hide GlobalAppBar dari wanigo_ui
 import 'package:wanigo_nasabah/features/auth/controllers/login_confirm_controller.dart';
 import 'package:wanigo_nasabah/widgets/global_app_bar.dart'; // Import GlobalAppBar lokal
 
@@ -28,34 +30,18 @@ class LoginConfirmScreen extends GetView<LoginConfirmController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // App logo - Gunakan Icon sebagai pengganti Image.asset yang bermasalah
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: AppColors.blue100,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.recycling,
-                        size: 50,
-                        color: AppColors.blue500,
-                      ),
-                    ),
-                  ),
-                  
+                  SvgPicture.asset('assets/images/wanigo.svg'),
                   const SizedBox(height: 24),
-                  
+
                   // Heading
                   GlobalText(
                     text: 'Masuk Akun WANIGO!',
                     variant: TextVariant.h4,
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Email instructions
                   GlobalText(
                     text: 'Masukkan kata sandi akun dengan email:',
@@ -63,9 +49,9 @@ class LoginConfirmScreen extends GetView<LoginConfirmController> {
                     color: AppColors.gray600,
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Email text with underline
                   GlobalText(
                     text: controller.email,
@@ -74,68 +60,68 @@ class LoginConfirmScreen extends GetView<LoginConfirmController> {
                     textAlign: TextAlign.center,
                     decoration: TextDecoration.underline,
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Password input
                   Obx(() => GlobalTextField(
-                    controller: controller.passwordController,
-                    hint: 'Masukkan kata sandi anda disini',
-                    obscureText: controller.obscurePassword.value,
-                    errorText: controller.errorMessage.value.isEmpty 
-                        ? null 
-                        : controller.errorMessage.value,
-                    onChanged: (value) {
-                      // Clear error message when user types
-                      if (controller.errorMessage.value.isNotEmpty) {
-                        controller.errorMessage.value = '';
-                      }
-                    },
-                    suffixIcon: GestureDetector(
-                      onTap: controller.togglePasswordVisibility,
-                      child: Icon(
-                        controller.obscurePassword.value 
-                          ? Icons.visibility_off 
-                          : Icons.visibility,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  )),
-                  
+                        controller: controller.passwordController,
+                        hint: 'Masukkan kata sandi anda disini',
+                        obscureText: controller.obscurePassword.value,
+                        errorText: controller.errorMessage.value.isEmpty
+                            ? null
+                            : controller.errorMessage.value,
+                        onChanged: (value) {
+                          // Clear error message when user types
+                          if (controller.errorMessage.value.isNotEmpty) {
+                            controller.errorMessage.value = '';
+                          }
+                        },
+                        suffixIcon: GestureDetector(
+                          onTap: controller.togglePasswordVisibility,
+                          child: Icon(
+                            controller.obscurePassword.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      )),
+
                   const SizedBox(height: 24),
-                  
+
                   // Login button - menggunakan ElevatedButton sebagai fallback untuk menghindari masalah dengan GlobalButton
                   Obx(() => SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blue500,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: controller.isLoading.value 
-                        ? null 
-                        : controller.login,
-                      child: controller.isLoading.value
-                        ? CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          )
-                        : Text(
-                            'Masuk Aplikasi',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.blue500,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                    ),
-                  )),
-                  
+                          onPressed: controller.isLoading.value
+                              ? null
+                              : controller.login,
+                          child: controller.isLoading.value
+                              ? CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                )
+                              : Text(
+                                  'Masuk Aplikasi',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
+                      )),
+
                   const SizedBox(height: 16),
-                  
+
                   // Forgot password text
                   RichText(
                     textAlign: TextAlign.center,
@@ -159,50 +145,49 @@ class LoginConfirmScreen extends GetView<LoginConfirmController> {
                       ],
                     ),
                   ),
-                  
+
                   // Show error message if any
                   Obx(() => controller.errorMessage.value.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.red[100],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Gagal Login',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red[900],
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.red[100],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Gagal Login',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red[900],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                controller.errorMessage.value,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.red[900],
+                                SizedBox(height: 4),
+                                Text(
+                                  controller.errorMessage.value,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.red[900],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    : const SizedBox.shrink()
-                  ),
-                  
+                        )
+                      : const SizedBox.shrink()),
+
                   // Space untuk bottom image
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                 ],
               ),
             ),
-            
+
             // Bottom wave decoration - seperti di insight_intro.dart
             // Ditambahkan sebagai child terakhir dari SingleChildScrollView > Column
             Image.asset(

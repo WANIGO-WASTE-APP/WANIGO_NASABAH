@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  alice_dio:
+    dependency: "direct main"
+    description:
+      name: alice_dio
+      sha256: "8ffae0dbf5a7b98e47597372dc5e7d8b9aa3de64576db4b7d2e108ff68cd0c83"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   args:
     dependency: transitive
     description:
