@@ -6,12 +6,12 @@ import 'package:wanigo_nasabah/routes/app_routes.dart';
 import 'package:wanigo_nasabah/routes/app_pages.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 
+
 void main() {
-  // Tambahkan ini untuk melihat debug logs di console Flutter Web
   if (kDebugMode) {
     print("DEBUG - Starting Wanigo Nasabah App");
   }
-  
+
   // Set log level untuk GetX
   Get.config(
     enableLog: true,
@@ -25,7 +25,7 @@ void main() {
       }
     },
   );
-  
+
   runApp(const MyApp());
 }
 
@@ -121,7 +121,7 @@ class MyApp extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 final FocusScopeNode currentFocus = FocusScope.of(context);
-                if (!currentFocus.hasPrimaryFocus && 
+                if (!currentFocus.hasPrimaryFocus &&
                     currentFocus.focusedChild != null) {
                   FocusManager.instance.primaryFocus?.unfocus();
                 }

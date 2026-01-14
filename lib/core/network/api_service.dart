@@ -6,7 +6,7 @@ class ApiService {
   final HttpClient _httpClient = HttpClient();
 
   // Base URL dari API tanpa /api di akhir (sesuai dengan gambar Postman dan error 404)
-  final String _baseUrl = 'http://api.wanigo.my.id';
+  final String _baseUrl = 'https://api.wanigo.id';
 
   // Timeout constants
   static const Duration _defaultTimeout = Duration(seconds: 45);
