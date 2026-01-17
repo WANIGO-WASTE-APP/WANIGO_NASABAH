@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide ButtonStyle;
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/data/models/profile_model.dart';
@@ -11,6 +11,9 @@ import 'package:wanigo_nasabah/features/home/widgets/profile_card.dart';
 import 'package:wanigo_nasabah/features/home/widgets/tabungan_saldo.dart';
 import 'package:wanigo_nasabah/features/home/widgets/calendar_card.dart';
 import 'package:wanigo_nasabah/features/home/widgets/setoran_sampah_card.dart';
+import 'package:wanigo_nasabah/features/home/widgets/bottom_nav_bar.dart';
+
+import 'package:wanigo_nasabah/features/home/controllers/home_controller.dart';
 
 class NasabahHomeScreen extends StatefulWidget {
   const NasabahHomeScreen({super.key});
@@ -20,33 +23,8 @@ class NasabahHomeScreen extends StatefulWidget {
 }
 
 class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
-  // Current index untuk bottom navigation
-  int _currentIndex = 0;
-
-  // Method untuk mengganti halaman saat navigasi diklik
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-    
-    // Navigasi ke halaman yang sesuai berdasarkan index
-    switch (index) {
-      case 0: // Beranda - sudah di halaman ini
-        break;
-      case 1: // Riwayat
-        Get.toNamed('/riwayat');
-        break;
-      case 2: // Setoran
-        Get.toNamed('/setoran');
-        break;
-      case 3: // Pesan
-        Get.toNamed('/pesan');
-        break;
-      case 4: // Profil
-        Get.toNamed('/profil');
-        break;
-    }
-  }
+  // Controller
+  final HomeController controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +44,7 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
               color: const Color(0xFFDCE8FF),
             ),
           ),
-          
+
           // Content layer
           SingleChildScrollView(
             child: Column(
@@ -74,20 +52,25 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
               children: [
                 // Bagian atas dengan padding horizontal yang konsisten 20px
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.r, vertical: 8.r),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.r, vertical: 8.r),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Profile Card - Full width
-                      ProfileCard(
-                        profile: ProfileModel(
-                          userName: 'Adhitya Pratama',
-                          points: 0,
-                        ),
-                      ),
-                      
+                      Obx(() => ProfileCard(
+                            profile: ProfileModel(
+                              userName: controller.userName,
+                              points: controller.userPoints,
+                              profilePhotoUrl:
+                                  controller.user.value?.profilePhotoUrl,
+                              address: controller.address.value,
+                              bankSampahName: controller.bankSampahName.value,
+                            ),
+                          )),
+
                       SizedBox(height: 14.h),
-                      
+
                       // Tabungan Card - Full width
                       TabunganCard(
                         tabungan: TabunganModel(
@@ -95,9 +78,9 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
                           beratSampah: 12,
                         ),
                       ),
-                      
+
                       SizedBox(height: 18.h),
-                      
+
                       // Calendar Card - Full width
                       Container(
                         width: double.infinity,
@@ -113,16 +96,16 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
                             month: 'Sep',
                             weekday: 'Selasa',
                             message:
-                            'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
+                                'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
                           ),
                         ),
                       ),
-                      
+
                       SizedBox(height: 32.h),
                     ],
                   ),
                 ),
-                
+
                 // Section with white background - Features and Setoran
                 Container(
                   width: double.infinity, // Full width
@@ -142,30 +125,31 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
                         GlobalText(
                           text: 'Fitur Aplikasi WANIGO!',
                           variant: TextVariant.h5,
+                          color: AppColors.gray600,
                         ),
-                        
+
                         SizedBox(height: 16.h),
-                        
+
                         _buildFeatureIcons(),
-                        
+
                         SizedBox(height: 32.h),
-                        
+
                         // Setoran Section
                         GlobalText(
                           text: 'Setoran Sampah Terkini',
                           variant: TextVariant.h5,
                         ),
-                        
+
                         SizedBox(height: 16.h),
-                        
+
                         SetoranSampahCard(
                           setoran: SetoranSampahModel(
                             title: 'Buat Rencana Setoran',
                             description:
-                            'Mulai ajukan setoran sampah Anda & berkontribusi menjaga lingkungan',
+                                'Mulai ajukan setoran sampah Anda & berkontribusi menjaga lingkungan',
                           ),
                         ),
-                        
+
                         // Tambah padding ekstra untuk memastikan bg_main_bottom terlihat
                         SizedBox(height: 120.h),
                       ],
@@ -177,7 +161,47 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      floatingActionButton: Obx(() {
+        final isActive = controller.currentIndex.value == 2;
+
+        return Transform.translate(
+          offset: Offset(0, 25.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FloatingActionButton(
+                onPressed: () => controller.onBottomNavTapped(2),
+                backgroundColor:
+                    isActive ? AppColors.blue800 : AppColors.gray900,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                  side: BorderSide(
+                    color: Colors.white,
+                    width: 3.r,
+                  ),
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/setoran_icon.svg',
+                  width: 29.r,
+                  height: 29.r,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                'Penjualan',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: isActive ? AppColors.blue600 : AppColors.gray900,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 
@@ -224,11 +248,31 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
 
   Widget _buildFeatureIcons() {
     final features = [
-      {'label': 'Edukasi', 'image': 'assets/images/edukasi.png', 'icon': Icons.menu_book},
-      {'label': 'Laporan', 'image': 'assets/images/laporan.png', 'icon': Icons.receipt_long},
-      {'label': 'Juara', 'image': 'assets/images/juara.png', 'icon': Icons.emoji_events},
-      {'label': 'Misi', 'image': 'assets/images/misi.png', 'icon': Icons.track_changes},
-      {'label': 'Lainnya', 'image': 'assets/images/lainnya.png', 'icon': Icons.grid_view},
+      {
+        'label': 'Edukasi',
+        'image': 'assets/images/edukasi.png',
+        'icon': Icons.menu_book
+      },
+      {
+        'label': 'Laporan',
+        'image': 'assets/images/laporan.png',
+        'icon': Icons.receipt_long
+      },
+      {
+        'label': 'Juara',
+        'image': 'assets/images/juara.png',
+        'icon': Icons.emoji_events
+      },
+      {
+        'label': 'Misi',
+        'image': 'assets/images/misi.png',
+        'icon': Icons.track_changes
+      },
+      {
+        'label': 'Lainnya',
+        'image': 'assets/images/lainnya.png',
+        'icon': Icons.grid_view
+      },
     ];
 
     return Row(
@@ -239,7 +283,8 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
             // Icon gambar diperbesar tanpa background bulat
             Image.asset(
               f['image'] as String,
-              width: 48.r, // Ukuran diperbesar sesuai dengan ukuran container sebelumnya
+              width: 48
+                  .r, // Ukuran diperbesar sesuai dengan ukuran container sebelumnya
               height: 48.r,
               errorBuilder: (context, error, stackTrace) {
                 debugPrint('Error loading ${f['image']}: $error');
@@ -258,76 +303,6 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
           ],
         );
       }).toList(),
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    // Daftar item untuk bottom navigation
-    final List<Map<String, dynamic>> items = [
-      {'image': 'assets/images/beranda.svg', 'icon': Icons.home, 'label': 'Beranda'},
-      {'image': 'assets/images/riwayat.svg', 'icon': Icons.history, 'label': 'Riwayat'},
-      {'image': 'assets/images/setoran.svg', 'icon': Icons.shopping_bag, 'label': 'Setoran'},
-      {'image': 'assets/images/pesan.svg', 'icon': Icons.chat_bubble_outline, 'label': 'Pesan'},
-      {'image': 'assets/images/profil.svg', 'icon': Icons.person, 'label': 'Profil'},
-    ];
-
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _currentIndex,
-      onTap: _onItemTapped,
-      selectedItemColor: AppColors.blue600,
-      unselectedItemColor: AppColors.gray900,
-      items: List.generate(items.length, (index) {
-        final isActive = index == _currentIndex;
-        final color = isActive ? AppColors.blue600 : AppColors.gray900;
-        
-        // Special case for Setoran button (middle button)
-        if (index == 2) {
-          return BottomNavigationBarItem(
-            icon: Container(
-              padding: EdgeInsets.all(6.r),
-              decoration: BoxDecoration(
-                color: isActive ? AppColors.blue600 : AppColors.gray900,
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset(
-                items[index]['image'],
-                width: 24.r,
-                height: 24.r,
-                color: Colors.white,
-                errorBuilder: (context, error, stackTrace) {
-                  debugPrint('Error loading ${items[index]['image']}: $error');
-                  return Icon(
-                    items[index]['icon'],
-                    color: Colors.white,
-                    size: 24.r,
-                  );
-                },
-              ),
-            ),
-            label: items[index]['label'],
-          );
-        }
-        
-        // Regular navigation items
-        return BottomNavigationBarItem(
-          icon: Image.asset(
-            items[index]['image'],
-            width: 24.r,
-            height: 24.r,
-            color: color,
-            errorBuilder: (context, error, stackTrace) {
-              debugPrint('Error loading ${items[index]['image']}: $error');
-              return Icon(
-                items[index]['icon'],
-                color: color,
-                size: 24.r,
-              );
-            },
-          ),
-          label: items[index]['label'],
-        );
-      }),
     );
   }
 }

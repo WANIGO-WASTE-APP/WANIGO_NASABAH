@@ -4,6 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wanigo_nasabah/core/network/http_client.dart';
 import 'package:wanigo_nasabah/data/models/auth_models.dart';
 import 'package:wanigo_nasabah/core/network/api_service.dart';
+import 'package:wanigo_nasabah/data/models/member_bank_sampah_response.dart';
+
+// ... other imports ...
+
+// ... inside AuthRepository class ...
+
+/// Get Member Bank Sampah
+// ... other imports ...
 
 /// Repository untuk autentikasi
 /// Kelas ini menangani interaksi dengan API terkait autentikasi
@@ -14,6 +22,33 @@ class AuthRepository {
 
   // HTTP Client untuk pengelolaan token
   final HttpClient _httpClient = HttpClient();
+
+  /// Get Member Bank Sampah
+  Future<MemberBankSampahResponse?> getMemberBankSampah() async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Member Bank Sampah Request");
+      }
+
+      final response = await _apiService.getMemberBankSampah();
+
+      if (kDebugMode) {
+        print("DEBUG - Get Member Bank Sampah Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        final data = response['data'];
+        return MemberBankSampahResponse.fromJson(data);
+      } else {
+        return null; // Or throw exception if preferred
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Member Bank Sampah Repository Exception: $e");
+      }
+      return null;
+    }
+  }
 
   // Key untuk penyimpanan lokal
   static const String _userKey = 'user_data';
@@ -764,8 +799,8 @@ class AuthRepository {
         final savedUser = await getUser();
         if (savedUser != null && savedUser.nasabah != null) {
           // Get updated timestamps from response if available
-          String? profileCompletedAt = null;
-          String? updatedAt = null;
+          String? profileCompletedAt;
+          String? updatedAt;
 
           if (response['data'] != null && response['data']['nasabah'] != null) {
             profileCompletedAt =

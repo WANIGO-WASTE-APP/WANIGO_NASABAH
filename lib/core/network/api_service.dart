@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:wanigo_nasabah/core/network/http_client.dart';
 
@@ -517,6 +516,46 @@ class ApiService {
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - Update Profile Step 3 Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Get Member Bank Sampah API
+  Future<Map<String, dynamic>> getMemberBankSampah() async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Member Bank Sampah Request");
+      }
+
+      final response = await _httpClient
+          .get(
+        '$_baseUrl/api/nasabah/member-bank-sampah',
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Get Member Bank Sampah API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success': response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Member Bank Sampah API Exception: $e");
       }
 
       return {

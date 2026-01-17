@@ -12,7 +12,7 @@ class ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 353.w,
-      padding: EdgeInsets.all(10.r),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.r),
@@ -33,7 +33,6 @@ class ProfileCard extends StatelessWidget {
           SizedBox(height: 7.h),
           _buildNasabahInfo(),
           SizedBox(height: 7.h),
-          _buildActionButton(),
         ],
       ),
     );
@@ -58,24 +57,18 @@ class ProfileCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Nasabah Bank Sampah Kawan',
-                style: TextStyle(
-                  fontFamily: 'Nunito Sans',
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
+              GlobalText(
+                text: 'Nasabah ${profile.bankSampahName}',
+                variant: TextVariant.smallSemiBold,
+                color: Colors.black,
               ),
               SizedBox(height: 2.h),
-              Text(
-                'Jl Jojoran Baru III, No 30, Kelurahan Mojo',
-                style: TextStyle(
-                  fontFamily: 'Nunito Sans',
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black54,
-                ),
+              GlobalText(
+                text: profile.address,
+                variant: TextVariant.xSmallMedium,
+                color: AppColors.gray600,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -103,56 +96,64 @@ class ProfileCard extends StatelessWidget {
   Widget _buildAvatar(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(4.r),
-      child: Image.asset(
-        'assets/images/default-img.jpg',
-        width: 40.r, // Lebih besar sesuai figma
-        height: 40.r, // Lebih besar sesuai figma
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          debugPrint('Error loading default-img.jpg: $error');
-          return Container(
-            width: 40.r,
-            height: 40.r,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-            child: Icon(
-              Icons.person,
-              size: 30.r,
-              color: Colors.grey[600],
-            ),
-          );
-        },
-      ),
+      child:
+          profile.profilePhotoUrl != null && profile.profilePhotoUrl!.isNotEmpty
+              ? Image.network(
+                  profile.profilePhotoUrl!,
+                  width: 40.r,
+                  height: 40.r,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildDefaultAvatar();
+                  },
+                )
+              : _buildDefaultAvatar(),
+    );
+  }
+
+  Widget _buildDefaultAvatar() {
+    return Image.asset(
+      'assets/images/default-img.jpg',
+      width: 40.r,
+      height: 40.r,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint('Error loading default-img.jpg: $error');
+        return Container(
+          width: 40.r,
+          height: 40.r,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+          child: Icon(
+            Icons.person,
+            size: 30.r,
+            color: Colors.grey[600],
+          ),
+        );
+      },
     );
   }
 
   Widget _buildGreeting() {
     return Expanded(
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: 'Hai, ',
-              style: TextStyle(
-                fontFamily: 'Nunito Sans',
-                fontSize: 16.sp, // Body Large Medium
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-            TextSpan(
+      child: Row(
+        children: [
+          GlobalText(
+            text: 'Hai, ',
+            variant: TextVariant.largeMedium,
+            color: Colors.black,
+          ),
+          Flexible(
+            child: GlobalText(
               text: profile.userName,
-              style: TextStyle(
-                fontFamily: 'Nunito Sans',
-                fontSize: 16.sp, // Heading 6
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-              ),
+              variant: TextVariant.h6,
+              color: Colors.black,
+              overflow: TextOverflow.ellipsis,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -189,25 +190,6 @@ class ProfileCard extends StatelessWidget {
             color: AppColors.blue600,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton() {
-    return InkWell(
-      onTap: () {
-        // Handle click
-      },
-      borderRadius: BorderRadius.circular(8.r),
-      child: Text(
-        'Daftar Sebagai Nasabah Bank Sampah',
-        style: TextStyle(
-          fontFamily: 'Nunito Sans',
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w700,
-          height: 1.55, // Line height 155%
-          color: const Color(0xFF111415), // Grey-900
-        ),
       ),
     );
   }

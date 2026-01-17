@@ -31,19 +31,19 @@ class TabunganCard extends StatelessWidget {
                 children: [
                   GlobalText(
                     text: 'Total Saldo Tabungan',
-                    variant: TextVariant.smallMedium,
+                    variant: TextVariant.smallSemiBold,
                     color: Colors.white,
                   ),
                   SizedBox(height: 4.h),
                   GlobalText(
                     text: 'Rp${tabungan.saldo.toStringAsFixed(2)}',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     color: Colors.white,
                   ),
                   SizedBox(height: 16.h),
                   GlobalText(
                     text: 'Total Sampah Terpilahkan',
-                    variant: TextVariant.smallMedium,
+                    variant: TextVariant.smallSemiBold,
                     color: Colors.white,
                   ),
                   SizedBox(height: 4.h),
