@@ -2,7 +2,7 @@ import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:wanigo_ui/wanigo_ui.dart';
+import 'package:wanigo_ui/wanigo_ui.dart' hide GlobalAppBar;
 import 'package:wanigo_nasabah/data/models/profile_model.dart';
 import 'package:wanigo_nasabah/data/models/tabungan_model.dart';
 import 'package:wanigo_nasabah/data/models/calendar_schedule_model.dart';
@@ -12,6 +12,7 @@ import 'package:wanigo_nasabah/features/home/widgets/tabungan_saldo.dart';
 import 'package:wanigo_nasabah/features/home/widgets/calendar_card.dart';
 import 'package:wanigo_nasabah/features/home/widgets/setoran_sampah_card.dart';
 import 'package:wanigo_nasabah/features/home/widgets/bottom_nav_bar.dart';
+import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 
 import 'package:wanigo_nasabah/features/home/controllers/home_controller.dart';
 
@@ -205,44 +206,12 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
     );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      titleSpacing: 20.r, // Konsisten 20px
-      title: Image.asset(
-        'assets/images/appbar_logo.png',
-        height: 30.h,
-        errorBuilder: (context, error, stackTrace) {
-          debugPrint('Error loading appbar_logo.png: $error');
-          return Text(
-            'WANIGO!',
-            style: TextStyle(
-              color: AppColors.blue500,
-              fontWeight: FontWeight.bold,
-              fontSize: 22.sp,
-            ),
-          );
-        },
-      ),
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 20.r), // Konsisten 20px
-          child: Image.asset(
-            'assets/images/lonceng.png',
-            width: 24.r,
-            height: 24.r,
-            errorBuilder: (context, error, stackTrace) {
-              debugPrint('Error loading lonceng.png: $error');
-              return Icon(
-                Icons.notifications_none,
-                color: Colors.black,
-                size: 24.r,
-              );
-            },
-          ),
-        ),
-      ],
+  PreferredSizeWidget _buildAppBar() {
+    return GlobalAppBar(
+      centerTitle: false,
+      showBackButton: false,
+      titleSpacing: 20.r,
+      showNotification: true,
     );
   }
 

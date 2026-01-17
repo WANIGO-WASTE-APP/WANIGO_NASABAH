@@ -7,7 +7,8 @@ import 'package:wanigo_nasabah/features/kalendar/views/planoption.dart';
 import 'package:wanigo_nasabah/features/kalendar/views/wasteform.dart';
 
 // Import GlobalAppBar dengan path yang benar
-import '../widgets/global_app_bar.dart';
+// Import GlobalAppBar dengan path yang benar
+import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 
 // Model untuk Jadwal Sampah
 class WasteSchedule {
@@ -28,27 +29,24 @@ class WasteSchedule {
 
 // Enum untuk tipe jadwal
 enum ScheduleType {
-  sorting,   // Pemilahan sampah
-  deposit,   // Setoran sampah
+  sorting, // Pemilahan sampah
+  deposit, // Setoran sampah
 }
 
 // Enum untuk status jadwal
 enum ScheduleStatus {
-  upcoming,   // Akan datang
-  ongoing,    // Sedang berlangsung
-  completed,  // Selesai
+  upcoming, // Akan datang
+  ongoing, // Sedang berlangsung
+  completed, // Selesai
 }
 
 // Calendar view enum
-enum CalendarView {
-  monthly,
-  weekly
-}
+enum CalendarView { monthly, weekly }
 
 // Screen untuk menampilkan konfirmasi jadwal selesai
 class ScheduleCompletedScreen extends StatelessWidget {
   final ScheduleType scheduleType;
-  
+
   const ScheduleCompletedScreen({
     Key? key,
     required this.scheduleType,
@@ -58,10 +56,10 @@ class ScheduleCompletedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar: GlobalAppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true,
+        enableShadow: false,
         title: Text(
           'LAPORAN',
           style: TextStyle(
@@ -70,7 +68,7 @@ class ScheduleCompletedScreen extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        leading: Container(), // Hide back button
+        showBackButton: false,
       ),
       body: Container(
         padding: EdgeInsets.all(24.r),
@@ -85,14 +83,15 @@ class ScheduleCompletedScreen extends StatelessWidget {
             SizedBox(height: 24.h),
             GlobalText(
               text: scheduleType == ScheduleType.sorting
-                ? "Pemilahan Sampah Sudah Selesai!"
-                : "Setoran Sampah Sudah Selesai!",
+                  ? "Pemilahan Sampah Sudah Selesai!"
+                  : "Setoran Sampah Sudah Selesai!",
               variant: TextVariant.h5,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 16.h),
             GlobalText(
-              text: "Jadwal ${scheduleType == ScheduleType.sorting ? 'pemilahan' : 'setoran'} sampah berhasil diselesaikan. Terima kasih telah berkontribusi menjaga kebersihan lingkungan! 🌏",
+              text:
+                  "Jadwal ${scheduleType == ScheduleType.sorting ? 'pemilahan' : 'setoran'} sampah berhasil diselesaikan. Terima kasih telah berkontribusi menjaga kebersihan lingkungan! 🌏",
               variant: TextVariant.mediumRegular,
               textAlign: TextAlign.center,
             ),
@@ -136,19 +135,19 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
   final Map<String, List<WasteSchedule>> _schedules = {
     "2025-03-31": [
       WasteSchedule(
-        id: 1, 
-        title: "Pemilahan Sampah #1", 
-        type: ScheduleType.sorting, 
-        startTime: "07:00", 
+        id: 1,
+        title: "Pemilahan Sampah #1",
+        type: ScheduleType.sorting,
+        startTime: "07:00",
         status: ScheduleStatus.ongoing,
       ),
     ],
     "2025-03-30": [
       WasteSchedule(
-        id: 2, 
-        title: "Setoran Sampah", 
-        type: ScheduleType.deposit, 
-        startTime: "10:00", 
+        id: 2,
+        title: "Setoran Sampah",
+        type: ScheduleType.deposit,
+        startTime: "10:00",
         status: ScheduleStatus.upcoming,
       ),
     ],
@@ -162,11 +161,12 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
       ),
     ],
   };
-  
+
   // SIMULASI STATUS USER - nantinya dari user management
   bool _isRegisteredMember = true; // true = terdaftar, false = belum terdaftar
-  bool _hasCreatedSchedule = true; // true = sudah ada jadwal, false = belum ada jadwal
-  
+  bool _hasCreatedSchedule =
+      true; // true = sudah ada jadwal, false = belum ada jadwal
+
   // Simulasi jadwal yang dipilih - nantinya dari API/database
   WasteSchedule? _selectedSchedule;
 
@@ -194,17 +194,22 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
   List<DateTime> _generateDatesGrid(DateTime? month, {bool weekOnly = false}) {
     if (weekOnly) {
       int weekdayAdjustment = selectedDate.weekday % 7;
-      DateTime startOfWeek = selectedDate.subtract(Duration(days: weekdayAdjustment));
-      return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+      DateTime startOfWeek =
+          selectedDate.subtract(Duration(days: weekdayAdjustment));
+      return List.generate(
+          7, (index) => startOfWeek.add(Duration(days: index)));
     }
 
     final DateTime effectiveMonth = month ?? currentMonth;
-    
-    int numDays = DateTime(effectiveMonth.year, effectiveMonth.month + 1, 0).day;
-    int firstWeekday = DateTime(effectiveMonth.year, effectiveMonth.month, 1).weekday % 7;
+
+    int numDays =
+        DateTime(effectiveMonth.year, effectiveMonth.month + 1, 0).day;
+    int firstWeekday =
+        DateTime(effectiveMonth.year, effectiveMonth.month, 1).weekday % 7;
     List<DateTime> dates = [];
 
-    DateTime previousMonth = DateTime(effectiveMonth.year, effectiveMonth.month - 1);
+    DateTime previousMonth =
+        DateTime(effectiveMonth.year, effectiveMonth.month - 1);
     int previousMonthLastDay =
         DateTime(previousMonth.year, previousMonth.month + 1, 0).day;
     for (int i = firstWeekday; i > 0; i--) {
@@ -240,10 +245,11 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
   void _selectDate(DateTime date) {
     setState(() {
       selectedDate = date;
-      
+
       // Cek apakah ada jadwal di tanggal yang dipilih
-      String dateKey = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-      
+      String dateKey =
+          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+
       if (_schedules.containsKey(dateKey) && _schedules[dateKey]!.isNotEmpty) {
         _selectedSchedule = _schedules[dateKey]![0]; // Ambil jadwal pertama
       } else {
@@ -277,7 +283,7 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
       }
       _showPopup = false;
     });
-    
+
     // Demo: menampilkan halaman "Jadwal Selesai"
     Navigator.push(
       context,
@@ -291,21 +297,23 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
 
   // Helper untuk cek apakah tanggal memiliki jadwal
   bool _hasSchedule(DateTime date) {
-    String dateKey = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    String dateKey =
+        "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
     return _schedules.containsKey(dateKey) && _schedules[dateKey]!.isNotEmpty;
   }
 
   // Helper untuk mendapatkan warna indikator jadwal
   Color _getScheduleIndicatorColor(DateTime date) {
-    String dateKey = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    String dateKey =
+        "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
     if (_schedules.containsKey(dateKey) && _schedules[dateKey]!.isNotEmpty) {
       // Jika ada lebih dari satu jadwal, prioritaskan yang sedang berlangsung
-      WasteSchedule? ongoingSchedule = _schedules[dateKey]!
-          .firstWhere((schedule) => schedule.status == ScheduleStatus.ongoing, 
-                     orElse: () => _schedules[dateKey]![0]);
-      
-      return ongoingSchedule.type == ScheduleType.sorting 
-          ? AppColors.blue600 
+      WasteSchedule? ongoingSchedule = _schedules[dateKey]!.firstWhere(
+          (schedule) => schedule.status == ScheduleStatus.ongoing,
+          orElse: () => _schedules[dateKey]![0]);
+
+      return ongoingSchedule.type == ScheduleType.sorting
+          ? AppColors.blue600
           : AppColors.green600;
     }
     return Colors.transparent;
@@ -315,10 +323,10 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _backgroundColor,
-      appBar: AppBar(
+      appBar: GlobalAppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true,
+        enableShadow: false,
         title: Text(
           'KALENDAR',
           style: TextStyle(
@@ -327,10 +335,7 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
             fontSize: 18,
           ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.chevron_left, color: AppColors.blue600),
-          onPressed: () => Navigator.pop(context),
-        ),
+        // GlobalAppBar automatically handles back button
       ),
       body: Stack(
         children: [
@@ -359,8 +364,8 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
                           child: Center(
                             child: GlobalText(
                               text: _currentView == CalendarView.monthly
-                                ? '${_monthName(currentMonth.month)} ${currentMonth.year}'
-                                : '${_monthName(selectedDate.month)} ${selectedDate.year}',
+                                  ? '${_monthName(currentMonth.month)} ${currentMonth.year}'
+                                  : '${_monthName(selectedDate.month)} ${selectedDate.year}',
                               variant: TextVariant.largeBold,
                               color: AppColors.blue600,
                               textAlign: TextAlign.center,
@@ -397,9 +402,9 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
                           ),
                           SizedBox(width: 4.w),
                           Icon(
-                            _currentView == CalendarView.monthly 
-                              ? Icons.keyboard_arrow_up 
-                              : Icons.keyboard_arrow_down,
+                            _currentView == CalendarView.monthly
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
                             color: AppColors.gray600,
                             size: 20.r,
                           ),
@@ -422,14 +427,22 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: 8.h),
-                    
+
                     // Day names row
                     SizedBox(
                       height: 20.h,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: List.generate(7, (index) {
-                          final days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+                          final days = [
+                            'Min',
+                            'Sen',
+                            'Sel',
+                            'Rab',
+                            'Kam',
+                            'Jum',
+                            'Sab'
+                          ];
                           return Expanded(
                             child: Center(
                               child: GlobalText(
@@ -442,14 +455,14 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
                         }),
                       ),
                     ),
-                    
+
                     SizedBox(height: 2.h),
-                    
+
                     // Calendar Grid
                     Expanded(
-                      child: _currentView == CalendarView.monthly 
-                        ? _buildMonthlyView() 
-                        : _buildWeeklyView(),
+                      child: _currentView == CalendarView.monthly
+                          ? _buildMonthlyView()
+                          : _buildWeeklyView(),
                     ),
                   ],
                 ),
@@ -459,11 +472,11 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
               Expanded(
                 child: Container(
                   color: Colors.white,
-                  child: _isRegisteredMember 
-                    ? (_hasCreatedSchedule
-                        ? _buildScheduleListSection()
-                        : _buildNoScheduleSection())
-                    : _buildNotRegisteredSection(),
+                  child: _isRegisteredMember
+                      ? (_hasCreatedSchedule
+                          ? _buildScheduleListSection()
+                          : _buildNoScheduleSection())
+                      : _buildNotRegisteredSection(),
                 ),
               ),
             ],
@@ -492,11 +505,11 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
       itemBuilder: (context, index) {
         DateTime date = datesGrid[index];
         bool isCurrentMonth = date.month == currentMonth.month;
-        bool isSelected = date.year == selectedDate.year && 
-                         date.month == selectedDate.month && 
-                         date.day == selectedDate.day;
+        bool isSelected = date.year == selectedDate.year &&
+            date.month == selectedDate.month &&
+            date.day == selectedDate.day;
         bool hasSchedule = _hasSchedule(date);
-        
+
         return GestureDetector(
           onTap: () => _selectDate(date),
           child: Container(
@@ -510,11 +523,11 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
                 GlobalText(
                   text: date.day.toString(),
                   variant: TextVariant.mediumBold,
-                  color: isSelected 
-                    ? Colors.white 
-                    : (isCurrentMonth 
-                        ? AppColors.blue600
-                        : AppColors.gray400),
+                  color: isSelected
+                      ? Colors.white
+                      : (isCurrentMonth
+                          ? AppColors.blue600
+                          : AppColors.gray400),
                 ),
                 if (hasSchedule)
                   Positioned(
@@ -550,11 +563,11 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
       itemCount: datesGrid.length,
       itemBuilder: (context, index) {
         DateTime date = datesGrid[index];
-        bool isSelected = date.year == selectedDate.year && 
-                         date.month == selectedDate.month && 
-                         date.day == selectedDate.day;
+        bool isSelected = date.year == selectedDate.year &&
+            date.month == selectedDate.month &&
+            date.day == selectedDate.day;
         bool hasSchedule = _hasSchedule(date);
-        
+
         return GestureDetector(
           onTap: () => _selectDate(date),
           child: Container(
@@ -617,7 +630,8 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
               ),
               SizedBox(height: 8.h),
               GlobalText(
-                text: "Lapor hasil pemilahan sampah Anda untuk menyelesaikan jadwal pemilahan hari ini",
+                text:
+                    "Lapor hasil pemilahan sampah Anda untuk menyelesaikan jadwal pemilahan hari ini",
                 variant: TextVariant.smallRegular,
                 textAlign: TextAlign.center,
               ),
@@ -645,11 +659,21 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
   // Month name helper
   String _monthName(int monthNumber) {
     return [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember'
     ][monthNumber - 1];
   }
-  
+
   // Bagian jika user belum terdaftar sebagai nasabah bank sampah
   Widget _buildNotRegisteredSection() {
     return Padding(
@@ -675,7 +699,8 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
           ),
           SizedBox(height: 16.h),
           GlobalText(
-            text: "Pastikan kamu menjadi nasabah bank sampah sebelum mengatur jadwal pemilahan. Daftar sekarang untuk memulai pengelolaan sampah",
+            text:
+                "Pastikan kamu menjadi nasabah bank sampah sebelum mengatur jadwal pemilahan. Daftar sekarang untuk memulai pengelolaan sampah",
             variant: TextVariant.mediumRegular,
             textAlign: TextAlign.center,
           ),
@@ -714,7 +739,8 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
           ),
           SizedBox(height: 12.h),
           GlobalText(
-            text: "Buat jadwal pemilahan atau setoran sampah untuk memulai proses pengelolaan sampah yang lebih teratur dan efisien",
+            text:
+                "Buat jadwal pemilahan atau setoran sampah untuk memulai proses pengelolaan sampah yang lebih teratur dan efisien",
             variant: TextVariant.mediumRegular,
             textAlign: TextAlign.center,
           ),
@@ -738,29 +764,33 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
   // Bagian jika user sudah terdaftar dan sudah ada jadwal
   Widget _buildScheduleListSection() {
     // Jika ada tanggal yang dipilih dan tanggal tersebut memiliki jadwal
-    String dateKey = "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
-    bool hasSelectedDateSchedule = _schedules.containsKey(dateKey) && _schedules[dateKey]!.isNotEmpty;
-    
+    String dateKey =
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+    bool hasSelectedDateSchedule =
+        _schedules.containsKey(dateKey) && _schedules[dateKey]!.isNotEmpty;
+
     return Padding(
       padding: EdgeInsets.all(16.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GlobalText(
-            text: hasSelectedDateSchedule 
-              ? "Jadwal Sampah Sedang Berlangsung"
-              : "Daftar Jadwal Sampah Sudah Terbuat",
+            text: hasSelectedDateSchedule
+                ? "Jadwal Sampah Sedang Berlangsung"
+                : "Daftar Jadwal Sampah Sudah Terbuat",
             variant: TextVariant.mediumBold,
           ),
           SizedBox(height: 16.h),
-          
+
           // Jika tanggal yang dipilih memiliki jadwal, tampilkan detailnya
           // Jika tidak, tampilkan jadwal terdekat
           if (hasSelectedDateSchedule)
-            ..._schedules[dateKey]!.map((schedule) => _buildScheduleCard(schedule)).toList()
+            ..._schedules[dateKey]!
+                .map((schedule) => _buildScheduleCard(schedule))
+                .toList()
           else
             _buildSchedulesList(),
-          
+
           Spacer(),
           GlobalButton(
             text: "Buat Jadwal Baru",
@@ -783,37 +813,36 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
     // Filter untuk mendapatkan jadwal pemilahan dan setoran
     List<WasteSchedule> sortingSchedules = [];
     List<WasteSchedule> depositSchedules = [];
-    
+
     _schedules.forEach((date, schedules) {
       for (var schedule in schedules) {
         if (schedule.type == ScheduleType.sorting && sortingSchedules.isEmpty) {
           sortingSchedules.add(schedule);
-        } else if (schedule.type == ScheduleType.deposit && depositSchedules.isEmpty) {
+        } else if (schedule.type == ScheduleType.deposit &&
+            depositSchedules.isEmpty) {
           depositSchedules.add(schedule);
         }
       }
     });
-    
+
     return Column(
       children: [
         // Tampilkan jadwal pemilahan sampah (jika ada)
         if (sortingSchedules.isNotEmpty)
           _buildScheduleSummaryCard(
-            sortingSchedules.first,
-            "Jadwal Pemilahan Sampah",
-            "Mulai tanggal ${_getDayAndMonth(sortingSchedules.first)}"
-          ),
-          
+              sortingSchedules.first,
+              "Jadwal Pemilahan Sampah",
+              "Mulai tanggal ${_getDayAndMonth(sortingSchedules.first)}"),
+
         SizedBox(height: sortingSchedules.isNotEmpty ? 12.h : 0),
-        
+
         // Tampilkan jadwal setoran sampah (jika ada)
         if (depositSchedules.isNotEmpty)
           _buildScheduleSummaryCard(
-            depositSchedules.first,
-            "Jadwal Setoran Sampah",
-            "Mulai tanggal ${_getDayAndMonth(depositSchedules.first)}"
-          ),
-          
+              depositSchedules.first,
+              "Jadwal Setoran Sampah",
+              "Mulai tanggal ${_getDayAndMonth(depositSchedules.first)}"),
+
         // Jika tidak ada jadwal sama sekali
         if (sortingSchedules.isEmpty && depositSchedules.isEmpty)
           Center(
@@ -857,9 +886,9 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
             Container(
               width: 4.w,
               height: 40.h,
-              color: schedule.type == ScheduleType.sorting 
-                ? AppColors.blue600 
-                : AppColors.green600,
+              color: schedule.type == ScheduleType.sorting
+                  ? AppColors.blue600
+                  : AppColors.green600,
             ),
             SizedBox(width: 12.w),
             Expanded(
@@ -883,18 +912,18 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
                 color: schedule.status == ScheduleStatus.ongoing
-                  ? AppColors.blue600
-                  : (schedule.status == ScheduleStatus.upcoming 
-                      ? AppColors.gray400 
-                      : AppColors.green600),
+                    ? AppColors.blue600
+                    : (schedule.status == ScheduleStatus.upcoming
+                        ? AppColors.gray400
+                        : AppColors.green600),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: GlobalText(
                 text: schedule.status == ScheduleStatus.ongoing
-                  ? "Berlangsung"
-                  : (schedule.status == ScheduleStatus.upcoming 
-                      ? "Akan Datang" 
-                      : "Selesai"),
+                    ? "Berlangsung"
+                    : (schedule.status == ScheduleStatus.upcoming
+                        ? "Akan Datang"
+                        : "Selesai"),
                 variant: TextVariant.xSmallBold,
                 color: Colors.white,
               ),
@@ -908,73 +937,75 @@ class _CalendarMainScreenState extends State<CalendarMainScreen> {
 // Modifikasi pada _buildScheduleSummaryCard di calendar_main.dart
 // Hapus parameter yang tidak didukung dan hanya gunakan push tanpa parameter tambahan
 
-Widget _buildScheduleSummaryCard(WasteSchedule schedule, String title, String dateInfo) {
-  return GestureDetector(
-    onTap: () {
-      // Arahkan ke halaman waste form tanpa parameter tambahan
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const WasteSortingScheduleForm(),
-        ),
-      ).then((_) {
-        // Refresh data setelah kembali dari form
-        setState(() {
-          // Nanti akan diimplementasikan untuk refresh data dari backend
+  Widget _buildScheduleSummaryCard(
+      WasteSchedule schedule, String title, String dateInfo) {
+    return GestureDetector(
+      onTap: () {
+        // Arahkan ke halaman waste form tanpa parameter tambahan
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const WasteSortingScheduleForm(),
+          ),
+        ).then((_) {
+          // Refresh data setelah kembali dari form
+          setState(() {
+            // Nanti akan diimplementasikan untuk refresh data dari backend
+          });
         });
-      });
-    },
-    child: Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      decoration: BoxDecoration(
-        color: AppColors.blue100,
-        borderRadius: BorderRadius.circular(8.r),
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 12.h),
+        decoration: BoxDecoration(
+          color: AppColors.blue100,
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        padding: EdgeInsets.all(12.r),
+        child: Row(
+          children: [
+            Container(
+              width: 4.w,
+              height: 40.h,
+              color: schedule.type == ScheduleType.sorting
+                  ? AppColors.blue600
+                  : AppColors.green600,
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GlobalText(
+                    text: title,
+                    variant: TextVariant.mediumSemiBold,
+                  ),
+                  SizedBox(height: 4.h),
+                  GlobalText(
+                    text: dateInfo,
+                    variant: TextVariant.smallRegular,
+                    color: AppColors.gray600,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: AppColors.blue600,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: GlobalText(
+                text:
+                    "Rutin ${schedule.type == ScheduleType.sorting ? 'harian' : 'mingguan'}",
+                variant: TextVariant.xSmallBold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
-      padding: EdgeInsets.all(12.r),
-      child: Row(
-        children: [
-          Container(
-            width: 4.w,
-            height: 40.h,
-            color: schedule.type == ScheduleType.sorting 
-              ? AppColors.blue600 
-              : AppColors.green600,
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GlobalText(
-                  text: title,
-                  variant: TextVariant.mediumSemiBold,
-                ),
-                SizedBox(height: 4.h),
-                GlobalText(
-                  text: dateInfo,
-                  variant: TextVariant.smallRegular,
-                  color: AppColors.gray600,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.blue600,
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: GlobalText(
-              text: "Rutin ${schedule.type == ScheduleType.sorting ? 'harian' : 'mingguan'}",
-              variant: TextVariant.xSmallBold,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+    );
+  }
 
   // Card untuk jadwal terdekat (jika tanggal yang dipilih tidak memiliki jadwal)
   Widget _buildNextScheduleCard() {
@@ -982,25 +1013,23 @@ Widget _buildScheduleSummaryCard(WasteSchedule schedule, String title, String da
     DateTime now = DateTime.now();
     WasteSchedule? nextSchedule;
     DateTime? nextScheduleDate;
-    
+
     _schedules.forEach((dateStr, scheduleList) {
       if (scheduleList.isNotEmpty) {
         List<String> dateParts = dateStr.split('-');
-        DateTime scheduleDate = DateTime(
-          int.parse(dateParts[0]), 
-          int.parse(dateParts[1]), 
-          int.parse(dateParts[2])
-        );
-        
+        DateTime scheduleDate = DateTime(int.parse(dateParts[0]),
+            int.parse(dateParts[1]), int.parse(dateParts[2]));
+
         if (scheduleDate.isAfter(now) || scheduleDate.day == now.day) {
-          if (nextScheduleDate == null || scheduleDate.isBefore(nextScheduleDate!)) {
+          if (nextScheduleDate == null ||
+              scheduleDate.isBefore(nextScheduleDate!)) {
             nextScheduleDate = scheduleDate;
             nextSchedule = scheduleList[0]; // Ambil jadwal pertama
           }
         }
       }
     });
-    
+
     if (nextSchedule != null && nextScheduleDate != null) {
       return Container(
         margin: EdgeInsets.only(bottom: 12.h),
@@ -1014,9 +1043,9 @@ Widget _buildScheduleSummaryCard(WasteSchedule schedule, String title, String da
             Container(
               width: 4.w,
               height: 40.h,
-              color: nextSchedule!.type == ScheduleType.sorting 
-                ? AppColors.blue600 
-                : AppColors.green600,
+              color: nextSchedule!.type == ScheduleType.sorting
+                  ? AppColors.blue600
+                  : AppColors.green600,
             ),
             SizedBox(width: 12.w),
             Expanded(
@@ -1029,7 +1058,8 @@ Widget _buildScheduleSummaryCard(WasteSchedule schedule, String title, String da
                   ),
                   SizedBox(height: 4.h),
                   GlobalText(
-                    text: "Mulai tanggal ${nextScheduleDate!.day} ${_monthName(nextScheduleDate!.month)} ${nextScheduleDate!.year}",
+                    text:
+                        "Mulai tanggal ${nextScheduleDate!.day} ${_monthName(nextScheduleDate!.month)} ${nextScheduleDate!.year}",
                     variant: TextVariant.smallRegular,
                     color: AppColors.gray600,
                   ),
@@ -1052,7 +1082,7 @@ Widget _buildScheduleSummaryCard(WasteSchedule schedule, String title, String da
         ),
       );
     }
-    
+
     // Jika tidak ada jadwal terdekat, tampilkan placeholder
     return Center(
       child: GlobalText(

@@ -17,7 +17,7 @@ class ProfileCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: const Color(0xFFCACACA), width: 0.6),
+        border: Border.all(color: const Color(0xFFCACACA), width: 1),
         boxShadow: GlobalShadow.getShadow(ShadowVariant.medium),
       ),
       child: Column(
