@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:wanigo_nasabah/widgets/global_divider.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/data/models/profile_model.dart';
 
@@ -11,7 +13,6 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 353.w,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -25,11 +26,7 @@ class ProfileCard extends StatelessWidget {
         children: [
           _buildHeader(context),
           SizedBox(height: 7.h),
-          const Divider(
-            height: 1,
-            thickness: 0.6,
-            color: Color(0xFFCACACA),
-          ),
+          GlobalDivider(),
           SizedBox(height: 7.h),
           _buildNasabahInfo(),
           SizedBox(height: 7.h),
@@ -58,7 +55,9 @@ class ProfileCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GlobalText(
-                text: 'Nasabah ${profile.bankSampahName}',
+                text: profile.bankSampahName.isNotEmpty
+                    ? 'Nasabah ${profile.bankSampahName}'
+                    : 'Daftar Sebagai Nasabah Bank Sampah',
                 variant: TextVariant.smallSemiBold,
                 color: Colors.black,
               ),
@@ -74,19 +73,17 @@ class ProfileCard extends StatelessWidget {
           ),
         ),
         Container(
-          width: 24.r,
-          height: 24.r,
+          width: 32.r,
+          height: 32.r,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              color: AppColors.blue600,
-              width: 1,
-            ),
           ),
-          child: Icon(
-            Icons.keyboard_arrow_down,
-            color: AppColors.blue600,
-            size: 16.r,
+          child: Center(
+            child: SvgPicture.asset(
+              'assets/icons/arrow_down_icon.svg',
+              width: 32.r,
+              height: 32.r,
+            ),
           ),
         ),
       ],
@@ -162,32 +159,23 @@ class ProfileCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF073C9D), width: 0.6),
+        border: Border.all(color: AppColors.blue700, width: 0.6),
         borderRadius: BorderRadius.circular(999),
         color: const Color(0xFFE0EBFF),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-            'assets/images/point_icon.png',
-            width: 14.r,
-            height: 14.r,
-            color: AppColors.blue600,
-            errorBuilder: (context, error, stackTrace) {
-              debugPrint('Error loading point_icon.png: $error');
-              return Icon(
-                Icons.star,
-                size: 14.r,
-                color: AppColors.blue600,
-              );
-            },
+          SvgPicture.asset(
+            'assets/icons/point_icon.svg',
+            width: 22.r,
+            height: 22.r,
           ),
           SizedBox(width: 4.w),
           GlobalText(
             text: '${profile.points} POIN',
-            variant: TextVariant.xSmallSemiBold,
-            color: AppColors.blue600,
+            variant: TextVariant.smallBold,
+            color: AppColors.blue800,
           ),
         ],
       ),
