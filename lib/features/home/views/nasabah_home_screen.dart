@@ -30,7 +30,7 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: Colors.white,
       appBar: _buildAppBar(),
       body: Stack(
         children: [
@@ -189,13 +189,10 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
                 ),
               ),
               SizedBox(height: 4.h),
-              Text(
-                'Penjualan',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: isActive ? AppColors.blue600 : AppColors.gray900,
-                  fontWeight: FontWeight.w500,
-                ),
+              GlobalText(
+                text: 'Penjualan',
+                variant: TextVariant.xSmallMedium,
+                color: isActive ? AppColors.blue600 : AppColors.gray900,
               ),
             ],
           ),

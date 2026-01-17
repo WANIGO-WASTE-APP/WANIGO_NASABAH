@@ -120,13 +120,10 @@ class BottomNavBar extends StatelessWidget {
               },
             ),
             SizedBox(height: 4.h),
-            Text(
-              item['label'],
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
+            GlobalText(
+              text: item['label'],
+              variant: TextVariant.xSmallMedium,
+              color: color,
             ),
           ],
         ),
