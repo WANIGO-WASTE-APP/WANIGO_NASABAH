@@ -151,8 +151,7 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
                           ),
                         ),
 
-                        // Tambah padding ekstra untuk memastikan bg_main_bottom terlihat
-                        SizedBox(height: 120.h),
+                        SizedBox(height: 20.h),
                       ],
                     ),
                   ),
