@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:wanigo_nasabah/features/waste_schedule/views/waste_schedule_screen.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/data/models/calendar_schedule_model.dart';
 
@@ -47,7 +50,9 @@ class CalendarProfile extends StatelessWidget {
                 child: GlobalButton(
                   text: 'Atur jadwal sekarang',
                   variant: ButtonVariant.small,
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => const WasteScheduleScreen());
+                  },
                 ),
               ),
             ],
