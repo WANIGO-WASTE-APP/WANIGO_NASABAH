@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wanigo_nasabah/core/network/http_client.dart';
 import 'package:wanigo_nasabah/data/models/auth_models.dart';
 import 'package:wanigo_nasabah/core/network/api_service.dart';
+import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
 import 'package:wanigo_nasabah/data/models/member_bank_sampah_response.dart';
 
 // ... other imports ...
@@ -47,6 +48,37 @@ class AuthRepository {
         print("DEBUG - Get Member Bank Sampah Repository Exception: $e");
       }
       return null;
+    }
+  }
+
+  /// Get Available Bank Sampah
+  Future<List<WasteBankModel>> getAvailableBankSampah() async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Available Bank Sampah Request (using member endpoint)");
+      }
+
+      final response = await _apiService.getMemberBankSampah();
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Available Bank Sampah Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        final data = response['data'];
+        final MemberBankSampahResponse memberResponse =
+            MemberBankSampahResponse.fromJson(data);
+        return memberResponse.bankSampah;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Available Bank Sampah Repository Exception: $e");
+      }
+      return [];
     }
   }
 

@@ -1,6 +1,8 @@
+import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
+
 class MemberBankSampahResponse {
   final bool isRegistered;
-  final List<BankSampahModel> bankSampah;
+  final List<WasteBankModel> bankSampah;
 
   MemberBankSampahResponse({
     required this.isRegistered,
@@ -11,29 +13,9 @@ class MemberBankSampahResponse {
     return MemberBankSampahResponse(
       isRegistered: json['is_registered'] ?? false,
       bankSampah: (json['bank_sampah'] as List<dynamic>?)
-              ?.map((e) => BankSampahModel.fromJson(e))
+              ?.map((e) => WasteBankModel.fromJson(e))
               .toList() ??
           [],
-    );
-  }
-}
-
-class BankSampahModel {
-  final int id;
-  final String namaBankSampah;
-  final String? alamatBankSampah;
-
-  BankSampahModel({
-    required this.id,
-    required this.namaBankSampah,
-    this.alamatBankSampah,
-  });
-
-  factory BankSampahModel.fromJson(Map<String, dynamic> json) {
-    return BankSampahModel(
-      id: json['id'],
-      namaBankSampah: json['nama_bank_sampah'] ?? '',
-      alamatBankSampah: json['alamat_bank_sampah'],
     );
   }
 }
