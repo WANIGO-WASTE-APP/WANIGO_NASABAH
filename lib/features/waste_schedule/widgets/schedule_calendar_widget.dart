@@ -73,7 +73,7 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
 
           // Calendar content
           Padding(
-            padding: EdgeInsets.all(16.r),
+            padding: EdgeInsets.symmetric(vertical: 8.r, horizontal: 16.r),
             child: Obx(() {
               final currentMonth = controller.currentMonth.value;
               final days = _getDaysInMonth(currentMonth);
@@ -163,7 +163,7 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 7,
-                      childAspectRatio: 1,
+                      childAspectRatio: 1.3,
                     ),
                     itemCount: days.length,
                     itemBuilder: (context, index) {
