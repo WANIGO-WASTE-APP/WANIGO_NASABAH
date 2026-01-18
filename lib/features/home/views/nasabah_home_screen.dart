@@ -215,28 +215,23 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
     final features = [
       {
         'label': 'Edukasi',
-        'image': 'assets/images/edukasi.png',
-        'icon': Icons.menu_book
+        'svg': 'assets/icons/edukasi_icon.svg',
       },
       {
         'label': 'Laporan',
-        'image': 'assets/images/laporan.png',
-        'icon': Icons.receipt_long
+        'svg': 'assets/icons/laporan_icon.svg',
       },
       {
         'label': 'Juara',
-        'image': 'assets/images/juara.png',
-        'icon': Icons.emoji_events
+        'svg': 'assets/icons/juara_icon.svg',
       },
       {
         'label': 'Misi',
-        'image': 'assets/images/misi.png',
-        'icon': Icons.track_changes
+        'svg': 'assets/icons/misi_icon.svg',
       },
       {
         'label': 'Lainnya',
-        'image': 'assets/images/lainnya.png',
-        'icon': Icons.grid_view
+        'svg': 'assets/icons/lainnya_icon.svg',
       },
     ];
 
@@ -245,25 +240,16 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
       children: features.map((f) {
         return Column(
           children: [
-            // Icon gambar diperbesar tanpa background bulat
-            Image.asset(
-              f['image'] as String,
-              width: 48
-                  .r, // Ukuran diperbesar sesuai dengan ukuran container sebelumnya
-              height: 48.r,
-              errorBuilder: (context, error, stackTrace) {
-                debugPrint('Error loading ${f['image']}: $error');
-                return Icon(
-                  f['icon'] as IconData,
-                  color: AppColors.blue600,
-                  size: 48.r, // Ukuran icon fallback juga diperbesar
-                );
-              },
+            SvgPicture.asset(
+              f['svg'] as String,
+              width: 56.r,
+              height: 56.r,
+              fit: BoxFit.contain,
             ),
             SizedBox(height: 4.h),
             GlobalText(
               text: f['label'] as String,
-              variant: TextVariant.xSmallMedium,
+              variant: TextVariant.smallMedium,
             ),
           ],
         );
