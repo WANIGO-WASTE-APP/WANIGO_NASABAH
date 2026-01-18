@@ -51,14 +51,13 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Bagian atas dengan padding horizontal yang konsisten 20px
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 20.r, vertical: 8.r),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Profile Card - Full width
+                      // Profile Card
                       Obx(() => ProfileCard(
                             profile: ProfileModel(
                               userName: controller.userName,
@@ -72,7 +71,7 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
 
                       SizedBox(height: 14.h),
 
-                      // Tabungan Card - Full width
+                      // Tabungan Card
                       TabunganCard(
                         tabungan: TabunganModel(
                           saldo: 24000.00,
@@ -80,80 +79,100 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 18.h),
-
-                      // Calendar Card - Full width
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: const Color(0xFFCACACA)),
-                        ),
-                        padding: EdgeInsets.all(12.r),
-                        child: CalendarProfile(
-                          schedule: CalendarScheduleModel(
-                            day: 18,
-                            month: 'Sep',
-                            weekday: 'Selasa',
-                            message:
-                                'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 32.h),
+                      SizedBox(height: 38.h),
                     ],
                   ),
                 ),
 
-                // Section with white background - Features and Setoran
+                // Features and Setoran
                 Container(
                   width: double.infinity, // Full width
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.all(20.r), // Konsisten 20px padding
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Features Section
-                        GlobalText(
-                          text: 'Fitur Aplikasi WANIGO!',
-                          variant: TextVariant.h5,
-                          color: AppColors.gray600,
-                        ),
-
-                        SizedBox(height: 16.h),
-
-                        _buildFeatureIcons(),
-
-                        SizedBox(height: 32.h),
-
-                        // Setoran Section
-                        GlobalText(
-                          text: 'Setoran Sampah Terkini',
-                          variant: TextVariant.h5,
-                        ),
-
-                        SizedBox(height: 16.h),
-
-                        SetoranSampahCard(
-                          setoran: SetoranSampahModel(
-                            title: 'Buat Rencana Setoran',
-                            description:
-                                'Mulai ajukan setoran sampah Anda & berkontribusi menjaga lingkungan',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Calendar Card
+                      Transform.translate(
+                        offset: Offset(0, -36.h),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.r),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border:
+                                  Border.all(color: const Color(0xFFCACACA)),
+                              boxShadow:
+                                  GlobalShadow.getShadow(ShadowVariant.medium),
+                            ),
+                            padding: EdgeInsets.all(12.r),
+                            child: CalendarProfile(
+                              schedule: CalendarScheduleModel(
+                                day: 18,
+                                month: 'Sep',
+                                weekday: 'Selasa',
+                                message:
+                                    'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
+                              ),
+                            ),
                           ),
                         ),
+                      ),
 
-                        SizedBox(height: 20.h),
-                      ],
-                    ),
+                      Transform.translate(
+                        offset: Offset(0, -20.h),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.r,
+                            right: 20.r,
+                            top: 0,
+                            bottom: 15.r,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Features Section
+                              GlobalText(
+                                text: 'Fitur Aplikasi WANIGO!',
+                                variant: TextVariant.h5,
+                                color: AppColors.gray600,
+                              ),
+
+                              SizedBox(height: 16.h),
+
+                              _buildFeatureIcons(),
+
+                              SizedBox(height: 32.h),
+
+                              // Setoran Section
+                              GlobalText(
+                                text: 'Setoran Sampah Terkini',
+                                variant: TextVariant.h5,
+                              ),
+
+                              SizedBox(height: 16.h),
+
+                              SetoranSampahCard(
+                                setoran: SetoranSampahModel(
+                                  title: 'Buat Rencana Setoran',
+                                  description:
+                                      'Mulai ajukan setoran sampah Anda & berkontribusi menjaga lingkungan',
+                                ),
+                              ),
+
+                              SizedBox(height: 20.h),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
