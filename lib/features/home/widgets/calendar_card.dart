@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/data/models/calendar_schedule_model.dart';
 
@@ -17,6 +18,7 @@ class CalendarProfile extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildJadwalPemilahan(),
               SizedBox(height: 8.h),
@@ -51,7 +53,7 @@ class CalendarProfile extends StatelessWidget {
               ),
               SizedBox(height: 2.h),
               GlobalText(
-                text: '30 Maret 2025 (12 hari lagi)',
+                text: DateFormat('d MMMM yyyy', 'id').format(DateTime.now()),
                 variant: TextVariant.xSmallRegular,
                 color: AppColors.gray600,
               ),
@@ -85,7 +87,7 @@ class CalendarProfile extends StatelessWidget {
               ),
               SizedBox(height: 2.h),
               GlobalText(
-                text: '30 Maret 2025 (12 hari lagi)',
+                text: DateFormat('d MMMM yyyy', 'id').format(DateTime.now()),
                 variant: TextVariant.xSmallRegular,
                 color: AppColors.gray600,
               ),

@@ -7,7 +7,12 @@ import 'package:wanigo_nasabah/routes/app_pages.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:wanigo_nasabah/core/config/alice_config.dart';
 
-void main() {
+import 'package:intl/date_symbol_data_local.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id', null);
+
   if (kDebugMode) {
     print("DEBUG - Starting Wanigo Nasabah App");
   }

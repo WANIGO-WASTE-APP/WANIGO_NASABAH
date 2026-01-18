@@ -114,10 +114,7 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
                             ),
                             padding: EdgeInsets.all(12.r),
                             child: CalendarProfile(
-                              schedule: CalendarScheduleModel(
-                                day: 18,
-                                month: 'Sep',
-                                weekday: 'Selasa',
+                              schedule: CalendarScheduleModel.today(
                                 message:
                                     'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
                               ),
