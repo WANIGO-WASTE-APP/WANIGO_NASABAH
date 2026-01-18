@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
+import 'package:wanigo_ui/wanigo_ui.dart' hide GlobalAppBar;
 
-class ArtikelDetailScreen extends StatefulWidget {
+class EducationDetailScreen extends StatefulWidget {
   final int artikelId;
   final String title;
   final String thumbnail;
-  
-  const ArtikelDetailScreen({
+
+  const EducationDetailScreen({
     Key? key,
     required this.artikelId,
     required this.title,
@@ -13,33 +15,34 @@ class ArtikelDetailScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ArtikelDetailScreen> createState() => _ArtikelDetailScreenState();
+  State<EducationDetailScreen> createState() => _EducationDetailScreenState();
 }
 
-class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
+class _EducationDetailScreenState extends State<EducationDetailScreen> {
   bool _bookmarked = false;
   double _readProgress = 0.0;
   bool _isLoading = true;
   bool _showGallery = false;
   ScrollController _scrollController = ScrollController();
-  
+
   // Dummy data untuk contoh
   late Map<String, dynamic> _artikelData;
   late List<Map<String, dynamic>> _galleryImages;
-  
+
   @override
   void initState() {
     super.initState();
     _loadArtikelData();
-    
+
     // Mendeteksi scroll untuk memperbarui progress membaca
     _scrollController.addListener(() {
       if (_scrollController.hasClients) {
-        double progress = _scrollController.offset / (_scrollController.position.maxScrollExtent);
+        double progress = _scrollController.offset /
+            (_scrollController.position.maxScrollExtent);
         setState(() {
           _readProgress = progress.clamp(0.0, 1.0);
         });
-        
+
         // Update progress ke API jika sudah di posisi tertentu
         if (progress > 0.9 && _readProgress < 1.0) {
           _updateArtikelProgress(1.0, true);
@@ -49,23 +52,24 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
       }
     });
   }
-  
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-  
+
   // Simulasi loading data artikel dari API
   Future<void> _loadArtikelData() async {
     // Simulasi network request
     await Future.delayed(const Duration(seconds: 1));
-    
+
     setState(() {
       _artikelData = {
         "id": widget.artikelId,
         "judul_konten": widget.title,
-        "deskripsi": "Artikel ini menjelaskan tentang jenis-jenis sampah dan bagaimana cara pengelolaannya yang benar untuk mendukung ekonomi sirkular.",
+        "deskripsi":
+            "Artikel ini menjelaskan tentang jenis-jenis sampah dan bagaimana cara pengelolaannya yang benar untuk mendukung ekonomi sirkular.",
         "content": """<h2>Mengenal Jenis-jenis Sampah</h2>
 <p>Sampah dapat dikategorikan menjadi beberapa jenis berdasarkan sumbernya, sifatnya, dan cara pengelolaannya.</p>
 <h3>1. Sampah Organik</h3>
@@ -82,7 +86,7 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
         "progress": 0.0,
         "is_completed": false,
       };
-      
+
       _galleryImages = [
         {
           "id": 1,
@@ -92,32 +96,43 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
         },
         {
           "id": 2,
-          "image_url": "https://example.com/images/gallery/sampah-anorganik.jpg",
+          "image_url":
+              "https://example.com/images/gallery/sampah-anorganik.jpg",
           "caption": "Berbagai jenis sampah anorganik yang bisa didaur ulang",
           "urutan": 2
         },
       ];
-      
+
       _isLoading = false;
     });
   }
-  
+
   // Simulasi update progress membaca artikel ke API
   Future<void> _updateArtikelProgress(double progress, bool completed) async {
     // Simulasi request API update progress
     print('Updating artikel progress: $progress, completed: $completed');
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _isLoading 
-          ? _buildLoadingScreen() 
-          : _buildArtikelScreen(),
+      appBar: GlobalAppBar(
+        enableShadow: true,
+        showBackButton: true,
+        title: const Text(
+          "Detail Edukasi", // Adding title back because typically Detail screens have titles, unlike Home screens.
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: _isLoading ? _buildLoadingScreen() : _buildArtikelScreen(),
     );
   }
-  
+
   Widget _buildLoadingScreen() {
     return const Center(
       child: Column(
@@ -139,7 +154,7 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
       ),
     );
   }
-  
+
   Widget _buildArtikelScreen() {
     return Stack(
       children: [
@@ -147,21 +162,15 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
           controller: _scrollController,
           slivers: [
             // App Bar dengan gambar thumbnail
-            SliverAppBar(
-              expandedHeight: 200,
-              pinned: true,
-              backgroundColor: Colors.blue[700],
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    // Thumbnail image
-                    Image.network(
-                      _artikelData['thumbnail_url'] ?? 'https://via.placeholder.com/400',
+            // Thumbnail image section (moved from SliverAppBar)
+            SliverToBoxAdapter(
+              child: Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Image.network(
+                      _artikelData['thumbnail_url'] ??
+                          'https://via.placeholder.com/400',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -174,60 +183,13 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                         );
                       },
                     ),
-                    // Gradient overlay untuk keterbacaan judul
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.7),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                title: Padding(
-                  padding: const EdgeInsets.only(right: 48),
-                  child: Text(
-                    _artikelData['judul_konten'],
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                titlePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                collapseMode: CollapseMode.parallax,
+                  // Title overlay on image if needed, or remove if title is in AppBar
+                  // Keeping it clean as title is in AppBar now
+                ],
               ),
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    _bookmarked ? Icons.bookmark : Icons.bookmark_border,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _bookmarked = !_bookmarked;
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.photo_library, color: Colors.white),
-                  onPressed: () {
-                    setState(() {
-                      _showGallery = true;
-                    });
-                  },
-                ),
-              ],
             ),
-            
+
             // Content
             SliverToBoxAdapter(
               child: Padding(
@@ -238,7 +200,8 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                     // Modul Info
                     Row(
                       children: [
-                        const Icon(Icons.menu_book, size: 16, color: Colors.blue),
+                        const Icon(Icons.menu_book,
+                            size: 16, color: Colors.blue),
                         const SizedBox(width: 4),
                         Text(
                           "Modul: ${_artikelData['judul_modul']}",
@@ -251,11 +214,12 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    
+
                     // Time and Points
                     Row(
                       children: [
-                        const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                        const Icon(Icons.access_time,
+                            size: 16, color: Colors.grey),
                         const SizedBox(width: 4),
                         Text(
                           "${(_artikelData['durasi'] / 60).floor()} menit baca",
@@ -277,7 +241,7 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Deskripsi
                     Text(
                       _artikelData['deskripsi'],
@@ -287,10 +251,10 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Content HTML
                     _buildHtmlContent(_artikelData['content']),
-                    
+
                     // Related Content Section
                     const SizedBox(height: 32),
                     const Text(
@@ -302,10 +266,10 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Related content cards
                     _buildRelatedContentList(),
-                    
+
                     // Bottom space
                     const SizedBox(height: 80),
                   ],
@@ -314,7 +278,7 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
             ),
           ],
         ),
-        
+
         // Progress indicator at bottom
         Positioned(
           bottom: 0,
@@ -362,7 +326,8 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                   child: LinearProgressIndicator(
                     value: _readProgress,
                     backgroundColor: Colors.grey[200],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                     minHeight: 8,
                   ),
                 ),
@@ -370,24 +335,23 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
             ),
           ),
         ),
-        
+
         // Gallery overlay
-        if (_showGallery)
-          _buildGalleryOverlay(),
+        if (_showGallery) _buildGalleryOverlay(),
       ],
     );
   }
-  
+
   Widget _buildHtmlContent(String htmlContent) {
     // Simplified HTML parser for demo
     // In real app, use flutter_html or any HTML rendering package
-    
+
     List<Widget> contentWidgets = [];
-    
+
     // Parse H2 tags
     final h2Regex = RegExp(r'<h2>(.*?)<\/h2>');
     final h2Matches = h2Regex.allMatches(htmlContent);
-    
+
     for (var match in h2Matches) {
       String h2Text = match.group(1) ?? '';
       contentWidgets.add(
@@ -404,11 +368,11 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
         ),
       );
     }
-    
+
     // Parse H3 tags
     final h3Regex = RegExp(r'<h3>(.*?)<\/h3>');
     final h3Matches = h3Regex.allMatches(htmlContent);
-    
+
     for (var match in h3Matches) {
       String h3Text = match.group(1) ?? '';
       contentWidgets.add(
@@ -425,11 +389,11 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
         ),
       );
     }
-    
+
     // Parse paragraphs
     final pRegex = RegExp(r'<p>(.*?)<\/p>');
     final pMatches = pRegex.allMatches(htmlContent);
-    
+
     for (var match in pMatches) {
       String pText = match.group(1) ?? '';
       contentWidgets.add(
@@ -446,13 +410,13 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
         ),
       );
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: contentWidgets,
     );
   }
-  
+
   Widget _buildRelatedContentList() {
     List<Map<String, dynamic>> relatedContent = [
       {
@@ -472,11 +436,11 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
         "poin": 15
       },
     ];
-    
+
     return Column(
       children: relatedContent.map((content) {
         bool isVideo = content["tipe_konten"] == "video";
-        
+
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
@@ -502,9 +466,9 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                 } else {
                   // Navigate to artikel screen
                   Navigator.push(
-                    context, 
+                    context,
                     MaterialPageRoute(
-                      builder: (context) => ArtikelDetailScreen(
+                      builder: (context) => EducationDetailScreen(
                         artikelId: content["id"],
                         title: content["judul_konten"],
                         thumbnail: content["thumbnail"],
@@ -557,7 +521,7 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Content info
                     Expanded(
                       child: Column(
@@ -626,7 +590,7 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                         ],
                       ),
                     ),
-                    
+
                     const Icon(
                       Icons.chevron_right,
                       color: Colors.grey,
@@ -640,7 +604,7 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
       }).toList(),
     );
   }
-  
+
   Widget _buildGalleryOverlay() {
     return GestureDetector(
       onTap: () {
@@ -682,7 +646,8 @@ class _ArtikelDetailScreenState extends State<ArtikelDetailScreen> {
                 itemCount: _galleryImages.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

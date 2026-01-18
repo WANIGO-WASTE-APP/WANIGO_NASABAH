@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:wanigo_nasabah/features/edukasi/views/module_video.dart';
-import 'package:wanigo_nasabah/features/edukasi/views/module_artikel.dart';
+import 'package:wanigo_nasabah/features/education/views/module_video.dart';
+import 'package:wanigo_nasabah/features/education/views/education_detail_screen.dart';
 
 class ModuleDetailScreen extends StatefulWidget {
   final String title;
-  
+
   const ModuleDetailScreen({
-    Key? key, 
+    Key? key,
     required this.title,
   }) : super(key: key);
 
@@ -14,14 +14,15 @@ class ModuleDetailScreen extends StatefulWidget {
   State<ModuleDetailScreen> createState() => _ModuleDetailScreenState();
 }
 
-class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTickerProviderStateMixin {
+class _ModuleDetailScreenState extends State<ModuleDetailScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = true;
-  
+
   // Dummy data untuk modul
   late Map<String, dynamic> _moduleData;
   late List<Map<String, dynamic>> _moduleContents;
-  
+
   @override
   void initState() {
     super.initState();
@@ -31,33 +32,35 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
         setState(() {});
       }
     });
-  
+
     _loadModuleData();
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-  
+
   // Simulasi loading data modul
   Future<void> _loadModuleData() async {
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     setState(() {
       _moduleData = {
         "id": 1,
         "judul_modul": widget.title,
-        "deskripsi": "Modul ini memperkenalkan konsep dasar pengelolaan sampah untuk lingkungan yang berkelanjutan.",
+        "deskripsi":
+            "Modul ini memperkenalkan konsep dasar pengelolaan sampah untuk lingkungan yang berkelanjutan.",
         "objektif": "Memahami jenis-jenis sampah dan cara pengelolaannya.",
-        "benefit": "Kemampuan untuk memilah sampah dengan benar dan berkontribusi pada lingkungan.",
+        "benefit":
+            "Kemampuan untuk memilah sampah dengan benar dan berkontribusi pada lingkungan.",
         "durasi_total": 120, // dalam menit
         "konten_total": 5,
         "poin": 100,
         "progress": 20.0
       };
-      
+
       _moduleContents = [
         {
           "id": 1,
@@ -101,11 +104,11 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
           "selesai": false
         }
       ];
-      
+
       _isLoading = false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +127,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
-                  'assets/WANIGO_logo.png',
+                  'assets/images/WANIGO_logo.png',
                   width: 24,
                   height: 24,
                   color: const Color(0xFF1E88E5),
@@ -149,10 +152,10 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
           ),
         ),
       ),
-      body: _isLoading 
+      body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
-            ) 
+            )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -172,13 +175,17 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Icon(Icons.description, size: 16, color: Colors.blue[600]),
+                          Icon(Icons.description,
+                              size: 16, color: Colors.blue[600]),
                           const SizedBox(width: 4),
-                          Text('${_moduleData["konten_total"]} konten', style: const TextStyle(fontSize: 14)),
+                          Text('${_moduleData["konten_total"]} konten',
+                              style: const TextStyle(fontSize: 14)),
                           const SizedBox(width: 16),
-                          Icon(Icons.access_time, size: 16, color: Colors.blue[600]),
+                          Icon(Icons.access_time,
+                              size: 16, color: Colors.blue[600]),
                           const SizedBox(width: 4),
-                          Text('${_moduleData["durasi_total"]} menit', style: const TextStyle(fontSize: 14)),
+                          Text('${_moduleData["durasi_total"]} menit',
+                              style: const TextStyle(fontSize: 14)),
                         ],
                       ),
                       const SizedBox(height: 12),
@@ -194,7 +201,8 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                       LinearProgressIndicator(
                         value: _moduleData["progress"] / 100,
                         backgroundColor: Colors.grey[200],
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
                         minHeight: 8,
                       ),
                       const SizedBox(height: 4),
@@ -212,7 +220,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                     ],
                   ),
                 ),
-                
+
                 // Checkerboard image (placeholder)
                 Container(
                   width: double.infinity,
@@ -225,12 +233,14 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                       int row = index ~/ 8;
                       int col = index % 8;
                       return Container(
-                        color: (row + col) % 2 == 0 ? Colors.white : Colors.grey[200],
+                        color: (row + col) % 2 == 0
+                            ? Colors.white
+                            : Colors.grey[200],
                       );
                     }),
                   ),
                 ),
-                
+
                 // Tab bar
                 Container(
                   decoration: BoxDecoration(
@@ -251,7 +261,9 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
-                                  color: _tabController.index == 0 ? Colors.blue : Colors.transparent,
+                                  color: _tabController.index == 0
+                                      ? Colors.blue
+                                      : Colors.transparent,
                                   width: 3,
                                 ),
                               ),
@@ -260,7 +272,9 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                               'Deskripsi',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: _tabController.index == 0 ? Colors.blue : Colors.grey,
+                                color: _tabController.index == 0
+                                    ? Colors.blue
+                                    : Colors.grey,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -278,7 +292,9 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
-                                  color: _tabController.index == 1 ? Colors.blue : Colors.transparent,
+                                  color: _tabController.index == 1
+                                      ? Colors.blue
+                                      : Colors.transparent,
                                   width: 3,
                                 ),
                               ),
@@ -287,7 +303,9 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                               'Konten',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: _tabController.index == 1 ? Colors.blue : Colors.grey,
+                                color: _tabController.index == 1
+                                    ? Colors.blue
+                                    : Colors.grey,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -297,7 +315,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                     ],
                   ),
                 ),
-                
+
                 // Tab content
                 Expanded(
                   child: TabBarView(
@@ -325,7 +343,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                               ),
                             ),
                             const SizedBox(height: 24),
-                            
+
                             const Text(
                               'Objektif Modul',
                               style: TextStyle(
@@ -342,7 +360,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                               ),
                             ),
                             const SizedBox(height: 24),
-                            
+
                             const Text(
                               'Benefit Modul',
                               style: TextStyle(
@@ -359,17 +377,21 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                               ),
                             ),
                             const SizedBox(height: 16),
-                            
+
                             // List benefits with check marks
-                            _buildBenefitItem("Pemahaman tentang jenis-jenis sampah"),
-                            _buildBenefitItem("Kemampuan untuk memilah sampah dengan tepat"),
+                            _buildBenefitItem(
+                                "Pemahaman tentang jenis-jenis sampah"),
+                            _buildBenefitItem(
+                                "Kemampuan untuk memilah sampah dengan tepat"),
                             _buildBenefitItem("Pengetahuan tentang daur ulang"),
-                            _buildBenefitItem("Kontribusi pada kelestarian lingkungan"),
-                            _buildBenefitItem("Meningkatkan kesadaran komunitas"),
+                            _buildBenefitItem(
+                                "Kontribusi pada kelestarian lingkungan"),
+                            _buildBenefitItem(
+                                "Meningkatkan kesadaran komunitas"),
                           ],
                         ),
                       ),
-                      
+
                       // Content tab
                       ListView.builder(
                         itemCount: _moduleContents.length,
@@ -377,20 +399,25 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                           final content = _moduleContents[index];
                           final bool isVideo = content["tipe"] == "video";
                           final bool isCompleted = content["selesai"] == true;
-                          
+
                           return ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             leading: Container(
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: isCompleted ? Colors.green[600] : Colors.blue[600],
+                                color: isCompleted
+                                    ? Colors.green[600]
+                                    : Colors.blue[600],
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                isCompleted 
+                                isCompleted
                                     ? Icons.check
-                                    : (isVideo ? Icons.play_arrow : Icons.article),
+                                    : (isVideo
+                                        ? Icons.play_arrow
+                                        : Icons.article),
                                 color: Colors.white,
                                 size: 24,
                               ),
@@ -424,10 +451,11 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ArtikelDetailScreen(
+                                    builder: (context) => EducationDetailScreen(
                                       artikelId: content["id"],
                                       title: content["judul"],
-                                      thumbnail: "https://example.com/thumbnail.jpg", // placeholder
+                                      thumbnail:
+                                          "https://example.com/thumbnail.jpg", // placeholder
                                     ),
                                   ),
                                 );
@@ -443,7 +471,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> with SingleTick
             ),
     );
   }
-  
+
   Widget _buildBenefitItem(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),

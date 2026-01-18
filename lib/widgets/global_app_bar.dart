@@ -61,10 +61,10 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: title ?? _buildAppBarLogo(),
       leading: showBackButton
           ? IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 24,
+              icon: SvgPicture.asset(
+                'assets/icons/arrow_left_icon.svg',
+                width: 24,
+                height: 24,
               ),
               onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
             )

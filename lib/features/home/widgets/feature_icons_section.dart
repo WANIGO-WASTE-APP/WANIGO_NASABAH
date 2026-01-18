@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
+import 'package:get/get.dart';
+import 'package:wanigo_nasabah/routes/app_routes.dart';
 
 class FeatureIconsSection extends StatelessWidget {
   const FeatureIconsSection({super.key});
@@ -34,20 +36,27 @@ class FeatureIconsSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: features.map((f) {
-        return Column(
-          children: [
-            SvgPicture.asset(
-              f['svg'] as String,
-              width: 56.r,
-              height: 56.r,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(height: 4.h),
-            GlobalText(
-              text: f['label'] as String,
-              variant: TextVariant.smallMedium,
-            ),
-          ],
+        return GestureDetector(
+          onTap: () {
+            if (f['label'] == 'Edukasi') {
+              Get.toNamed(Routes.edukasi);
+            }
+          },
+          child: Column(
+            children: [
+              SvgPicture.asset(
+                f['svg'] as String,
+                width: 56.r,
+                height: 56.r,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: 4.h),
+              GlobalText(
+                text: f['label'] as String,
+                variant: TextVariant.smallMedium,
+              ),
+            ],
+          ),
         );
       }).toList(),
     );
