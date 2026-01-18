@@ -4,6 +4,11 @@ class WasteScheduleController extends GetxController {
   // Observables
   final Rx<DateTime> currentMonth = DateTime.now().obs;
   final RxList<DateTime> selectedDates = <DateTime>[].obs;
+  final RxBool isCalendarExpanded = true.obs;
+
+  void toggleCalendarExpanded() {
+    isCalendarExpanded.value = !isCalendarExpanded.value;
+  }
 
   // Actions
   void nextMonth() {

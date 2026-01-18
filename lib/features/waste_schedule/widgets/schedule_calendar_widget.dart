@@ -59,26 +59,29 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
       ),
       child: Stack(
         children: [
-          Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Opacity(
-                opacity: 0.3, // 0.0 – 1.0
-                child: SvgPicture.asset(
-                  'assets/images/plants_image.svg',
-                  fit: BoxFit.cover,
-                ),
-              )),
+          Obx(() => controller.isCalendarExpanded.value
+              ? Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Opacity(
+                    opacity: 0.3, // 0.0 – 1.0
+                    child: SvgPicture.asset(
+                      'assets/images/plants_image.svg',
+                      fit: BoxFit.cover,
+                    ),
+                  ))
+              : const SizedBox.shrink()),
 
           // Calendar content
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.r, horizontal: 16.r),
-            child: Obx(() {
-              final currentMonth = controller.currentMonth.value;
-              final days = _getDaysInMonth(currentMonth);
+          Obx(() {
+            final currentMonth = controller.currentMonth.value;
+            final days = _getDaysInMonth(currentMonth);
 
-              return Column(
+            return Padding(
+              padding: EdgeInsets.fromLTRB(16.r, 8.r, 16.r,
+                  controller.isCalendarExpanded.value ? 8.r : 0),
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Month/Year header with navigation
@@ -126,11 +129,13 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
                       ),
                       IconButton(
                         icon: SvgPicture.asset(
-                          'assets/icons/arrow_up_icon.svg',
+                          controller.isCalendarExpanded.value
+                              ? 'assets/icons/schedule_arrow_up_icon.svg'
+                              : 'assets/icons/schedule_arrow_down_icon.svg',
                           width: 16.r,
                           height: 16.r,
                         ),
-                        onPressed: () {},
+                        onPressed: controller.toggleCalendarExpanded,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -165,7 +170,8 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
                       crossAxisCount: 7,
                       childAspectRatio: 1.3,
                     ),
-                    itemCount: days.length,
+                    itemCount:
+                        controller.isCalendarExpanded.value ? days.length : 7,
                     itemBuilder: (context, index) {
                       final date = days[index];
                       final isCurrentMonth = date.month == currentMonth.month;
@@ -195,9 +201,9 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
                     },
                   ),
                 ],
-              );
-            }),
-          ),
+              ),
+            );
+          }),
         ],
       ),
     );
