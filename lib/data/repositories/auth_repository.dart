@@ -82,6 +82,35 @@ class AuthRepository {
     }
   }
 
+  /// Get Nasabah Bank Sampah Detail
+  Future<WasteBankModel?> getNasabahBankSampahDetail(int id) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail Request for ID: $id");
+      }
+
+      final response = await _apiService.getNasabahBankSampahDetail(id);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Nasabah Bank Sampah Detail Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        final data = response['data'];
+        return WasteBankModel.fromJson(data);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Nasabah Bank Sampah Detail Repository Exception: $e");
+      }
+      return null;
+    }
+  }
+
   // Key untuk penyimpanan lokal
   static const String _userKey = 'user_data';
   static const String _profileStatusKey = 'profile_status';

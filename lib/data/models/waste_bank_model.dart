@@ -14,6 +14,7 @@ class WasteBankModel {
   final String? memberCode;
   final String? joinDate;
   final String? membershipStatus;
+  final int? nasabahCount;
   // Fields not directly in API or need derivation
   final String? distance;
   final TimeOfDay? openTime;
@@ -35,6 +36,7 @@ class WasteBankModel {
     this.memberCode,
     this.joinDate,
     this.membershipStatus,
+    this.nasabahCount,
     this.distance,
     this.openTime,
     this.closeTime,
@@ -57,6 +59,7 @@ class WasteBankModel {
       memberCode: json['kode_nasabah'],
       joinDate: json['tanggal_bergabung'],
       membershipStatus: json['status_keanggotaan'],
+      nasabahCount: json['jumlah_nasabah'],
       distance: null,
       openTime: null,
       closeTime: null,

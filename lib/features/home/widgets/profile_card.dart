@@ -52,6 +52,7 @@ class ProfileCard extends StatelessWidget {
 
   Widget _buildNasabahInfo() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Column(
@@ -64,14 +65,16 @@ class ProfileCard extends StatelessWidget {
                 variant: TextVariant.smallSemiBold,
                 color: Colors.black,
               ),
-              SizedBox(height: 2.h),
-              GlobalText(
-                text: profile.address,
-                variant: TextVariant.xSmallMedium,
-                color: AppColors.gray600,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              if (profile.bankSampahName.isNotEmpty) ...[
+                SizedBox(height: 2.h),
+                GlobalText(
+                  text: profile.address,
+                  variant: TextVariant.xSmallMedium,
+                  color: AppColors.gray600,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
           ),
         ),

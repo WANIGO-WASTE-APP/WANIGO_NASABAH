@@ -7,6 +7,7 @@ import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 import 'package:wanigo_nasabah/widgets/global_bottom_action_button.dart';
 import 'package:wanigo_nasabah/widgets/global_header.dart';
 import 'package:wanigo_nasabah/widgets/global_empty_state.dart';
+import 'package:wanigo_nasabah/features/waste_bank/views/waste_bank_detail_screen.dart';
 
 class WasteBankScreen extends StatelessWidget {
   const WasteBankScreen({Key? key}) : super(key: key);
@@ -73,7 +74,13 @@ class WasteBankScreen extends StatelessWidget {
                     children: controller.wasteBankList
                         .map((wasteBank) => Padding(
                               padding: const EdgeInsets.only(bottom: 16.0),
-                              child: WasteBankCard(wasteBank: wasteBank),
+                              child: WasteBankCard(
+                                wasteBank: wasteBank,
+                                onTap: () {
+                                  Get.to(() => WasteBankDetailScreen(
+                                      wasteBank: wasteBank));
+                                },
+                              ),
                             ))
                         .toList(),
                   );

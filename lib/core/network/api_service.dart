@@ -564,4 +564,44 @@ class ApiService {
       };
     }
   }
+
+  // Get Nasabah Bank Sampah Detail API
+  Future<Map<String, dynamic>> getNasabahBankSampahDetail(int id) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail Request with ID: $id");
+      }
+
+      final response = await _httpClient
+          .get(
+        '$_baseUrl/api/nasabah/bank-sampah/$id',
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success': response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
 }
