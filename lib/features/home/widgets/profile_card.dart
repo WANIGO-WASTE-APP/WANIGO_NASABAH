@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:wanigo_nasabah/features/waste_bank/views/waste_bank_screen.dart';
 import 'package:wanigo_nasabah/widgets/global_divider.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/data/models/profile_model.dart';
@@ -79,10 +82,15 @@ class ProfileCard extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: SvgPicture.asset(
-              'assets/icons/arrow_down_icon.svg',
-              width: 32.r,
-              height: 32.r,
+            child: GestureDetector(
+              child: SvgPicture.asset(
+                'assets/icons/arrow_circle_right.svg',
+                width: 32.r,
+                height: 32.r,
+              ),
+              onTap: () {
+                Get.to(() => const WasteBankScreen());
+              },
             ),
           ),
         ),
