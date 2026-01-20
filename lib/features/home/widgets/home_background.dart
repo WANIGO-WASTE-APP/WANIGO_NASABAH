@@ -12,7 +12,7 @@ class HomeBackground extends StatelessWidget {
       right: 0,
       child: Container(
         width: double.infinity,
-        height: 513.h,
+        height: 450.h,
         color: const Color(0xFFDCE8FF),
       ),
     );

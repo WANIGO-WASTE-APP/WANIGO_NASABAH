@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 
 class WastePlan {
   final int id;
-  final int type;       // 1 = Pemilahan, 2 = Setoran
-  final int frequency;  // 1 = Harian, 2 = Mingguan, 3 = Bulanan
+  final int type; // 1 = Pemilahan, 2 = Setoran
+  final int frequency; // 1 = Harian, 2 = Mingguan, 3 = Bulanan
   final String? startingHours;
   final DateTime? startDate;
   final DateTime? planDate;
@@ -26,12 +26,10 @@ class WastePlan {
       type: json['type'],
       frequency: json['frequency'] ?? 1,
       startingHours: json['startingHours'],
-      startDate: json['startDate'] != null 
-          ? DateTime.parse(json['startDate']) 
-          : null,
-      planDate: json['planDate'] != null 
-          ? DateTime.parse(json['planDate']) 
-          : null,
+      startDate:
+          json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      planDate:
+          json['planDate'] != null ? DateTime.parse(json['planDate']) : null,
       createdAt: DateTime.parse(json['createdAt']),
     );
   }
