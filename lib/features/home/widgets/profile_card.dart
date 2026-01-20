@@ -157,7 +157,7 @@ class ProfileCard extends StatelessWidget {
 
   Widget _buildPointsBadge(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.blue700, width: 0.6),
         borderRadius: BorderRadius.circular(999),
