@@ -7,7 +7,12 @@ class WasteBankDetailController extends GetxController {
 
   final RxBool isLoading = true.obs;
   final Rxn<WasteBankModel> wasteBankDetail = Rxn<WasteBankModel>();
+  final RxInt selectedTabIndex = 0.obs;
   final RxString errorMessage = ''.obs;
+
+  void changeTab(int index) {
+    selectedTabIndex.value = index;
+  }
 
   Future<void> fetchWasteBankDetail(int id) async {
     try {

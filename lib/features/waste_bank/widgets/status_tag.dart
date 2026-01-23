@@ -22,7 +22,7 @@ class StatusTag extends StatelessWidget {
         child: GlobalText(
           text: isActive ? 'Buka' : 'Tutup',
           variant: TextVariant.xSmallMedium,
-          color: isActive ? AppColors.green600 : AppColors.red600,
+          color: isActive ? AppColors.green900 : AppColors.red600,
         ),
       ),
     );
