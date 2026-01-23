@@ -102,6 +102,15 @@ class WasteInfoSection extends StatelessWidget {
             variant: ButtonVariant.medium,
             onPressed: () {},
           ),
+          const SizedBox(height: 32),
+          const GlobalText(
+            text: 'Lokasi Bank Sampah',
+            variant: TextVariant.largeBold,
+            color: Colors.black,
+          ),
+          const SizedBox(height: 12),
+          const WasteBankMap(),
+          const SizedBox(height: 16),
         ],
       ),
     );

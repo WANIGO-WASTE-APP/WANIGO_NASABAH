@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 
@@ -29,6 +30,7 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
         _buildSubTabSelector(),
         const SizedBox(height: 16),
         _buildCatalogTable(),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -36,25 +38,27 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
   Widget _buildSubTabSelector() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Obx(() => Row(
-            children: [
-              Expanded(
-                child: _buildSubTabItem(
-                  title: 'Sampah Kering',
-                  isActive: subTabIndex.value == 0,
-                  onTap: () => subTabIndex.value = 0,
-                ),
+      child: Obx(
+        () => Row(
+          children: [
+            Expanded(
+              child: _buildSubTabItem(
+                title: 'Sampah Kering',
+                isActive: subTabIndex.value == 0,
+                onTap: () => subTabIndex.value = 0,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildSubTabItem(
-                  title: 'Sampah Basah',
-                  isActive: subTabIndex.value == 1,
-                  onTap: () => subTabIndex.value = 1,
-                ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildSubTabItem(
+                title: 'Sampah Basah',
+                isActive: subTabIndex.value == 1,
+                onTap: () => subTabIndex.value = 1,
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -87,9 +91,9 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
       child: Container(
         decoration: const BoxDecoration(
           border: Border(
-            left: BorderSide(color: Color(0xFFCACACA)),
-            right: BorderSide(color: Color(0xFFCACACA)),
-            bottom: BorderSide(color: Color(0xFFCACACA)),
+            left: BorderSide(color: Color(0xFFEFEFEF)),
+            right: BorderSide(color: Color(0xFFEFEFEF)),
+            bottom: BorderSide(color: Color(0xFFEFEFEF)),
           ),
         ),
         child: Column(
@@ -106,7 +110,7 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: const BoxDecoration(
-        color: Color(0xFFCACACA),
+        color: Color(0xFFEFEFEF),
       ),
       child: Row(
         children: [
@@ -120,7 +124,11 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
                   color: AppColors.gray600,
                 ),
                 const SizedBox(width: 4),
-                const Icon(Icons.swap_vert, size: 16, color: AppColors.gray700),
+                SvgPicture.asset(
+                  'assets/icons/arrow_down_arrow_up_icon.svg',
+                  width: 16,
+                  height: 16,
+                ),
               ],
             ),
           ),
@@ -137,7 +145,11 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
                   ),
                 ),
                 const SizedBox(width: 4),
-                const Icon(Icons.swap_vert, size: 16, color: AppColors.gray700),
+                SvgPicture.asset(
+                  'assets/icons/arrow_down_arrow_up_icon.svg',
+                  width: 16,
+                  height: 16,
+                ),
               ],
             ),
           ),
