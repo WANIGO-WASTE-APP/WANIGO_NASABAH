@@ -82,11 +82,23 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
   }
 
   Widget _buildCatalogTable() {
-    return Column(
-      children: [
-        _buildTableHeader(),
-        _buildTableBody(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            left: BorderSide(color: Color(0xFFCACACA)),
+            right: BorderSide(color: Color(0xFFCACACA)),
+            bottom: BorderSide(color: Color(0xFFCACACA)),
+          ),
+        ),
+        child: Column(
+          children: [
+            _buildTableHeader(),
+            _buildTableBody(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -94,7 +106,7 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: const BoxDecoration(
-        color: Color(0xFFF0F0F0),
+        color: Color(0xFFCACACA),
       ),
       child: Row(
         children: [
@@ -148,7 +160,7 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: const BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: AppColors.gray100),
+          bottom: BorderSide(color: Color(0xFFF2F2F2)),
         ),
       ),
       child: Row(
