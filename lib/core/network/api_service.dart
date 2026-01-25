@@ -547,7 +547,8 @@ class ApiService {
       }
 
       final Map<String, dynamic> standardizedResponse = {
-        'success': response['status'] == 'success',
+        'success':
+            response['success'] == true || response['status'] == 'success',
         'data': response['data'],
         'statusMessage': response['message'],
       };
@@ -556,6 +557,132 @@ class ApiService {
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - Get Member Bank Sampah API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Get All Bank Sampah API
+  Future<Map<String, dynamic>> getAllBankSampah() async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get All Bank Sampah Request");
+      }
+
+      final response = await _httpClient
+          .get(
+        '$_baseUrl/api/bank-sampah',
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Get All Bank Sampah API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get All Bank Sampah API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Register Member Bank Sampah API
+  Future<Map<String, dynamic>> registerMemberBankSampah(
+      int bankSampahId) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Register Member Bank Sampah Request for ID: $bankSampahId");
+      }
+
+      final response = await _httpClient
+          .post(
+        '$_baseUrl/api/nasabah/register-member',
+        {'bank_sampah_id': bankSampahId},
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Register Member Bank Sampah API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Register Member Bank Sampah API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Get Nasabah Bank Sampah Detail API
+  Future<Map<String, dynamic>> getNasabahBankSampahDetail(int id) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail Request with ID: $id");
+      }
+
+      final response = await _httpClient
+          .get(
+        '$_baseUrl/api/nasabah/bank-sampah/$id',
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail API Exception: $e");
       }
 
       return {

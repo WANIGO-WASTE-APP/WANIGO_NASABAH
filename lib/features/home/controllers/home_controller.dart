@@ -80,12 +80,10 @@ class HomeController extends GetxController {
             memberBankSampah != null &&
             memberBankSampah.bankSampah.isNotEmpty) {
           // Ambil alamat dari bank sampah pertama
-          address.value =
-              memberBankSampah.bankSampah.first.alamatBankSampah ?? '';
+          address.value = memberBankSampah.bankSampah.first.address;
 
           // Ambil nama bank sampah dari bank sampah pertama
-          bankSampahName.value =
-              memberBankSampah.bankSampah.first.namaBankSampah;
+          bankSampahName.value = memberBankSampah.bankSampah.first.name;
         }
       } catch (e) {
         if (kDebugMode) {

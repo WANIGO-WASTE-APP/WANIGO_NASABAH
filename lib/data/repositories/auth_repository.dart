@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wanigo_nasabah/core/network/http_client.dart';
 import 'package:wanigo_nasabah/data/models/auth_models.dart';
 import 'package:wanigo_nasabah/core/network/api_service.dart';
+import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
 import 'package:wanigo_nasabah/data/models/member_bank_sampah_response.dart';
 
 // ... other imports ...
@@ -47,6 +48,90 @@ class AuthRepository {
         print("DEBUG - Get Member Bank Sampah Repository Exception: $e");
       }
       return null;
+    }
+  }
+
+  /// Get Available Bank Sampah
+  Future<List<WasteBankModel>> getAvailableBankSampah() async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Available Bank Sampah Request (using /api/bank-sampah)");
+      }
+
+      final response = await _apiService.getAllBankSampah();
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Available Bank Sampah Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        final data = response['data'];
+        final MemberBankSampahResponse memberResponse =
+            MemberBankSampahResponse.fromJson(data);
+        return memberResponse.bankSampah;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Available Bank Sampah Repository Exception: $e");
+      }
+      return [];
+    }
+  }
+
+  /// Get Nasabah Bank Sampah Detail
+  Future<WasteBankModel?> getNasabahBankSampahDetail(int id) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Nasabah Bank Sampah Detail Request for ID: $id");
+      }
+
+      final response = await _apiService.getNasabahBankSampahDetail(id);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Nasabah Bank Sampah Detail Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        final data = response['data'];
+        return WasteBankModel.fromJson(data);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Nasabah Bank Sampah Detail Repository Exception: $e");
+      }
+      return null;
+    }
+  }
+
+  /// Register Member Bank Sampah
+  Future<bool> registerMemberBankSampah(int bankSampahId) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Register Member Bank Sampah Request for ID: $bankSampahId");
+      }
+
+      final response = await _apiService.registerMemberBankSampah(bankSampahId);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Register Member Bank Sampah Repository Response: $response");
+      }
+
+      return response['success'] == true;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Register Member Bank Sampah Repository Exception: $e");
+      }
+      return false;
     }
   }
 
