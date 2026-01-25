@@ -93,18 +93,25 @@ class WasteBankCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.blue200,
+                          color: wasteBank.isVerified
+                              ? AppColors.blue200
+                              : AppColors.red200,
                           borderRadius: BorderRadius.circular(6),
-                          border:
-                              Border.all(color: AppColors.blue600, width: 1),
+                          border: Border.all(
+                              color: wasteBank.isVerified
+                                  ? AppColors.blue600
+                                  : AppColors.red600,
+                              width: 1),
                         ),
                         child: Center(
                           child: GlobalText(
                             text: wasteBank.isVerified
                                 ? 'Sudah Terdaftar'
-                                : 'Belum Terdaftar',
+                                : 'Tidak Terdaftar',
                             variant: TextVariant.smallSemiBold,
-                            color: AppColors.blue600,
+                            color: wasteBank.isVerified
+                                ? AppColors.blue600
+                                : AppColors.red600,
                           ),
                         ),
                       ),

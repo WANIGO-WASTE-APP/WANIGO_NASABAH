@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
 import 'package:wanigo_nasabah/features/waste_bank/controllers/waste_bank_detail_controller.dart';
+import 'package:wanigo_nasabah/features/waste_bank/controllers/waste_bank_search_controller.dart';
 import 'package:wanigo_nasabah/features/waste_bank/widgets/widgets.dart';
 import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 import 'package:wanigo_nasabah/widgets/global_bottom_action_button.dart';
@@ -25,14 +26,23 @@ class _WasteBankDetailScreenState extends State<WasteBankDetailScreen> {
   @override
   void initState() {
     super.initState();
-    controller.fetchWasteBankDetail(widget.wasteBank.id);
+    controller.fetchWasteBankDetail(widget.wasteBank.id,
+        initialData: widget.wasteBank);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const GlobalAppBar(),
+      appBar: GlobalAppBar(
+        onBackPressed: () {
+          try {
+            final searchController = Get.find<WasteBankSearchController>();
+            searchController.fetchAvailableWasteBanks();
+          } catch (e) {}
+          Get.back();
+        },
+      ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -77,14 +87,13 @@ class _WasteBankDetailScreenState extends State<WasteBankDetailScreen> {
                         const SizedBox(width: 8),
                         DetailInfoBadge(
                           iconPath: 'assets/icons/tonne_icon.svg',
-                          text: '${wasteBank.nasabahCount ?? 0} nasabah',
+                          text: '${wasteBank.tonaseCount ?? 0} ton sampah',
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
               GlobalTabMenu(
                 tabs: const ['Informasi Umum', 'Katalog Sampah'],
                 initialIndex: controller.selectedTabIndex.value,
@@ -102,19 +111,22 @@ class _WasteBankDetailScreenState extends State<WasteBankDetailScreen> {
           ),
         );
       }),
-      bottomNavigationBar: GlobalBottomActionButton(
-        text: 'Gabung Jadi Nasabah',
-        onPressed: () {
-          Get.dialog(GlobalModal(
-            imagePath: 'assets/icons/success_icon.svg',
-            title: 'Berhasil Terdaftar',
-            message:
-                'Selamat! Anda telah berhasil terdaftar sebagai nasabah bank sampah. Sekarang Anda dapat mulai menyetor sampah',
-            primaryButtonText: 'Kembali',
-            onPrimaryButtonPressed: () => Get.back(),
-          ));
-        },
-      ),
+      bottomNavigationBar: Obx(() {
+        final wasteBank = controller.wasteBankDetail.value ?? widget.wasteBank;
+        final bool isRegistered = wasteBank.isVerified;
+
+        return GlobalBottomActionButton(
+          text: isRegistered ? 'Buat Setoran Sampah' : 'Gabung Jadi Nasabah',
+          onPressed: () {
+            if (isRegistered) {
+              Get.snackbar(
+                  'Info', 'Fitur Buat Setoran Sampah akan segera hadir');
+            } else {
+              controller.registerAsMember(wasteBank.id);
+            }
+          },
+        );
+      }),
     );
   }
 }

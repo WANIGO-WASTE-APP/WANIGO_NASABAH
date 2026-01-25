@@ -19,9 +19,24 @@ class WasteBankSearchController extends GetxController {
   Future<void> fetchAvailableWasteBanks() async {
     try {
       isLoading.value = true;
-      final result = await _authRepository.getAvailableBankSampah();
-      allWasteBanks.assignAll(result);
-      filteredWasteBanks.assignAll(result);
+
+      final allBanks = await _authRepository.getAvailableBankSampah();
+
+      final memberResponse = await _authRepository.getMemberBankSampah();
+      final List<int> registeredIds =
+          memberResponse?.bankSampah.map((b) => b.id).toList() ?? [];
+
+      final crossReferencedBanks = allBanks.map((bank) {
+        if (registeredIds.contains(bank.id)) {
+          return bank.copyWith(isVerified: true);
+        }
+        return bank;
+      }).toList();
+
+      crossReferencedBanks.sort((a, b) => a.id.compareTo(b.id));
+
+      allWasteBanks.assignAll(crossReferencedBanks);
+      filteredWasteBanks.assignAll(crossReferencedBanks);
     } catch (e) {
       print("Error fetching available waste banks: $e");
     } finally {

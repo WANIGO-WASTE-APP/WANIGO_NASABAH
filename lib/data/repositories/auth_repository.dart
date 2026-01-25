@@ -56,10 +56,10 @@ class AuthRepository {
     try {
       if (kDebugMode) {
         print(
-            "DEBUG - Get Available Bank Sampah Request (using member endpoint)");
+            "DEBUG - Get Available Bank Sampah Request (using /api/bank-sampah)");
       }
 
-      final response = await _apiService.getMemberBankSampah();
+      final response = await _apiService.getAllBankSampah();
 
       if (kDebugMode) {
         print(
@@ -108,6 +108,30 @@ class AuthRepository {
             "DEBUG - Get Nasabah Bank Sampah Detail Repository Exception: $e");
       }
       return null;
+    }
+  }
+
+  /// Register Member Bank Sampah
+  Future<bool> registerMemberBankSampah(int bankSampahId) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Register Member Bank Sampah Request for ID: $bankSampahId");
+      }
+
+      final response = await _apiService.registerMemberBankSampah(bankSampahId);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Register Member Bank Sampah Repository Response: $response");
+      }
+
+      return response['success'] == true;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Register Member Bank Sampah Repository Exception: $e");
+      }
+      return false;
     }
   }
 

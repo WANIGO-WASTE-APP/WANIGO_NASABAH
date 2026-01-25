@@ -27,7 +27,7 @@ class WasteInfoSection extends StatelessWidget {
           const SizedBox(height: 8),
           GlobalText(
             text: wasteBank.description,
-            variant: TextVariant.xSmallRegular,
+            variant: TextVariant.smallRegular,
             color: AppColors.gray500,
           ),
           const SizedBox(height: 24),
@@ -86,10 +86,10 @@ class WasteInfoSection extends StatelessWidget {
                       time: '08.00 - 16.00',
                     ),
                     const SizedBox(width: 16),
-                    const ScheduleSectionItem(
+                    ScheduleSectionItem(
                       title: 'Jadwal Setoran Sampah',
-                      subtitle: 'Setiap Bulan',
-                      time: '10:00',
+                      subtitle: wasteBank.depositTime ?? 'Setiap Bulan',
+                      time: wasteBank.depositHour ?? '10:00',
                     ),
                   ],
                 ),
@@ -97,19 +97,23 @@ class WasteInfoSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          GlobalButton(
-            text: 'Tambahkan Jadwal Setoran ke Kalender',
-            variant: ButtonVariant.medium,
-            onPressed: () {},
-          ),
-          const SizedBox(height: 32),
+          if (wasteBank.isVerified)
+            GlobalButton(
+              text: 'Tambahkan Jadwal Setoran ke Kalender',
+              variant: ButtonVariant.medium,
+              onPressed: () {},
+            ),
+          if (wasteBank.isVerified) const SizedBox(height: 32),
           const GlobalText(
             text: 'Lokasi Bank Sampah',
             variant: TextVariant.largeBold,
             color: Colors.black,
           ),
           const SizedBox(height: 12),
-          const WasteBankMap(),
+          WasteBankMap(
+            latitude: wasteBank.latitude,
+            longitude: wasteBank.longitude,
+          ),
           const SizedBox(height: 16),
         ],
       ),

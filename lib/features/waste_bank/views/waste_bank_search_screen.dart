@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_nasabah/features/waste_bank/controllers/waste_bank_search_controller.dart';
+import 'package:wanigo_nasabah/features/waste_bank/views/waste_bank_detail_screen.dart';
 import 'package:wanigo_nasabah/features/waste_bank/widgets/waste_bank_card.dart';
 import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 import 'package:wanigo_ui/wanigo_ui.dart' hide GlobalAppBar;
@@ -179,7 +180,12 @@ class WasteBankSearchScreen extends StatelessWidget {
                   final wasteBank = controller.filteredWasteBanks[index];
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
-                    child: WasteBankCard(wasteBank: wasteBank),
+                    child: WasteBankCard(
+                      wasteBank: wasteBank,
+                      onTap: () => Get.to(() => WasteBankDetailScreen(
+                            wasteBank: wasteBank,
+                          )),
+                    ),
                   );
                 },
               );

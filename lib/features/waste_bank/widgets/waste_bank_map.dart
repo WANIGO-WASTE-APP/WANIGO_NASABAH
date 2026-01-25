@@ -10,8 +10,8 @@ class WasteBankMap extends StatelessWidget {
 
   const WasteBankMap({
     super.key,
-    this.latitude = -6.2088, // Dummy
-    this.longitude = 106.8456, // Dummy
+    required this.latitude,
+    required this.longitude,
   });
 
   @override
