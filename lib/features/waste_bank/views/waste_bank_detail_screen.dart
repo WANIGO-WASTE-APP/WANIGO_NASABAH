@@ -116,7 +116,8 @@ class _WasteBankDetailScreenState extends State<WasteBankDetailScreen> {
         final bool isRegistered = wasteBank.isVerified;
 
         return GlobalBottomActionButton(
-          text: isRegistered ? 'Buat Setoran Sampah' : 'Gabung Jadi Nasabah',
+          buttonText:
+              isRegistered ? 'Buat Setoran Sampah' : 'Gabung Jadi Nasabah',
           onPressed: () {
             if (isRegistered) {
               Get.snackbar(

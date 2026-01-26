@@ -19,16 +19,8 @@ import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 
 import 'package:wanigo_nasabah/features/home/controllers/home_controller.dart';
 
-class NasabahHomeScreen extends StatefulWidget {
+class NasabahHomeScreen extends GetView<HomeController> {
   const NasabahHomeScreen({super.key});
-
-  @override
-  State<NasabahHomeScreen> createState() => _NasabahHomeScreenState();
-}
-
-class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
-  // Controller
-  final HomeController controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,151 +33,155 @@ class _NasabahHomeScreenState extends State<NasabahHomeScreen> {
           const HomeBackground(),
 
           // Content layer
-          SingleChildScrollView(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Leaf Illustration
-                Positioned(
-                  top: 200.h,
-                  left: 0,
-                  right: 0,
-                  child: SvgPicture.asset(
-                    'assets/icons/leaf_illustration_icon.svg',
-                    width: double.infinity,
-                    height: 220.h,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10.h),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20.r, vertical: 8.r),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Profile Card
-                          Obx(() => ProfileCard(
-                                profile: ProfileModel(
-                                  userName: controller.userName,
-                                  points: controller.userPoints,
-                                  profilePhotoUrl:
-                                      controller.user.value?.profilePhotoUrl,
-                                  address: controller.address.value,
-                                  bankSampahName:
-                                      controller.bankSampahName.value,
-                                ),
-                              )),
-
-                          SizedBox(height: 14.h),
-
-                          // Tabungan Card
-                          TabunganCard(
-                            tabungan: TabunganModel(
-                              saldo: 24000.00,
-                              beratSampah: 12,
-                            ),
-                          ),
-
-                          SizedBox(height: 38.h),
-                        ],
-                      ),
+          RefreshIndicator(
+            onRefresh: controller.refreshHomeData,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Leaf Illustration
+                  Positioned(
+                    top: 200.h,
+                    left: 0,
+                    right: 0,
+                    child: SvgPicture.asset(
+                      'assets/icons/leaf_illustration_icon.svg',
+                      width: double.infinity,
+                      height: 220.h,
+                      fit: BoxFit.fitWidth,
                     ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.r, vertical: 8.r),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Profile Card
+                            Obx(() => ProfileCard(
+                                  profile: ProfileModel(
+                                    userName: controller.userName,
+                                    points: controller.userPoints,
+                                    profilePhotoUrl:
+                                        controller.user?.profilePhotoUrl,
+                                    address: controller.address.value,
+                                    bankSampahName:
+                                        controller.bankSampahName.value,
+                                  ),
+                                )),
 
-                    // Features and Setoran
-                    Container(
-                      width: double.infinity, // Full width
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
+                            SizedBox(height: 14.h),
+
+                            // Tabungan Card
+                            TabunganCard(
+                              tabungan: TabunganModel(
+                                saldo: 24000.00,
+                                beratSampah: 12,
+                              ),
+                            ),
+
+                            SizedBox(height: 38.h),
+                          ],
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Calendar Card
-                          Transform.translate(
-                            offset: Offset(0, -36.h),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.r),
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(
-                                      color: const Color(0xFFCACACA)),
-                                  boxShadow: GlobalShadow.getShadow(
-                                      ShadowVariant.medium),
-                                ),
-                                padding: EdgeInsets.all(12.r),
-                                child: CalendarProfile(
-                                  schedule: CalendarScheduleModel.today(
-                                    message:
-                                        'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
-                                  ),
-                                ),
-                              ),
-                            ),
+
+                      // Features and Setoran
+                      Container(
+                        width: double.infinity, // Full width
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
                           ),
-
-                          Transform.translate(
-                            offset: Offset(0, -20.h),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: 20.r,
-                                right: 20.r,
-                                top: 0,
-                                bottom: 15.r,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Features Section
-                                  GlobalText(
-                                    text: 'Fitur Aplikasi WANIGO!',
-                                    variant: TextVariant.h5,
-                                    color: AppColors.gray600,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Calendar Card
+                            Transform.translate(
+                              offset: Offset(0, -36.h),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.r),
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                        color: const Color(0xFFCACACA)),
+                                    boxShadow: GlobalShadow.getShadow(
+                                        ShadowVariant.medium),
                                   ),
-
-                                  SizedBox(height: 16.h),
-
-                                  const FeatureIconsSection(),
-
-                                  SizedBox(height: 32.h),
-
-                                  // Setoran Section
-                                  GlobalText(
-                                    text: 'Setoran Sampah Terkini',
-                                    variant: TextVariant.h5,
-                                  ),
-
-                                  SizedBox(height: 16.h),
-
-                                  SetoranSampahCard(
-                                    setoran: SetoranSampahModel(
-                                      title: 'Buat Rencana Setoran',
-                                      description:
-                                          'Mulai ajukan setoran sampah Anda & berkontribusi menjaga lingkungan',
+                                  padding: EdgeInsets.all(12.r),
+                                  child: CalendarProfile(
+                                    schedule: CalendarScheduleModel.today(
+                                      message:
+                                          'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
                                     ),
                                   ),
-
-                                  SizedBox(height: 10.h),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+
+                            Transform.translate(
+                              offset: Offset(0, -20.h),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  left: 20.r,
+                                  right: 20.r,
+                                  top: 0,
+                                  bottom: 15.r,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Features Section
+                                    GlobalText(
+                                      text: 'Fitur Aplikasi WANIGO!',
+                                      variant: TextVariant.h5,
+                                      color: AppColors.gray600,
+                                    ),
+
+                                    SizedBox(height: 16.h),
+
+                                    const FeatureIconsSection(),
+
+                                    SizedBox(height: 32.h),
+
+                                    // Setoran Section
+                                    GlobalText(
+                                      text: 'Setoran Sampah Terkini',
+                                      variant: TextVariant.h5,
+                                    ),
+
+                                    SizedBox(height: 16.h),
+
+                                    SetoranSampahCard(
+                                      setoran: SetoranSampahModel(
+                                        title: 'Buat Rencana Setoran',
+                                        description:
+                                            'Mulai ajukan setoran sampah Anda & berkontribusi menjaga lingkungan',
+                                      ),
+                                    ),
+
+                                    SizedBox(height: 10.h),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

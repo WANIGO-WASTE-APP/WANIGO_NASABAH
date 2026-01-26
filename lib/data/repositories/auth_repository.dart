@@ -6,6 +6,7 @@ import 'package:wanigo_nasabah/data/models/auth_models.dart';
 import 'package:wanigo_nasabah/core/network/api_service.dart';
 import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
 import 'package:wanigo_nasabah/data/models/member_bank_sampah_response.dart';
+import 'package:wanigo_nasabah/data/models/waste_catalog_model.dart';
 
 // ... other imports ...
 
@@ -34,13 +35,23 @@ class AuthRepository {
       final response = await _apiService.getMemberBankSampah();
 
       if (kDebugMode) {
-        print("DEBUG - Get Member Bank Sampah Repository Response: $response");
+        print(
+            "DEBUG - Get Member Bank Sampah Repository Response Success: ${response['success']}");
+        if (response['success'] != true) {
+          print(
+              "DEBUG - Get Member Bank Sampah Repository Error Message: ${response['statusMessage']}");
+        }
       }
 
       if (response['success'] == true) {
         final data = response['data'];
-        return MemberBankSampahResponse.fromJson(data);
+        if (kDebugMode) print("DEBUG - MemberBankSampahResponse data: $data");
+        final parsed = MemberBankSampahResponse.fromJson(data);
+        return parsed;
       } else {
+        if (kDebugMode)
+          print(
+              "DEBUG - AuthRepository: Returning NULL because success is false");
         return null; // Or throw exception if preferred
       }
     } catch (e) {
@@ -132,6 +143,82 @@ class AuthRepository {
         print("DEBUG - Register Member Bank Sampah Repository Exception: $e");
       }
       return false;
+    }
+  }
+
+  /// Get Waste Catalog by Bank Sampah
+  Future<WasteCatalogResponse?> getWasteCatalog(
+      int bankSampahId, String kodeKategori) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Catalog Request for Bank Sampah ID: $bankSampahId, Kategori: $kodeKategori");
+      }
+
+      final response =
+          await _apiService.getWasteCatalog(bankSampahId, kodeKategori);
+
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Catalog Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        return WasteCatalogResponse.fromJson(response);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Catalog Repository Exception: $e");
+      }
+      return null;
+    }
+  }
+
+  /// Get Waste Sub-Categories by Bank Sampah
+  Future<List<WasteSubCategory>> getSubKategori(
+      int bankSampahId, String kodeKategori) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Sub-Categories Request for Bank Sampah ID: $bankSampahId, Kategori: $kodeKategori");
+      }
+
+      final response =
+          await _apiService.getSubKategori(bankSampahId, kodeKategori);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Sub-Categories Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        var rawData = response['data'];
+        List<dynamic> listData = [];
+
+        if (rawData is List) {
+          listData = rawData;
+        } else if (rawData is Map && rawData.containsKey('sub_kategori')) {
+          listData = rawData['sub_kategori'] ?? [];
+        } else if (rawData is Map && rawData.containsKey('data')) {
+          listData = rawData['data'] ?? [];
+        } else if (rawData is Map && rawData.containsKey('sub_kategori_list')) {
+          listData = rawData['sub_kategori_list'] ?? [];
+        }
+
+        if (kDebugMode) {
+          print("DEBUG - Parsed listData length: ${listData.length}");
+        }
+
+        return listData.map((e) => WasteSubCategory.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Sub-Categories Repository Exception: $e");
+      }
+      return [];
     }
   }
 
@@ -1098,5 +1185,34 @@ class AuthRepository {
   /// Get token dari secure storage
   Future<String?> getToken() async {
     return await _httpClient.getToken();
+  }
+
+  /// Submit Waste Deposit
+  Future<Map<String, dynamic>> submitWasteDeposit({
+    required int bankSampahId,
+    required String tanggalSetoran,
+    required String waktuSetoran,
+    required List<int> itemIds,
+    String? catatan,
+  }) async {
+    try {
+      final response = await _apiService.createWasteDeposit(
+        bankSampahId: bankSampahId,
+        tanggalSetoran: tanggalSetoran,
+        waktuSetoran: waktuSetoran,
+        itemIds: itemIds,
+        catatan: catatan,
+      );
+
+      return response;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - submitWasteDeposit Repository Exception: $e");
+      }
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
   }
 }

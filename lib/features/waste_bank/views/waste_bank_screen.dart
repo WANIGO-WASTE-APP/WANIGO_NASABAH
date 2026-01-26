@@ -93,7 +93,7 @@ class WasteBankScreen extends StatelessWidget {
       bottomNavigationBar: Obx(
         () => controller.wasteBankList.isNotEmpty
             ? GlobalBottomActionButton(
-                text: 'Tambah Bank Sampah Baru',
+                buttonText: 'Tambah Bank Sampah Baru',
                 onPressed: () {
                   Get.to(() => const WasteBankSearchScreen());
                 },

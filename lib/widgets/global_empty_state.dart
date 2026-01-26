@@ -7,16 +7,18 @@ class GlobalEmptyState extends StatelessWidget {
   final String iconPath;
   final String title;
   final String description;
-  final String buttonText;
-  final VoidCallback onButtonPressed;
+  final String? buttonText;
+  final VoidCallback? onButtonPressed;
+  final double? iconSize;
 
   const GlobalEmptyState({
     Key? key,
     required this.iconPath,
     required this.title,
     required this.description,
-    required this.buttonText,
-    required this.onButtonPressed,
+    this.buttonText,
+    this.onButtonPressed,
+    this.iconSize,
   }) : super(key: key);
 
   @override
@@ -31,10 +33,10 @@ class GlobalEmptyState extends StatelessWidget {
               children: [
                 SvgPicture.asset(
                   iconPath,
-                  width: 95.w,
-                  height: 95.h,
+                  width: (iconSize ?? 95).w,
+                  height: (iconSize ?? 95).h,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 GlobalText(
                   text: title,
                   variant: TextVariant.h5,
@@ -51,12 +53,14 @@ class GlobalEmptyState extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 32),
-          GlobalButton(
-            text: buttonText,
-            onPressed: onButtonPressed,
-            variant: ButtonVariant.medium,
-          ),
+          if (buttonText != null && onButtonPressed != null) ...[
+            const SizedBox(height: 32),
+            GlobalButton(
+              text: buttonText!,
+              onPressed: onButtonPressed!,
+              variant: ButtonVariant.medium,
+            ),
+          ],
         ],
       ),
     );

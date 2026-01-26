@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:wanigo_nasabah/data/models/waste_catalog_model.dart';
+import 'package:wanigo_nasabah/features/waste_bank/controllers/waste_bank_detail_controller.dart';
+import 'package:wanigo_nasabah/widgets/global_empty_state.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 
 class WasteCatalogSection extends StatefulWidget {
@@ -12,6 +15,8 @@ class WasteCatalogSection extends StatefulWidget {
 
 class _WasteCatalogSectionState extends State<WasteCatalogSection> {
   final RxInt subTabIndex = 0.obs;
+  final WasteBankDetailController controller =
+      Get.find<WasteBankDetailController>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,46 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
         const SizedBox(height: 16),
         _buildSubTabSelector(),
         const SizedBox(height: 16),
-        _buildCatalogTable(),
+        Obx(() {
+          if (controller.isCatalogLoading.value) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32.0),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          if (controller.wasteCatalog.value == null) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32.0),
+                child: GlobalText(
+                  text: 'Katalog tidak tersedia',
+                  variant: TextVariant.mediumMedium,
+                ),
+              ),
+            );
+          }
+
+          final catalogItems = controller.wasteCatalog.value!.katalogSampah;
+
+          if (catalogItems.isEmpty) {
+            final categoryName =
+                subTabIndex.value == 0 ? 'sampah kering' : 'sampah basah';
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 48),
+              child: GlobalEmptyState(
+                iconPath: 'assets/icons/catalog_empty_icon.svg',
+                title: 'Katalog Masih Kosong',
+                description:
+                    'Bank sampah ini belum menerima setoran $categoryName. Coba cari bank sampah lain yang bisa menampung ${categoryName}mu.',
+              ),
+            );
+          }
+
+          return _buildCatalogTable(catalogItems);
+        }),
         const SizedBox(height: 16),
       ],
     );
@@ -45,7 +89,13 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
               child: _buildSubTabItem(
                 title: 'Sampah Kering',
                 isActive: subTabIndex.value == 0,
-                onTap: () => subTabIndex.value = 0,
+                onTap: () {
+                  subTabIndex.value = 0;
+                  if (controller.wasteBankDetail.value != null) {
+                    controller.fetchWasteCatalog(
+                        controller.wasteBankDetail.value!.id, 'kering');
+                  }
+                },
               ),
             ),
             const SizedBox(width: 12),
@@ -53,7 +103,13 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
               child: _buildSubTabItem(
                 title: 'Sampah Basah',
                 isActive: subTabIndex.value == 1,
-                onTap: () => subTabIndex.value = 1,
+                onTap: () {
+                  subTabIndex.value = 1;
+                  if (controller.wasteBankDetail.value != null) {
+                    controller.fetchWasteCatalog(
+                        controller.wasteBankDetail.value!.id, 'basah');
+                  }
+                },
               ),
             ),
           ],
@@ -85,7 +141,7 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
     );
   }
 
-  Widget _buildCatalogTable() {
+  Widget _buildCatalogTable(List<WasteCatalogItem> items) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -99,7 +155,7 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
         child: Column(
           children: [
             _buildTableHeader(),
-            _buildTableBody(),
+            _buildTableBody(items),
           ],
         ),
       ),
@@ -158,16 +214,13 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
     );
   }
 
-  Widget _buildTableBody() {
-    // Dummy data
-    final items = List.generate(7, (index) => 'Nama Item Sampah');
-
+  Widget _buildTableBody(List<WasteCatalogItem> items) {
     return Column(
       children: items.map((item) => _buildTableRow(item)).toList(),
     );
   }
 
-  Widget _buildTableRow(String name) {
+  Widget _buildTableRow(WasteCatalogItem item) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: const BoxDecoration(
@@ -179,14 +232,14 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
         children: [
           Expanded(
             child: GlobalText(
-              text: name,
+              text: item.namaItemSampah,
               variant: TextVariant.smallMedium,
               color: const Color(0xFF404040),
             ),
           ),
           Expanded(
             child: GlobalText(
-              text: 'Rp.99.999',
+              text: item.formattedHargaPerKg,
               variant: TextVariant.smallMedium,
               color: const Color(0xFF404040),
               textAlign: TextAlign.end,

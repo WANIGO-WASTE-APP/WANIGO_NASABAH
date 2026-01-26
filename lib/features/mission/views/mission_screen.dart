@@ -29,7 +29,7 @@ class MissionScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: GlobalBottomActionButton(
-        text: 'Lihat Papan Peringkat',
+        buttonText: 'Lihat Papan Peringkat',
         onPressed: () {
           Get.to(() => const LeaderboardScreen());
         },

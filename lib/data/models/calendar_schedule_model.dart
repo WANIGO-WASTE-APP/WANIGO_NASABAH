@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+import 'package:wanigo_nasabah/core/utils/date_formatter.dart';
 
 class CalendarScheduleModel {
   final int day;
@@ -17,8 +17,8 @@ class CalendarScheduleModel {
     final now = DateTime.now();
     return CalendarScheduleModel(
       day: now.day,
-      month: DateFormat('MMM', 'id').format(now),
-      weekday: DateFormat('EEEE', 'id').format(now),
+      month: DateFormatter.formatAbbreviatedMonth(now),
+      weekday: DateFormatter.formatFullWeekday(now),
       message:
           message ?? 'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
     );

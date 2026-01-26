@@ -114,6 +114,7 @@ class HttpClient {
   // GET request
   Future<Map<String, dynamic>> get(
     String url, {
+    Map<String, dynamic>? queryParameters,
     bool withToken = false,
     Duration timeout = defaultTimeout,
     Map<String, String>? additionalHeaders,
@@ -136,6 +137,9 @@ class HttpClient {
 
       if (kDebugMode) {
         print("DEBUG - GET Request: $url");
+        if (queryParameters != null) {
+          print("DEBUG - Query Parameters: $queryParameters");
+        }
         print("DEBUG - Headers: $headers");
       }
 
@@ -143,6 +147,7 @@ class HttpClient {
       final Response dioResponse = await _dio
           .get(
         url,
+        queryParameters: queryParameters,
         options: Options(
           headers: headers,
         ),

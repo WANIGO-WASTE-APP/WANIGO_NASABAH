@@ -18,7 +18,7 @@ class GlobalHeader extends StatelessWidget {
       children: [
         GlobalText(
           text: title,
-          variant: TextVariant.h3,
+          variant: TextVariant.h4,
           color: AppColors.gray600,
         ),
         const SizedBox(height: 4),

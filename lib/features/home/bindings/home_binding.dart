@@ -8,9 +8,9 @@ class HomeBinding extends Bindings {
   void dependencies() {
     // Repositories
     Get.lazyPut<AuthRepository>(() => AuthRepository());
-    
+
     // Controllers
     Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
-    Get.lazyPut<HomeController>(() => HomeController());
+    Get.put<HomeController>(HomeController(), permanent: true);
   }
 }

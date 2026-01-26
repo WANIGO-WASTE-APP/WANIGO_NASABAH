@@ -529,7 +529,8 @@ class ApiService {
   Future<Map<String, dynamic>> getMemberBankSampah() async {
     try {
       if (kDebugMode) {
-        print("DEBUG - Get Member Bank Sampah Request");
+        print(
+            "DEBUG - Get Member Bank Sampah Request to: $_baseUrl/api/nasabah/member-bank-sampah");
       }
 
       final response = await _httpClient
@@ -543,7 +544,7 @@ class ApiService {
       });
 
       if (kDebugMode) {
-        print("DEBUG - Get Member Bank Sampah API Response: $response");
+        print("DEBUG - Get Member Bank Sampah API Raw Response: $response");
       }
 
       final Map<String, dynamic> standardizedResponse = {
@@ -683,6 +684,154 @@ class ApiService {
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - Get Nasabah Bank Sampah Detail API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Get Waste Catalog by Bank Sampah API
+  Future<Map<String, dynamic>> getWasteCatalog(
+      int bankSampahId, String kodeKategori) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Catalog Request for Bank Sampah ID: $bankSampahId, Kategori: $kodeKategori");
+      }
+
+      final response = await _httpClient
+          .post(
+        '$_baseUrl/api/nasabah/katalog-sampah/by-bank-sampah',
+        {
+          'bank_sampah_id': bankSampahId,
+          'kode_kategori': kodeKategori,
+        },
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Catalog API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Catalog API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Get Waste Sub-Categories by Bank Sampah API
+  Future<Map<String, dynamic>> getSubKategori(
+      int bankSampahId, String kodeKategori) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Sub-Categories Request for Bank Sampah ID: $bankSampahId, Kategori: $kodeKategori");
+      }
+
+      final response = await _httpClient
+          .post(
+        '$_baseUrl/api/nasabah/sub-kategori-sampah/by-bank-sampah',
+        {
+          'bank_sampah_id': bankSampahId,
+          'kode_kategori': kodeKategori,
+        },
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Sub-Categories API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Sub-Categories API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Create Waste Deposit API
+  Future<Map<String, dynamic>> createWasteDeposit({
+    required int bankSampahId,
+    required String tanggalSetoran,
+    required String waktuSetoran,
+    required List<int> itemIds,
+    String? catatan,
+  }) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Create Waste Deposit Request to: $_baseUrl/api/nasabah/setoran-sampah/pengajuan");
+      }
+
+      final response = await _httpClient
+          .post(
+        '$_baseUrl/api/nasabah/setoran-sampah/pengajuan',
+        {
+          'bank_sampah_id': bankSampahId,
+          'tanggal_setoran': tanggalSetoran,
+          'waktu_setoran': waktuSetoran,
+          'item_ids': itemIds,
+        },
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Create Waste Deposit API Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['status'] == 'success' || response['success'] == true,
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Create Waste Deposit API Exception: $e");
       }
 
       return {

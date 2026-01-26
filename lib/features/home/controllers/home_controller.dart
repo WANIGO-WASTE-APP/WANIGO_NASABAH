@@ -2,22 +2,24 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_nasabah/data/models/auth_models.dart';
 import 'package:wanigo_nasabah/data/repositories/auth_repository.dart';
+import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
 import 'package:wanigo_nasabah/routes/app_routes.dart';
+import 'package:wanigo_nasabah/features/auth/controllers/auth_controller.dart';
 
 class HomeController extends GetxController {
   // Repository
   final AuthRepository _authRepository = AuthRepository();
+  final AuthController _authController = Get.find<AuthController>();
 
   // Observable variables
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
-  // User data
-  final Rx<UserModel?> user = Rx<UserModel?>(null);
+  // Derive user from AuthController for data consistency
+  UserModel? get user => _authController.user.value;
 
-  // User points
-  int get userPoints =>
-      0; // Untuk sementara hardcoded, nanti bisa diambil dari API
+  // User points (hardcoded for now)
+  int get userPoints => 0;
 
   // Tabungan data
   final RxDouble saldoTabungan = 24000.00.obs;
@@ -26,13 +28,11 @@ class HomeController extends GetxController {
   // Flag untuk menandai controller di-dispose
   bool _isDisposed = false;
 
-  // User name
-  String get userName => user.value?.name ?? 'Nasabah';
+  // User name derived from user object
+  String get userName => user?.name ?? 'Nasabah';
 
-  // Address
+  // Address and Bank Name state
   final RxString address = ''.obs;
-
-  // Bank Sampah Name
   final RxString bankSampahName = ''.obs;
 
   // Bottom Navigation Index
@@ -41,177 +41,162 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (kDebugMode) print("DEBUG - HomeController.onInit called");
+
+    // Handle navigation arguments for tab selection
+    if (Get.arguments is Map && Get.arguments.containsKey('index')) {
+      currentIndex.value = Get.arguments['index'];
+    } else if (Get.arguments is int) {
+      currentIndex.value = Get.arguments;
+    }
+
     _loadInitialData();
+  }
+
+  /// Public method to manually trigger a data refresh
+  Future<void> refreshHomeData() async {
+    await _loadInitialData();
   }
 
   @override
   void onClose() {
+    if (kDebugMode) print("DEBUG - HomeController.onClose called (Disposing)");
     _isDisposed = true;
     super.onClose();
   }
 
-  /// Load initial data for home screen
   Future<void> _loadInitialData() async {
+    if (_isDisposed) return;
+
+    // Prevent multiple parallel loads
+    if (isLoading.value) {
+      if (kDebugMode)
+        print("DEBUG - HomeController: Load already in progress, skipping...");
+      return;
+    }
+
+    if (kDebugMode)
+      print("DEBUG - HomeController._loadInitialData starting...");
     isLoading.value = true;
 
     try {
-      // Ambil data user dari repository
-      final userData = await _authRepository.getUser();
-      if (userData != null) {
-        user.value = userData;
+      // Sync local user if null
+      if (user == null) {
+        if (kDebugMode)
+          print("DEBUG - HomeController: User is null, fetching from repo");
+        final userData = await _authRepository.getUser();
+        if (userData != null && !_isDisposed) {
+          _authController.user.value = userData;
+        }
       }
 
-      // Get profile data if needed
+      // Fetch fresh profile data
       try {
+        if (kDebugMode)
+          print("DEBUG - HomeController: Fetching Nasabah Profile");
         final nasabahProfile = await _authRepository.getNasabahProfile();
         if (!_isDisposed) {
-          user.value = nasabahProfile;
+          _authController.user.value = nasabahProfile;
         }
       } catch (e) {
-        if (kDebugMode) {
-          print("DEBUG - Error getting nasabah profile: $e");
-        }
+        if (kDebugMode) print("DEBUG - Error fetching nasabah profile: $e");
       }
 
-      // Get member bank sampah data
+      // Fetch member bank data
       try {
+        if (kDebugMode)
+          print("DEBUG - HomeController: Fetching Member Bank Sampah");
         final memberBankSampah = await _authRepository.getMemberBankSampah();
-        if (!_isDisposed &&
-            memberBankSampah != null &&
-            memberBankSampah.bankSampah.isNotEmpty) {
-          // Ambil alamat dari bank sampah pertama
-          address.value = memberBankSampah.bankSampah.first.address;
 
-          // Ambil nama bank sampah dari bank sampah pertama
-          bankSampahName.value = memberBankSampah.bankSampah.first.name;
+        if (_isDisposed) {
+          if (kDebugMode)
+            print(
+                "DEBUG - HomeController: Member Bank response received but controller was ALREADY DISPOSED");
+          return;
+        }
+
+        if (memberBankSampah != null) {
+          if (kDebugMode)
+            print(
+                "DEBUG - HomeController: Received ${memberBankSampah.bankSampah.length} member banks");
+
+          if (memberBankSampah.bankSampah.isNotEmpty) {
+            // Urutkan berdasarkan ID (terkecil ke terbesar) dan ambil yang pertama
+            final sortedBanks =
+                List<WasteBankModel>.from(memberBankSampah.bankSampah);
+            sortedBanks.sort((a, b) => a.id.compareTo(b.id));
+
+            final targetBank = sortedBanks.first;
+            address.value = targetBank.address;
+            bankSampahName.value = targetBank.name;
+
+            if (kDebugMode) {
+              print(
+                  "DEBUG - HomeController: Selected Bank (ID MIN): ${targetBank.id} - ${targetBank.name}");
+            }
+          } else {
+            if (kDebugMode)
+              print(
+                  "DEBUG - HomeController: Member Bank list is EMPTY after parsing");
+          }
+        } else {
+          if (kDebugMode)
+            print(
+                "DEBUG - HomeController: Member Bank Response is ACTUALLY NULL from Repository");
         }
       } catch (e) {
-        if (kDebugMode) {
-          print("DEBUG - Error getting member bank sampah: $e");
-        }
+        if (kDebugMode) print("DEBUG - Error fetching member bank: $e");
       }
-
-      // Here you can add API calls to get other home data like:
-      // - Tabungan data
-      // - Jadwal data
-      // - etc.
     } catch (e) {
-      if (_isDisposed) return;
-
-      errorMessage.value = e.toString();
-      if (kDebugMode) {
-        print("DEBUG - Home load data error: ${errorMessage.value}");
-      }
+      if (!_isDisposed) errorMessage.value = e.toString();
     } finally {
       if (!_isDisposed) {
         isLoading.value = false;
+        if (kDebugMode)
+          print(
+              "DEBUG - HomeController._loadInitialData finished successfully");
+      } else {
+        if (kDebugMode)
+          print(
+              "DEBUG - HomeController._loadInitialData finished but controller was DISPOSED");
       }
     }
   }
 
-  /// Navigate to profile page
+  void onBottomNavTapped(int index) {
+    if (_isDisposed) return;
+    currentIndex.value = index;
+
+    switch (index) {
+      case 0:
+        if (Get.currentRoute != Routes.home) {
+          Get.until((route) => route.settings.name == Routes.home);
+        }
+        break;
+      case 1:
+        Get.toNamed(Routes.setoranHistory);
+        break;
+      case 2:
+        Get.toNamed(Routes.depositSelectBank);
+        break;
+      case 4:
+        Get.toNamed(Routes.profile);
+        break;
+    }
+  }
+
   void goToProfile() {
     if (_isDisposed) return;
     Get.toNamed(Routes.profile);
   }
 
-  /// Navigate to bank sampah page
-  void goToBankSampah() {
-    if (_isDisposed) return;
-
-    // Belum diimplementasi
-    Get.snackbar(
-      'Info',
-      'Fitur Bank Sampah sedang dalam pengembangan',
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  }
-
-  /// Navigate to setoran sampah page
-  void goToSetoranSampah() {
-    if (_isDisposed) return;
-
-    // Belum diimplementasi
-    Get.snackbar(
-      'Info',
-      'Fitur Setoran Sampah sedang dalam pengembangan',
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  }
-
-  /// Navigate to jadwal page
-  void goToJadwal() {
-    if (_isDisposed) return;
-
-    // Belum diimplementasi
-    Get.snackbar(
-      'Info',
-      'Fitur Jadwal sedang dalam pengembangan',
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  }
-
-  /// Logout
   Future<void> logout() async {
     if (_isDisposed) return;
-
     isLoading.value = true;
-
     try {
-      final success = await _authRepository.logout();
-
-      if (_isDisposed) return;
-
-      if (success) {
-        // Navigasi ke halaman login
-        Get.offAllNamed(Routes.login);
-      } else {
-        // Masih coba logout meskipun API gagal
-        Get.offAllNamed(Routes.login);
-      }
-    } catch (e) {
-      if (_isDisposed) return;
-
-      errorMessage.value = e.toString();
-      if (kDebugMode) {
-        print("DEBUG - Logout error: ${errorMessage.value}");
-      }
-
-      // Masih coba logout meskipun terjadi error
-      Get.offAllNamed(Routes.login);
+      await _authController.logout();
     } finally {
-      if (!_isDisposed) {
-        isLoading.value = false;
-      }
-    }
-  }
-
-  /// Handle bottom navigation tap
-  void onBottomNavTapped(int index) {
-    if (_isDisposed) return;
-
-    currentIndex.value = index;
-
-    switch (index) {
-      case 0: // Beranda
-        // Already on home scren
-        break;
-      case 1: // Riwayat
-        // Menggunakan rute riwayat setoran
-        Get.toNamed(Routes.setoranHistory);
-        break;
-      case 3: // Laporan (formerly Pesan)
-        // Get.toNamed('/laporan');
-        // For now using snackbar as placeholder or existing route if available
-        Get.snackbar(
-          'Info',
-          'Fitur Laporan belum tersedia',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        break;
-      case 4: // Profil
-        goToProfile();
-        break;
+      if (!_isDisposed) isLoading.value = false;
     }
   }
 }
