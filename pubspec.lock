@@ -1121,10 +1121,10 @@ packages:
     dependency: "direct main"
     description:
       name: wanigo_ui
-      sha256: e3489ac4f7051e69adedcfecd75820099e96ca11b34347e2403a34fc08a94c30
+      sha256: "42fd122300e32f2a74f38185734e969e1b43208982553c46d90ed6c01764ba87"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.6"
   web:
     dependency: transitive
     description:

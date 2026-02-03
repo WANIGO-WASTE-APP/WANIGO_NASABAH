@@ -13,6 +13,8 @@ class CurrencyFormatter {
       value = 0.0;
     }
 
+    if (value == 0) return 'Rp0';
+
     final formatter = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp',

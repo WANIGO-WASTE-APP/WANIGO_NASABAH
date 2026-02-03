@@ -8,12 +8,14 @@ class WasteItemCard extends StatelessWidget {
   final WasteCatalogItem item;
   final bool isSelected;
   final VoidCallback onTap;
+  final VoidCallback onInfoButtonTap;
 
   const WasteItemCard({
     super.key,
     required this.item,
     this.isSelected = false,
     required this.onTap,
+    required this.onInfoButtonTap,
   });
 
   @override
@@ -29,6 +31,7 @@ class WasteItemCard extends StatelessWidget {
             color: isSelected ? AppColors.blue600 : const Color(0xFFCACACA),
             width: isSelected ? 1.5.w : 0.3.w,
           ),
+          boxShadow: GlobalShadow.getShadow(ShadowVariant.medium),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,18 +59,21 @@ class WasteItemCard extends StatelessWidget {
                 Positioned(
                   top: 18.h,
                   right: 18.w,
-                  child: Container(
-                    width: 36.w,
-                    height: 36.w,
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppColors.blue100 : Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: const Color(0xFFCACACA), width: 0.58.w),
-                    ),
-                    padding: EdgeInsets.all(6.r),
-                    child: SvgPicture.asset(
-                      'assets/icons/black_information_icon.svg',
+                  child: GestureDetector(
+                    onTap: onInfoButtonTap,
+                    child: Container(
+                      width: 36.w,
+                      height: 36.w,
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppColors.blue100 : Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: const Color(0xFFCACACA), width: 0.58.w),
+                      ),
+                      padding: EdgeInsets.all(6.r),
+                      child: SvgPicture.asset(
+                        'assets/icons/black_information_icon.svg',
+                      ),
                     ),
                   ),
                 ),

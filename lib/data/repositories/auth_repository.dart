@@ -7,6 +7,8 @@ import 'package:wanigo_nasabah/core/network/api_service.dart';
 import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
 import 'package:wanigo_nasabah/data/models/member_bank_sampah_response.dart';
 import 'package:wanigo_nasabah/data/models/waste_catalog_model.dart';
+import 'package:wanigo_nasabah/data/models/waste_deposit_history_model.dart';
+import 'package:wanigo_nasabah/data/models/waste_deposit_item_detail_model.dart';
 
 // ... other imports ...
 
@@ -143,6 +145,34 @@ class AuthRepository {
         print("DEBUG - Register Member Bank Sampah Repository Exception: $e");
       }
       return false;
+    }
+  }
+
+  /// Get Waste Catalog Detail
+  Future<WasteCatalogItem?> getWasteCatalogDetail(int id) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Catalog Detail Request for ID: $id");
+      }
+
+      final response = await _apiService.getWasteCatalogDetail(id);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Catalog Detail Repository Response: $response");
+      }
+
+      if (response['success'] == true) {
+        final data = response['data'];
+        return WasteCatalogItem.fromJson(data);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Catalog Detail Repository Exception: $e");
+      }
+      return null;
     }
   }
 
@@ -1193,7 +1223,6 @@ class AuthRepository {
     required String tanggalSetoran,
     required String waktuSetoran,
     required List<int> itemIds,
-    String? catatan,
   }) async {
     try {
       final response = await _apiService.createWasteDeposit(
@@ -1201,7 +1230,6 @@ class AuthRepository {
         tanggalSetoran: tanggalSetoran,
         waktuSetoran: waktuSetoran,
         itemIds: itemIds,
-        catatan: catatan,
       );
 
       return response;
@@ -1213,6 +1241,125 @@ class AuthRepository {
         'success': false,
         'statusMessage': e.toString(),
       };
+    }
+  }
+
+  /// Get ongoing waste deposit setoran
+  Future<WasteDepositHistoryResponse?> getOngoingSetoran() async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Ongoing Setoran Repository Request");
+      }
+
+      final response = await _apiService.getOngoingSetoran();
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Ongoing Setoran Repository Response Success: ${response['success']}");
+      }
+
+      if (response['success'] == true) {
+        return WasteDepositHistoryResponse.fromJson(response);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Ongoing Setoran Repository Exception: $e");
+      }
+      return null;
+    }
+  }
+
+  /// Get Deposit History by status
+  Future<WasteDepositHistoryResponse?> getDepositHistory(String status) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Deposit History Repository Request for Status: $status");
+      }
+
+      final response = await _apiService.getDepositHistory(status);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Deposit History Repository Response Success: ${response['success']}");
+      }
+
+      if (response['success'] == true) {
+        return WasteDepositHistoryResponse.fromJson(response);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Deposit History Repository Exception: $e");
+      }
+      return null;
+    }
+  }
+
+  /// Get Waste Deposit Detail
+  Future<WasteDepositHistoryModel?> getWasteDepositDetail(int id) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Deposit Detail Repository Request for ID: $id");
+      }
+
+      final response = await _apiService.getWasteDepositDetail(id);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Deposit Detail Repository Response Success: ${response['success']}");
+      }
+
+      if (response['success'] == true) {
+        return WasteDepositHistoryModel.fromJson(response['data']);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Deposit Detail Repository Exception: $e");
+      }
+      return null;
+    }
+  }
+
+  /// Get Waste Deposit Items
+  Future<List<WasteDepositItemDetailModel>> getWasteDepositItems(int id) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Deposit Items Repository Request for ID: $id");
+      }
+
+      final response = await _apiService.getWasteDepositItems(id);
+
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Waste Deposit Items Repository Response Success: ${response['success']}");
+      }
+
+      if (response['success'] == true) {
+        final List<dynamic> data = [];
+        if (response['data'] is List) {
+          data.addAll(response['data']);
+        } else if (response['data'] is Map) {
+          data.add(response['data']);
+        }
+
+        return data
+            .map((e) => WasteDepositItemDetailModel.fromJson(e))
+            .toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Waste Deposit Items Repository Exception: $e");
+      }
+      return [];
     }
   }
 }

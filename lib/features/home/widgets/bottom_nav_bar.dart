@@ -39,65 +39,64 @@ class BottomNavBar extends StatelessWidget {
       },
     ];
 
-    return Obx(() => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Color(0xFFCACACA),
-            ),
-            BottomAppBar(
-              color: Colors.white,
-              elevation: 0,
-              shape: const CircularNotchedRectangle(),
-              notchMargin: 8.r,
-              child: SizedBox(
-                height: 60.h,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildNavItem(
-                      context: context,
-                      item: items[0],
-                      index: 0,
-                      isActive: controller.currentIndex.value == 0,
-                      onTap: () => controller.onBottomNavTapped(0),
-                    ),
-                    _buildNavItem(
-                      context: context,
-                      item: items[1],
-                      index: 1,
-                      isActive: controller.currentIndex.value == 1,
-                      onTap: () => controller.onBottomNavTapped(1),
-                    ),
-                    SizedBox(width: 56.r), // Placeholder for FAB
-                    _buildNavItem(
-                      context: context,
-                      item: items[2], // Pesan (Index 3 logic in controller)
-                      index: 3,
-                      isActive: controller.currentIndex.value == 3,
-                      onTap: () => controller.onBottomNavTapped(3),
-                    ),
-                    _buildNavItem(
-                      context: context,
-                      item: items[3], // Profil (Index 4 logic in controller)
-                      index: 4,
-                      isActive: controller.currentIndex.value == 4,
-                      onTap: () => controller.onBottomNavTapped(4),
-                    ),
-                  ],
-                ),
+    return Obx(() {
+      final int currentIndex = controller.currentIndex.value;
+
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: Color(0xFFCACACA),
+          ),
+          BottomAppBar(
+            color: Colors.white,
+            elevation: 0,
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 8.r,
+            child: SizedBox(
+              height: 60.h,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    context: context,
+                    item: items[0],
+                    isActive: currentIndex == 0,
+                    onTap: () => controller.onBottomNavTapped(0),
+                  ),
+                  _buildNavItem(
+                    context: context,
+                    item: items[1],
+                    isActive: currentIndex == 1,
+                    onTap: () => controller.onBottomNavTapped(1),
+                  ),
+                  SizedBox(width: 56.r), // Placeholder for FAB
+                  _buildNavItem(
+                    context: context,
+                    item: items[2],
+                    isActive: currentIndex == 3,
+                    onTap: () => controller.onBottomNavTapped(3),
+                  ),
+                  _buildNavItem(
+                    context: context,
+                    item: items[3],
+                    isActive: currentIndex == 4,
+                    onTap: () => controller.onBottomNavTapped(4),
+                  ),
+                ],
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildNavItem({
     required BuildContext context,
     required Map<String, dynamic> item,
-    required int index,
     required bool isActive,
     required VoidCallback onTap,
   }) {

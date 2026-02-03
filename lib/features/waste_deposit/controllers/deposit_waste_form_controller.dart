@@ -149,7 +149,6 @@ class DepositWasteFormController extends GetxController {
         tanggalSetoran: tanggalSetoran,
         waktuSetoran: waktuSetoran,
         itemIds: selectedWasteItemIds.toList(),
-        catatan: "Pengajuan dari aplikasi nasabah",
       );
 
       if (result['success'] == true) {

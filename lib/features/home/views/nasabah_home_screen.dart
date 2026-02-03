@@ -186,13 +186,9 @@ class NasabahHomeScreen extends GetView<HomeController> {
           ),
         ],
       ),
-      floatingActionButton: Obx(() {
-        final isActive = controller.currentIndex.value == 2;
-        return HomeFloatingActionButton(
-          isActive: isActive,
-          onPressed: () => controller.onBottomNavTapped(2),
-        );
-      }),
+      floatingActionButton: HomeFloatingActionButton(
+        onPressed: () => controller.onBottomNavTapped(2),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const BottomNavBar(),
     );

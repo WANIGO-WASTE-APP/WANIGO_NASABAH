@@ -7,6 +7,7 @@ import 'package:wanigo_nasabah/routes/app_pages.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:wanigo_nasabah/core/config/alice_config.dart';
 
+import 'package:wanigo_nasabah/features/home/controllers/home_controller.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
@@ -67,10 +68,24 @@ class MyApp extends StatelessWidget {
             if (kDebugMode) {
               if (routing?.current != null) {
                 print("DEBUG - Navigating to: ${routing!.current}");
-                if (routing.args != null) {
-                  print("DEBUG - With arguments: ${routing.args}");
-                }
               }
+            }
+            if (routing?.current != null) {
+              try {
+                if (Get.isRegistered<HomeController>()) {
+                  final controller = Get.find<HomeController>();
+                  final String currentRoute = routing!.current;
+                  if (currentRoute == Routes.home) {
+                    controller.currentIndex.value = 0;
+                  } else if (currentRoute == Routes.setoranHistory) {
+                    controller.currentIndex.value = 1;
+                  } else if (currentRoute == Routes.depositSelectBank) {
+                    controller.currentIndex.value = 2;
+                  } else if (currentRoute == Routes.profile) {
+                    controller.currentIndex.value = 4;
+                  }
+                }
+              } catch (_) {}
             }
           },
           // Log error builder

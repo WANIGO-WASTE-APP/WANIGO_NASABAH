@@ -4,10 +4,7 @@ import 'package:wanigo_nasabah/routes/app_routes.dart';
 
 class DepositSuccessController extends GetxController {
   void navigateToStatus() {
-    final homeController = Get.find<HomeController>();
-    homeController.currentIndex.value = 0;
-    homeController.refreshHomeData();
-    Get.until((route) => route.settings.name == Routes.home);
+    Get.toNamed(Routes.setoranHistory);
   }
 
   void navigateHome() {

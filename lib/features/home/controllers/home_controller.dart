@@ -165,6 +165,8 @@ class HomeController extends GetxController {
 
   void onBottomNavTapped(int index) {
     if (_isDisposed) return;
+
+    // Optional: Sync currentIndex for legacy support or other observers
     currentIndex.value = index;
 
     switch (index) {
@@ -174,13 +176,22 @@ class HomeController extends GetxController {
         }
         break;
       case 1:
-        Get.toNamed(Routes.setoranHistory);
+        if (Get.currentRoute != Routes.setoranHistory) {
+          Get.toNamed(Routes.setoranHistory);
+        }
         break;
       case 2:
-        Get.toNamed(Routes.depositSelectBank);
+        if (Get.currentRoute != Routes.depositSelectBank) {
+          Get.toNamed(Routes.depositSelectBank);
+        }
+        break;
+      case 3:
+        // Future: Pesan screen
         break;
       case 4:
-        Get.toNamed(Routes.profile);
+        if (Get.currentRoute != Routes.profile) {
+          Get.toNamed(Routes.profile);
+        }
         break;
     }
   }

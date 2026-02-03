@@ -13,6 +13,7 @@ class DepositSuccessScreen extends StatelessWidget {
     final controller = Get.find<DepositSuccessController>();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: GlobalAppBar(
         onBackPressed: controller.navigateHome,
       ),

@@ -10,6 +10,7 @@ import 'package:wanigo_nasabah/widgets/global_header.dart';
 import 'package:wanigo_nasabah/core/utils/date_formatter.dart';
 import 'package:wanigo_nasabah/features/waste_deposit/widgets/waste_sub_category_selector.dart';
 import 'package:wanigo_nasabah/features/waste_deposit/widgets/waste_item_card.dart';
+import 'package:wanigo_nasabah/features/waste_deposit/widgets/waste_detail_bottom_modal.dart';
 import 'package:wanigo_ui/wanigo_ui.dart' hide GlobalAppBar;
 
 class DepositWasteFormScreen extends StatelessWidget {
@@ -156,6 +157,20 @@ class DepositWasteFormScreen extends StatelessWidget {
                               isSelected: controller.selectedWasteItemIds
                                   .contains(item.id),
                               onTap: () => controller.selectWasteItem(item.id),
+                              onInfoButtonTap: () {
+                                Get.bottomSheet(
+                                  WasteDetailBottomModal(
+                                    item: item,
+                                    isSelected: controller.selectedWasteItemIds
+                                        .contains(item.id),
+                                    onSelect: () {
+                                      controller.selectWasteItem(item.id);
+                                      Get.back();
+                                    },
+                                  ),
+                                  isScrollControlled: true,
+                                );
+                              },
                             ));
                       },
                     ),

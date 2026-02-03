@@ -39,6 +39,14 @@ import 'package:wanigo_nasabah/features/waste_deposit/bindings/deposit_binding.d
 // Middlewares
 import 'package:wanigo_nasabah/features/profile/middleware/profile_step_guard.dart';
 
+// Deposit History
+import 'package:wanigo_nasabah/features/deposit_history/views/deposit_history_screen.dart';
+import 'package:wanigo_nasabah/features/deposit_history/views/deposit_history_detail_screen.dart';
+import 'package:wanigo_nasabah/features/deposit_history/views/deposit_history_waste_list_screen.dart';
+import 'package:wanigo_nasabah/features/deposit_history/bindings/deposit_history_binding.dart';
+import 'package:wanigo_nasabah/features/deposit_history/bindings/deposit_history_detail_binding.dart';
+import 'package:wanigo_nasabah/features/deposit_history/bindings/deposit_history_waste_list_binding.dart';
+
 class AppPages {
   static final routes = [
     // SETORAN SAMPAH
@@ -62,6 +70,26 @@ class AppPages {
       page: () => const DepositSuccessScreen(),
       binding: DepositBinding(),
       transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: Routes.setoranHistory,
+      page: () => const DepositHistoryScreen(),
+      binding: DepositHistoryBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: Routes.setoranSampahDetail,
+      page: () => DepositHistoryDetailScreen(),
+      binding: DepositHistoryDetailBinding(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: Routes.detailSetoranBySetoran,
+      page: () => const DepositHistoryWasteListScreen(),
+      binding: DepositHistoryWasteListBinding(),
+      transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
 

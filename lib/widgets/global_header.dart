@@ -21,12 +21,14 @@ class GlobalHeader extends StatelessWidget {
           variant: TextVariant.h4,
           color: AppColors.gray600,
         ),
-        const SizedBox(height: 4),
-        GlobalText(
-          text: subtitle ?? '',
-          variant: TextVariant.smallMedium,
-          color: AppColors.gray400,
-        ),
+        if (subtitle != null && subtitle!.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          GlobalText(
+            text: subtitle!,
+            variant: TextVariant.smallMedium,
+            color: AppColors.gray400,
+          ),
+        ],
       ],
     );
   }

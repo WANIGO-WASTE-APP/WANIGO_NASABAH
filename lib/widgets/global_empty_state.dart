@@ -26,6 +26,7 @@ class GlobalEmptyState extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Center(
             child: Column(
@@ -36,17 +37,17 @@ class GlobalEmptyState extends StatelessWidget {
                   width: (iconSize ?? 95).w,
                   height: (iconSize ?? 95).h,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 GlobalText(
                   text: title,
-                  variant: TextVariant.h5,
+                  variant: TextVariant.h3,
                   color: Colors.black,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
                 GlobalText(
                   text: description,
-                  variant: TextVariant.smallSemiBold,
+                  variant: TextVariant.mediumMedium,
                   color: AppColors.gray600,
                   textAlign: TextAlign.center,
                 ),

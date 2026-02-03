@@ -113,7 +113,9 @@ class WasteBankModel {
 
     final Map<String, dynamic> contactInfo = (json['contact_info'] is Map)
         ? Map<String, dynamic>.from(json['contact_info'])
-        : {};
+        : (bankInfo['contact_info'] is Map)
+            ? Map<String, dynamic>.from(bankInfo['contact_info'])
+            : {};
 
     // ID parsing
     final rawId = bankInfo['id'] ?? json['id'];
@@ -219,7 +221,9 @@ class WasteBankModel {
     // Jadwal Setoran parsing
     final Map<String, dynamic> jadwalSetoran = (json['jadwal_setoran'] is Map)
         ? Map<String, dynamic>.from(json['jadwal_setoran'])
-        : {};
+        : (bankInfo['jadwal_setoran'] is Map)
+            ? Map<String, dynamic>.from(bankInfo['jadwal_setoran'])
+            : {};
 
     return WasteBankModel(
       id: id,
