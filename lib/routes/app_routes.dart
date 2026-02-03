@@ -97,4 +97,5 @@ class Routes {
 
   // Tarik Saldo
   static const String withdrawBalance = '/withdraw-balance';
+  static const String withdrawBalanceForm = '/withdraw-balance/form';
 }
