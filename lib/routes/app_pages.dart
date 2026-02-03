@@ -36,6 +36,9 @@ import 'package:wanigo_nasabah/features/waste_deposit/views/deposit_waste_form_s
 import 'package:wanigo_nasabah/features/waste_deposit/views/deposit_success_screen.dart';
 import 'package:wanigo_nasabah/features/waste_deposit/bindings/deposit_binding.dart';
 
+// Tarik Saldo
+import 'package:wanigo_nasabah/features/waste_withdraw_balance/views/waste_withdraw_balance_select_screen.dart';
+
 // Middlewares
 import 'package:wanigo_nasabah/features/profile/middleware/profile_step_guard.dart';
 
@@ -161,6 +164,14 @@ class AppPages {
         ProfileStepGuard()
       ], // TAMBAHAN: Middleware untuk mengecek status profil
       transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+
+    // TARIK SALDO
+    GetPage(
+      name: Routes.withdrawBalance,
+      page: () => const WasteWithdrawBalanceSelectScreen(),
+      transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
 

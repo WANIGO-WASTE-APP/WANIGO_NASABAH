@@ -94,4 +94,7 @@ class Routes {
   static const String subKategoriSampah = '/sub-kategori-sampah';
   static const String kategoriUtama = '/sub-kategori-sampah/kategori-utama';
   static const String subKategoriByBank = '/sub-kategori-sampah/by-bank';
+
+  // Tarik Saldo
+  static const String withdrawBalance = '/withdraw-balance';
 }

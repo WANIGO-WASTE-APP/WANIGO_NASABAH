@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:wanigo_nasabah/routes/app_routes.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/data/models/tabungan_model.dart';
 
@@ -88,7 +91,9 @@ class TabunganCard extends StatelessWidget {
                       children: [
                         // Menggunakan ElevatedButton dengan padding yang lebih kecil dan radius yang sangat melengkung
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.toNamed(Routes.withdrawBalance);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: AppColors.blue600,
