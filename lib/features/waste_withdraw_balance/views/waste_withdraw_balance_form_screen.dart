@@ -6,6 +6,7 @@ import 'package:wanigo_nasabah/features/waste_withdraw_balance/controllers/waste
 import 'package:wanigo_nasabah/features/waste_withdraw_balance/widgets/withdrawal_method_dropdown.dart';
 import 'package:wanigo_nasabah/features/waste_withdraw_balance/widgets/withdrawal_amount_input.dart';
 import 'package:wanigo_nasabah/features/waste_withdraw_balance/widgets/withdrawal_amount_presets.dart';
+import 'package:wanigo_nasabah/routes/app_routes.dart';
 import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 import 'package:wanigo_nasabah/widgets/global_bottom_action_button.dart';
 import 'package:wanigo_nasabah/widgets/global_header.dart';
@@ -116,7 +117,7 @@ class WasteWithdrawBalanceFormScreen extends StatelessWidget {
         if (!controller.isFormValid) return const SizedBox.shrink();
         return GlobalBottomActionButton(
           buttonText: 'Lanjutkan',
-          onPressed: () {},
+          onPressed: () => Get.toNamed(Routes.withdrawSuccess),
         );
       }),
     );

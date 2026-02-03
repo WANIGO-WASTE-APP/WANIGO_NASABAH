@@ -39,6 +39,7 @@ import 'package:wanigo_nasabah/features/waste_deposit/bindings/deposit_binding.d
 // Tarik Saldo
 import 'package:wanigo_nasabah/features/waste_withdraw_balance/views/waste_withdraw_balance_select_screen.dart';
 import 'package:wanigo_nasabah/features/waste_withdraw_balance/views/waste_withdraw_balance_form_screen.dart';
+import 'package:wanigo_nasabah/features/waste_withdraw_balance/views/waste_withdraw_success_screen.dart';
 
 // Middlewares
 import 'package:wanigo_nasabah/features/profile/middleware/profile_step_guard.dart';
@@ -179,6 +180,12 @@ class AppPages {
       name: Routes.withdrawBalanceForm,
       page: () => const WasteWithdrawBalanceFormScreen(),
       transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: Routes.withdrawSuccess,
+      page: () => const WasteWithdrawSuccessScreen(),
+      transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),
 
