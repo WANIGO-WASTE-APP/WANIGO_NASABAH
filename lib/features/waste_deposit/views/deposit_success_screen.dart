@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_nasabah/features/waste_deposit/controllers/deposit_success_controller.dart';
-import 'package:wanigo_nasabah/widgets/global_succes_state.dart';
+import 'package:wanigo_nasabah/widgets/global_success_state.dart';
 import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 
 class DepositSuccessScreen extends StatelessWidget {
