@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final String title;
-  
+
   const VideoPlayerScreen({
-    Key? key, 
+    Key? key,
     required this.title,
   }) : super(key: key);
 
@@ -19,7 +19,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   String _currentTime = "0:07";
   String _totalTime = "47:25";
   bool _isFullScreen = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -28,7 +28,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       DeviceOrientation.portraitUp,
     ]);
   }
-  
+
   @override
   void dispose() {
     // Reset orientation when leaving the screen
@@ -40,13 +40,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     ]);
     super.dispose();
   }
-  
+
   void _togglePlayPause() {
     setState(() {
       _isPlaying = !_isPlaying;
     });
   }
-  
+
   void _toggleFullScreen() {
     setState(() {
       _isFullScreen = !_isFullScreen;
@@ -62,12 +62,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       }
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _isFullScreen 
-          ? null 
+      appBar: _isFullScreen
+          ? null
           : AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
@@ -83,7 +83,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Image.asset(
-                        'assets/WANIGO_logo.png',
+                        'assets/images/WANIGO_logo.png',
                         width: 24,
                         height: 24,
                         color: Color(0xFF1E88E5),
@@ -101,14 +101,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 ),
               ),
             ),
-      body: _isFullScreen 
+      body: _isFullScreen
           ? _buildVideoPlayer()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Video player area
                 _buildVideoPlayer(),
-                
+
                 // Video title
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -120,7 +120,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     ),
                   ),
                 ),
-                
+
                 // Video description
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -148,7 +148,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     ],
                   ),
                 ),
-                
+
                 // Related content list
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -160,13 +160,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     ),
                   ),
                 ),
-                
+
                 Expanded(
                   child: ListView.builder(
                     itemCount: 5,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
                         leading: Container(
                           width: 36,
                           height: 36,
@@ -200,7 +201,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => VideoPlayerScreen(
-                                title: 'Judul Konten Modul Edukasi Sampah ${index + 1}',
+                                title:
+                                    'Judul Konten Modul Edukasi Sampah ${index + 1}',
                               ),
                             ),
                           );
@@ -213,7 +215,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             ),
     );
   }
-  
+
   Widget _buildVideoPlayer() {
     return Stack(
       children: [
@@ -231,13 +233,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 size: 120,
                 color: Colors.white.withOpacity(0.5),
               ),
-              
+
               // Playback controls overlay
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.skip_previous, color: Colors.white, size: 36),
+                    icon: const Icon(Icons.skip_previous,
+                        color: Colors.white, size: 36),
                     onPressed: () {},
                   ),
                   const SizedBox(width: 16),
@@ -251,12 +254,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   ),
                   const SizedBox(width: 16),
                   IconButton(
-                    icon: const Icon(Icons.skip_next, color: Colors.white, size: 36),
+                    icon: const Icon(Icons.skip_next,
+                        color: Colors.white, size: 36),
                     onPressed: () {},
                   ),
                 ],
               ),
-              
+
               // Settings and more buttons on top right
               Positioned(
                 top: 16,
@@ -274,7 +278,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   ],
                 ),
               ),
-              
+
               // Time and fullscreen controls at bottom
               if (!_isFullScreen)
                 Positioned(
@@ -305,7 +309,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                             const Spacer(),
                             IconButton(
                               icon: Icon(
-                                _isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+                                _isFullScreen
+                                    ? Icons.fullscreen_exit
+                                    : Icons.fullscreen,
                                 color: Colors.white,
                                 size: 20,
                               ),
@@ -316,13 +322,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           ],
                         ),
                       ),
-                      
+
                       // Progress bar
                       SliderTheme(
                         data: SliderThemeData(
                           trackHeight: 4,
-                          thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                          overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                          thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 6),
+                          overlayShape:
+                              const RoundSliderOverlayShape(overlayRadius: 14),
                           activeTrackColor: Colors.red,
                           inactiveTrackColor: Colors.white.withOpacity(0.3),
                           thumbColor: Colors.red,

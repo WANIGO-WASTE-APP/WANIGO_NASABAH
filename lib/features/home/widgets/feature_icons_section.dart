@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_ui/wanigo_ui.dart';
 import 'package:wanigo_nasabah/features/mission/views/mission_screen.dart';
+import 'package:wanigo_nasabah/routes/app_routes.dart';
 
 class FeatureIconsSection extends StatelessWidget {
   const FeatureIconsSection({super.key});
@@ -40,6 +41,8 @@ class FeatureIconsSection extends StatelessWidget {
           onTap: () {
             if (f['label'] == 'Misi') {
               Get.to(() => const MissionScreen());
+            } else if (f['label'] == 'Edukasi') {
+              Get.toNamed(Routes.edukasi);
             }
           },
           borderRadius: BorderRadius.circular(8.r),

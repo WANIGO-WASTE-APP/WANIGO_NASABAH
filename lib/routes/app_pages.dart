@@ -25,6 +25,9 @@ import 'package:wanigo_nasabah/features/auth/views/onboarding_screen.dart';
 import 'package:wanigo_nasabah/features/home/bindings/home_binding.dart';
 import 'package:wanigo_nasabah/features/home/views/nasabah_home_page.dart';
 
+// Edukasi
+import 'package:wanigo_nasabah/features/education/views/education_screen.dart';
+
 // Profile
 import 'package:wanigo_nasabah/features/profile/bindings/profile_binding.dart';
 import 'package:wanigo_nasabah/features/profile/views/profile_screen.dart'
@@ -244,6 +247,12 @@ class AppPages {
       middlewares: [
         ProfileStepGuard()
       ], // TAMBAHAN: Middleware untuk mengecek status profil
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: Routes.edukasi,
+      page: () => const EducationScreen(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
