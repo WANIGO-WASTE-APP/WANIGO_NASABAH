@@ -266,18 +266,16 @@ class LoginConfirmController extends GetxController {
           return;
         }
         
-        String errorMsg = e.toString();
+        String errorMsg = e.toString().replaceAll("Exception: ", "");
         
         // Cek pesan error dan berikan pesan yang lebih user-friendly
-        if (errorMsg.contains("Email atau kata sandi salah")) {
-          errorMessage.value = "Email atau kata sandi salah";
-        } else if (errorMsg.contains("Email") || errorMsg.contains("Password") || 
-                errorMsg.contains("email") || errorMsg.contains("password")) {
+        if (errorMsg.contains("Email atau kata sandi salah") || 
+            errorMsg.contains("invalid credentials")) {
           errorMessage.value = "Email atau kata sandi salah";
         } else if (errorMsg.contains("connection") || errorMsg.contains("lookup")) {
           errorMessage.value = "Gagal terhubung ke server. Silakan periksa koneksi internet Anda.";
         } else {
-          errorMessage.value = "Gagal login. Silakan coba lagi.";
+          errorMessage.value = errorMsg;
         }
         
         // Tampilkan error dalam snackbar

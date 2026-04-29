@@ -1,0 +1,39 @@
+{
+    "project_info": {
+        "project_number": "594408540101",
+        "project_id": "wanigo-nasabah",
+        "storage_bucket": "wanigo-nasabah.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:594408540101:android:85d4821d981219da452dac",
+                "android_client_info": {
+                    "package_name": "com.example.wanigo_nasabah"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "594408540101-97fdptvj9abc7sgvf7f707qfr64ktob6.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyA0YQVlRCmiDnr5JRZT_C_omOqvlE19Ud0"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "594408540101-97fdptvj9abc7sgvf7f707qfr64ktob6.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
