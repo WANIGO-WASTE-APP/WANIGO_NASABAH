@@ -28,6 +28,10 @@
     <true/>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Aplikasi ini membutuhkan akses lokasi untuk menghitung jarak ke bank sampah terdekat.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Aplikasi ini membutuhkan akses lokasi untuk menghitung jarak ke bank sampah terdekat.</string>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>
     <key>UIMainStoryboardFile</key>

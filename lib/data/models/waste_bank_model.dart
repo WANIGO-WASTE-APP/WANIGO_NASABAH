@@ -21,6 +21,7 @@ class WasteBankModel {
   final TimeOfDay? openTime;
   final TimeOfDay? closeTime;
   final String? information;
+  final String? insight;
   final bool isVerified;
   // Schedule fields
   final String? depositType;
@@ -47,6 +48,7 @@ class WasteBankModel {
     this.openTime,
     this.closeTime,
     this.information,
+    this.insight,
     this.isVerified = false,
     this.depositType,
     this.depositTime,
@@ -73,6 +75,7 @@ class WasteBankModel {
     TimeOfDay? openTime,
     TimeOfDay? closeTime,
     String? information,
+    String? insight,
     bool? isVerified,
     String? depositType,
     String? depositTime,
@@ -98,6 +101,7 @@ class WasteBankModel {
       openTime: openTime ?? this.openTime,
       closeTime: closeTime ?? this.closeTime,
       information: information ?? this.information,
+      insight: insight ?? this.insight,
       isVerified: isVerified ?? this.isVerified,
       depositType: depositType ?? this.depositType,
       depositTime: depositTime ?? this.depositTime,
@@ -256,6 +260,7 @@ class WasteBankModel {
       openTime: null,
       closeTime: null,
       information: null,
+      insight: (json['insight'] ?? bankInfo['insight'])?.toString(),
       isVerified: isVerified,
       depositType: jadwalSetoran['tipe']?.toString(),
       depositTime: jadwalSetoran['waktu']?.toString(),

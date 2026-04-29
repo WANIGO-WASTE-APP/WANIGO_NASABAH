@@ -8,11 +8,9 @@ class ScheduleEmptyTimetable extends StatelessWidget {
   Widget build(BuildContext context) {
     return GlobalEmptyState(
       iconPath: 'assets/icons/form_submission_icon.svg',
-      title: 'Daftar Jadi Nasabah Bank\nUntuk Mulai Jadwal Pemilahan',
+      title: 'Belum Ada Jadwal Pemilahan',
       description:
-          'Pastikan kamu menjadi nasabah bank sampah sebelum mengatur jadwal pemilahan. Daftar sekarang untuk memulai pengelolaan sampah ',
-      buttonText: 'Temukan Bank Sampah Terdekat',
-      onButtonPressed: () {},
+          'Kamu sudah terdaftar sebagai nasabah bank sampah. Silakan buat jadwal pemilahan untuk mulai mengelola sampah.',
     );
   }
 }

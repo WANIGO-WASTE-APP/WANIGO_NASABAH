@@ -49,8 +49,10 @@ class _WasteCatalogSectionState extends State<WasteCatalogSection> {
               child: Padding(
                 padding: EdgeInsets.all(32.0),
                 child: GlobalText(
-                  text: 'Katalog tidak tersedia',
-                  variant: TextVariant.mediumMedium,
+                  text:
+                      'Daftar Sebagai Nasabah Bank sampah ini terlebih dahulu untuk melihat katalog sampah.',
+                  variant: TextVariant.smallMedium,
+                  textAlign: TextAlign.center,
                 ),
               ),
             );
