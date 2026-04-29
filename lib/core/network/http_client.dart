@@ -171,6 +171,8 @@ class HttpClient {
           http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
+    } on DioException catch (e) {
+      return _handleDioException(e, 'Gagal mengambil data');
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - GET Request Error: $e");
@@ -264,6 +266,8 @@ class HttpClient {
           http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
+    } on DioException catch (e) {
+      return _handleDioException(e, 'Gagal mengirim data');
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - POST Request Error: $e");
@@ -349,6 +353,8 @@ class HttpClient {
           http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
+    } on DioException catch (e) {
+      return _handleDioException(e, 'Gagal mengupdate data');
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - PUT Request Error: $e");
@@ -429,6 +435,8 @@ class HttpClient {
           http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
+    } on DioException catch (e) {
+      return _handleDioException(e, 'Gagal menghapus data');
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - DELETE Request Error: $e");
@@ -514,6 +522,8 @@ class HttpClient {
           http.Response(bodyString, dioResponse.statusCode ?? 500);
 
       return _processResponse(response);
+    } on DioException catch (e) {
+      return _handleDioException(e, 'Gagal mengupdate data');
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - PATCH Request Error: $e");
@@ -537,6 +547,43 @@ class HttpClient {
         'data': null
       };
     }
+  }
+
+  // Handle DioException helper
+  Map<String, dynamic> _handleDioException(DioException e, String defaultErrorMessage) {
+    if (kDebugMode) {
+      print("DEBUG - DioException handled: ${e.type}, message: ${e.message}");
+      if (e.response != null) {
+        print("DEBUG - DioException response status: ${e.response?.statusCode}");
+        print("DEBUG - DioException response data: ${e.response?.data}");
+      }
+    }
+
+    if (e.response != null) {
+      final dynamic data = e.response!.data;
+      final String bodyString = data is String ? data : json.encode(data ?? {});
+      final http.Response response =
+          http.Response(bodyString, e.response!.statusCode ?? 500);
+      return _processResponse(response);
+    }
+
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        e.error.toString().contains('SocketException')) {
+      return {
+        'status': 'error',
+        'message':
+            'Koneksi terputus: Server tidak dapat dijangkau. Silakan periksa koneksi internet Anda.',
+        'data': null
+      };
+    }
+
+    return {
+      'status': 'error',
+      'message': '$defaultErrorMessage: ${e.message ?? e.toString()}',
+      'data': null
+    };
   }
 
   // Process HTTP response
@@ -660,8 +707,21 @@ class HttpClient {
               errorMessage = 'Data tidak ditemukan';
               break;
             case 422:
-              errorMessage =
-                  'Validasi gagal: ${responseJson.containsKey('message') ? responseJson['message'] : 'Periksa kembali data yang Anda masukkan'}';
+              errorMessage = 'Validasi gagal';
+              if (responseJson.containsKey('errors') && responseJson['errors'] is Map) {
+                final Map<String, dynamic> errors = responseJson['errors'];
+                if (errors.isNotEmpty) {
+                  // Ambil pesan error pertama dari field pertama yang bermasalah
+                  final firstFieldErrors = errors.values.first;
+                  if (firstFieldErrors is List && firstFieldErrors.isNotEmpty) {
+                    errorMessage = firstFieldErrors.first.toString();
+                  } else if (firstFieldErrors is String) {
+                    errorMessage = firstFieldErrors;
+                  }
+                }
+              } else if (responseJson.containsKey('message')) {
+                errorMessage = responseJson['message'];
+              }
               break;
             case 500:
               errorMessage = 'Terjadi kesalahan pada server';

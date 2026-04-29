@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_nasabah/routes/app_routes.dart';
 import 'package:wanigo_nasabah/data/repositories/auth_repository.dart';
+import 'package:wanigo_nasabah/features/auth/controllers/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,14 +17,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final RxBool _isLoading = false.obs;
   final RxString _errorMessage = ''.obs;
-  
+
   // AuthRepository untuk akses API
   final AuthRepository _authRepository = AuthRepository();
-  
+  final LoginController _loginController = Get.find<LoginController>();
+
   // Throttle untuk meminimalisir request berulang
   DateTime? _lastCheckTime;
   static const Duration _checkThrottleTime = Duration(milliseconds: 500);
-  
+
   @override
   void initState() {
     super.initState();
@@ -32,21 +34,21 @@ class _LoginScreenState extends State<LoginScreen> {
     if (args != null && args is Map && args.containsKey('email')) {
       _emailController.text = args['email'];
     }
-    
+
     // HAPUS default email untuk testing - tidak diperlukan lagi
     // if (_emailController.text.isEmpty && true) {
     //   _emailController.text = 'test@example.com';
     //   debugPrint('DEBUG - Email prefilled with test email for development');
     // }
   }
-  
+
   @override
   void dispose() {
     // Dispose controller lokal saat widget di-dispose
     _emailController.dispose();
     super.dispose();
   }
-  
+
   // Validasi email (sama dengan yang di LoginController)
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -57,26 +59,27 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
-  
+
   // Handle login dengan cara yang aman dari disposed controller
   void _handleLogin() async {
     // Hindari request beruntun terlalu cepat
     if (_lastCheckTime != null) {
       final difference = DateTime.now().difference(_lastCheckTime!);
       if (difference < _checkThrottleTime) {
-        debugPrint("DEBUG - Throttling email check request. Time since last request: ${difference.inMilliseconds}ms");
+        debugPrint(
+            "DEBUG - Throttling email check request. Time since last request: ${difference.inMilliseconds}ms");
         return;
       }
     }
     _lastCheckTime = DateTime.now();
-    
+
     // Reset error message
     _errorMessage.value = '';
-    
+
     // Validasi email
     final email = _emailController.text.trim();
     final emailValidation = _validateEmail(email);
-    
+
     if (emailValidation != null) {
       _errorMessage.value = emailValidation;
       Get.snackbar(
@@ -90,46 +93,50 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
-    
+
     // Tampilkan loading
     _isLoading.value = true;
-    
+
     try {
       // Tambahkan timeout yang lebih panjang untuk mengatasi masalah koneksi
-      final response = await _authRepository.checkEmail(email)
+      final response = await _authRepository
+          .checkEmail(email)
           .timeout(const Duration(seconds: 15), onTimeout: () {
-        throw Exception('Timeout: Server tidak merespon dalam waktu yang ditentukan');
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
       });
-      
+
       // Debug log untuk melihat isi response
       debugPrint("DEBUG - Check Email Response: $response");
-      
+
       // Verifikasi format response yang standar
       if (response.containsKey('status') && response['status'] == 'success') {
         // Ambil data dari respons API
         final data = response.containsKey('data') ? response['data'] : null;
-        
+
         if (data != null) {
           // Periksa email_exists sesuai dengan spesifikasi API
-          final bool emailExists = data.containsKey('email_exists') ? 
-              data['email_exists'] : false;
-          
-          final String? role = emailExists && data.containsKey('role') ? 
-              data['role'] : null;
-          
+          final bool emailExists =
+              data.containsKey('email_exists') ? data['email_exists'] : false;
+
+          final String? role =
+              emailExists && data.containsKey('role') ? data['role'] : null;
+
           debugPrint("DEBUG - Email exists: $emailExists, Role: $role");
-          
+
           if (emailExists) {
             // Periksa apakah role adalah nasabah
             if (role == 'nasabah') {
               // Email terdaftar dan role nasabah, navigasi ke login confirm
-              debugPrint("DEBUG - Email terdaftar dengan role nasabah, navigasi ke login confirm");
+              debugPrint(
+                  "DEBUG - Email terdaftar dengan role nasabah, navigasi ke login confirm");
               Get.toNamed(Routes.loginConfirm, arguments: email);
               return;
             } else {
               // Email terdaftar tapi bukan role nasabah
-              _errorMessage.value = "Email ini terdaftar dengan role '$role', bukan nasabah.";
-              
+              _errorMessage.value =
+                  "Email ini terdaftar dengan role '$role', bukan nasabah.";
+
               Get.snackbar(
                 'Perhatian',
                 _errorMessage.value,
@@ -149,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else {
           // Data tidak ditemukan
           _errorMessage.value = 'Data tidak valid dari server';
-          
+
           Get.snackbar(
             'Error',
             _errorMessage.value,
@@ -162,17 +169,19 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         // Status bukan success
-        _errorMessage.value = response.containsKey('message') ? response['message'] : 'Gagal memeriksa email';
-        
+        _errorMessage.value = response.containsKey('message')
+            ? response['message']
+            : 'Gagal memeriksa email';
+
         // Cek jika error terkait koneksi, tampilkan dialog koneksi
-        if (_errorMessage.value.contains('koneksi') || 
+        if (_errorMessage.value.contains('koneksi') ||
             _errorMessage.value.contains('network') ||
             _errorMessage.value.contains('failed') ||
             _errorMessage.value.contains('timeout')) {
           _showConnectionErrorDialog(email);
           return;
         }
-        
+
         Get.snackbar(
           'Error',
           _errorMessage.value,
@@ -186,16 +195,16 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       debugPrint("DEBUG - General error checking email: $e");
       _errorMessage.value = e.toString();
-      
+
       // Cek jika error terkait koneksi, tampilkan dialog koneksi
-      if (_errorMessage.value.contains('koneksi') || 
+      if (_errorMessage.value.contains('koneksi') ||
           _errorMessage.value.contains('network') ||
           _errorMessage.value.contains('Failed host lookup') ||
           _errorMessage.value.contains('timeout')) {
         _showConnectionErrorDialog(email);
         return;
       }
-      
+
       Get.snackbar(
         'Error',
         _errorMessage.value,
@@ -209,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading.value = false;
     }
   }
-  
+
   // Dialog email belum terdaftar
   void _showEmailNotRegisteredDialog(String email) {
     Get.dialog(
@@ -229,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.blue,
               ),
               const SizedBox(height: 16),
-              
+
               // Title text
               Text(
                 "Email Belum Terdaftar",
@@ -240,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              
+
               // Description text
               Text(
                 "Email $email belum terdaftar di WANIGO. Ingin melanjutkan pendaftaran?",
@@ -251,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Continue registration button
               ElevatedButton(
                 onPressed: () {
@@ -275,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              
+
               // Back button
               OutlinedButton(
                 onPressed: () {
@@ -303,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
       barrierDismissible: false, // User harus pilih salah satu tombol
     );
   }
-  
+
   // Dialog untuk error koneksi
   void _showConnectionErrorDialog(String email) {
     Get.dialog(
@@ -323,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.red,
               ),
               const SizedBox(height: 16),
-              
+
               // Title text
               Text(
                 "Gagal Terhubung",
@@ -334,7 +343,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              
+
               // Description text
               Text(
                 "Tidak dapat terhubung ke server. Silakan periksa koneksi internet atau gunakan mode offline.",
@@ -345,7 +354,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Try again button
               ElevatedButton(
                 onPressed: () {
@@ -369,12 +378,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              
+
               // Opsi untuk langsung menuju login confirm
               OutlinedButton(
                 onPressed: () {
                   Get.back(); // Close dialog
-                  
+
                   // Langsung ke login confirm
                   Get.toNamed(Routes.loginConfirm, arguments: email);
                 },
@@ -431,7 +440,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
               ),
-              
+
               // Content section below image
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -447,9 +456,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.black,
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
-              
+
                     // Email input
                     const Text(
                       'Alamat Email',
@@ -495,42 +504,82 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                     ),
-                    
+
                     const SizedBox(height: 32),
-              
+
                     // Login Button dengan Obx
                     Obx(() => ElevatedButton(
-                      onPressed: _isLoading.value 
-                          ? null  // Disable button saat loading
-                          : _handleLogin,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1976D2),
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(double.infinity, 55),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: _isLoading.value
-                          ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text(
-                              'Masuk Aplikasi',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          onPressed: _isLoading.value
+                              ? null // Disable button saat loading
+                              : _handleLogin,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1976D2),
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(double.infinity, 55),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                    )),
-                    
+                          ),
+                          child: _isLoading.value
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  'Masuk Aplikasi',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        )),
+
                     const SizedBox(height: 16),
-                    
+
+                    Obx(() => ElevatedButton(
+                          onPressed: (_isLoading.value || _loginController.isLoading.value)
+                              ? null
+                              : () => _loginController.signInWithGoogle(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            minimumSize: const Size(double.infinity, 55),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: const BorderSide(color: Colors.black),
+                            ),
+                          ),
+                          child: (_loginController.isLoading.value)
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.login, size: 20), // Placeholder for Google Icon
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      'Masuk Dengan Google',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        )),
+
+                    const SizedBox(height: 16),
+
                     // Error message
                     Obx(() => _errorMessage.value.isNotEmpty
                         ? Container(
@@ -549,9 +598,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           )
-                        : const SizedBox.shrink()
-                    ),
-                    
+                        : const SizedBox.shrink()),
+
                     // Privacy policy text
                     Center(
                       child: RichText(
@@ -562,7 +610,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.black,
                           ),
                           children: [
-                            const TextSpan(text: 'Dengan melanjutkan, Anda menyetujui '),
+                            const TextSpan(
+                                text: 'Dengan melanjutkan, Anda menyetujui '),
                             TextSpan(
                               text: 'Kebijakan Privasi',
                               style: const TextStyle(

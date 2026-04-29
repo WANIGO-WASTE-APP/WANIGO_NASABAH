@@ -234,7 +234,7 @@ class RegisterController extends GetxController {
         if (_isDisposed) return;
         
         // Error handling yang lebih spesifik
-        String errorMsg = e.toString();
+        String errorMsg = e.toString().replaceAll("Exception: ", "");
         
         // Cek untuk berbagai jenis error
         if (errorMsg.contains("email has already been taken") || 
@@ -244,8 +244,11 @@ class RegisterController extends GetxController {
           errorMessage.value = "Data yang dimasukkan tidak valid, silakan periksa kembali";
         } else if (errorMsg.contains("connection") || errorMsg.contains("lookup")) {
           errorMessage.value = "Gagal terhubung ke server. Silakan periksa koneksi internet Anda.";
+        } else if (errorMsg.contains("Gagal mengirim data") && errorMsg.contains("bad response")) {
+          // Jika masih ada bad response, berikan pesan yang lebih user-friendly
+          errorMessage.value = "Terjadi kesalahan pada server. Silakan coba lagi nanti.";
         } else {
-          errorMessage.value = "Gagal mendaftar: " + errorMsg;
+          errorMessage.value = errorMsg;
         }
         
         if (kDebugMode) {
