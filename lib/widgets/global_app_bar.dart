@@ -36,17 +36,20 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (enableShadow) {
-      return Container(
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          boxShadow: GlobalShadow.getShadow(ShadowVariant.medium),
-        ),
-        child: _buildAppBarContent(context, elevation: 0),
-      );
-    }
+    final content = enableShadow
+        ? Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              boxShadow: GlobalShadow.getShadow(ShadowVariant.medium),
+            ),
+            child: _buildAppBarContent(context, elevation: 0),
+          )
+        : _buildAppBarContent(context, elevation: elevation);
 
-    return _buildAppBarContent(context, elevation: elevation);
+    return PreferredSize(
+      preferredSize: preferredSize,
+      child: content,
+    );
   }
 
   PreferredSizeWidget _buildAppBarContent(BuildContext context,

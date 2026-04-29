@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:wanigo_nasabah/routes/app_routes.dart';
 import 'package:wanigo_nasabah/data/repositories/auth_repository.dart';
 import 'package:wanigo_nasabah/features/auth/controllers/login_controller.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wanigo_ui/wanigo_ui.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -537,45 +539,51 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                         )),
-
                     const SizedBox(height: 16),
-
-                    Obx(() => ElevatedButton(
-                          onPressed: (_isLoading.value || _loginController.isLoading.value)
-                              ? null
-                              : () => _loginController.signInWithGoogle(),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            minimumSize: const Size(double.infinity, 55),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              side: const BorderSide(color: Colors.black),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: 1,
+                            color: AppColors.gray600.withOpacity(0.3),
+                          ),
+                          Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: GlobalText(
+                              text: 'atau masuk cepat',
+                              variant: TextVariant.smallMedium,
+                              color: AppColors.gray600,
                             ),
                           ),
-                          child: (_loginController.isLoading.value)
-                              ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.black,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.login, size: 20), // Placeholder for Google Icon
-                                    const SizedBox(width: 8),
-                                    const Text(
-                                      'Masuk Dengan Google',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    Obx(() => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildSocialButton(
+                              icon: 'assets/icons/google_icon.svg',
+                              isLoading: _loginController.isLoading.value,
+                              onTap: () => _loginController.signInWithGoogle(),
+                            ),
+                            const SizedBox(width: 24),
+                            _buildSocialButton(
+                              icon: 'assets/icons/facebook_icon.svg',
+                              onTap: () {
+                                Get.snackbar(
+                                  'Facebook Login',
+                                  'Fitur ini akan segera hadir',
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
+                              },
+                            ),
+                          ],
                         )),
 
                     const SizedBox(height: 16),
@@ -633,6 +641,49 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSocialButton({
+    required String icon,
+    required VoidCallback onTap,
+    bool isLoading = false,
+  }) {
+    return InkWell(
+      onTap: isLoading ? null : onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.gray100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Center(
+          child: isLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.black,
+                  ),
+                )
+              : SvgPicture.asset(
+                  icon,
+                  width: 24,
+                  height: 24,
+                ),
         ),
       ),
     );
