@@ -1094,6 +1094,64 @@ class AuthRepository {
     }
   }
 
+  /// Update Profile (Name & Phone)
+  Future<Map<String, dynamic>> updateProfile({
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Update Profile Request: name=$name, phone=$phone");
+      }
+
+      final response = await _apiService.updateProfile(
+        name: name,
+        phone: phone,
+      );
+
+      if (response['success'] == true) {
+        // Update local user data
+        final savedUser = await getUser();
+        if (savedUser != null) {
+          final updatedUser = UserModel(
+            id: savedUser.id,
+            name: name,
+            email: savedUser.email,
+            phoneNumber: phone,
+            role: savedUser.role,
+            createdAt: savedUser.createdAt,
+            updatedAt: savedUser.updatedAt,
+            profilePhotoUrl: savedUser.profilePhotoUrl,
+            nasabah: savedUser.nasabah,
+          );
+
+          // Save updated user
+          await saveUser(updatedUser);
+        }
+
+        return {
+          'status': 'success',
+          'message': response['statusMessage'] ?? 'Profil berhasil diperbarui',
+          'data': response['data'],
+        };
+      } else {
+        return {
+          'status': 'error',
+          'message': response['statusMessage'] ?? 'Gagal memperbarui profil',
+        };
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Update Profile Repository Exception: $e");
+      }
+
+      return {
+        'status': 'error',
+        'message': 'Terjadi kesalahan: ${e.toString()}',
+      };
+    }
+  }
+
   /// Get user dari shared preferences
   Future<UserModel?> getUser() async {
     try {

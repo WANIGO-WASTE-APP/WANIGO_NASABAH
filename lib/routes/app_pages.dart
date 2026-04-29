@@ -29,6 +29,8 @@ import 'package:wanigo_nasabah/features/home/views/nasabah_home_page.dart';
 import 'package:wanigo_nasabah/features/profile/bindings/profile_binding.dart';
 import 'package:wanigo_nasabah/features/profile/views/profile_screen.dart'
     as profile;
+import 'package:wanigo_nasabah/features/profile/views/profile_main_screen.dart';
+import 'package:wanigo_nasabah/features/profile/views/account_settings_screen.dart';
 
 // Setoran Sampah
 import 'package:wanigo_nasabah/features/waste_deposit/views/deposit_select_bank_screen.dart';
@@ -166,6 +168,21 @@ class AppPages {
         ProfileStepGuard()
       ], // TAMBAHAN: Middleware untuk mengecek status profil
       transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: Routes.profile,
+      page: () => const ProfileMainScreen(),
+      binding: ProfileBinding(),
+      middlewares: [ProfileStepGuard()],
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: Routes.editProfile,
+      page: () => const AccountSettingsScreen(),
+      binding: ProfileBinding(),
+      transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
 

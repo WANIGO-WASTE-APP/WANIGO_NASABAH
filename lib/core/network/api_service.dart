@@ -525,6 +525,49 @@ class ApiService {
     }
   }
 
+  // Update Profile API - untuk mengupdate nama dan nomor telepon
+  Future<Map<String, dynamic>> updateProfile({
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Update Profile Request: name=$name, phone=$phone");
+      }
+
+      final response = await _httpClient.post(
+        '$_baseUrl/api/update-profile',
+        {
+          'name': name,
+          'phone_number': phone,
+        },
+        withToken: true,
+      ).timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Update Profile API Response: $response");
+      }
+
+      return {
+        'success': response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Update Profile API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
   // Get Member Bank Sampah API
   Future<Map<String, dynamic>> getMemberBankSampah() async {
     try {
