@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wanigo_nasabah/data/repositories/auth_repository.dart';
 import 'package:wanigo_nasabah/features/auth/controllers/auth_controller.dart';
 import 'package:wanigo_nasabah/routes/app_routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 /// Controller untuk halaman login
 class LoginController extends GetxController {
@@ -13,8 +16,7 @@ class LoginController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   
-  // Reference ke main auth controller dan repository
-  final AuthController _authController = Get.find<AuthController>();
+  // Reference ke repository
   final AuthRepository _authRepository = AuthRepository();
   
   // Variable untuk menyimpan email sebelum navigasi
@@ -30,7 +32,9 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print("DEBUG - Login controller initialized");
+    if (kDebugMode) {
+      print("DEBUG - Login controller initialized");
+    }
     
     // Inisialisasi controller
     emailController = TextEditingController();
@@ -39,7 +43,9 @@ class LoginController extends GetxController {
     final args = Get.arguments;
     if (args != null && args is Map && args.containsKey('email')) {
       emailController.text = args['email'];
-      print("DEBUG - Email prefilled with: ${emailController.text}");
+      if (kDebugMode) {
+        print("DEBUG - Email prefilled with: ${emailController.text}");
+      }
     }
   }
   
@@ -65,7 +71,9 @@ class LoginController extends GetxController {
   Future<void> checkEmailAndNavigate() async {
     // Jika controller sudah di-dispose, jangan lanjutkan
     if (_isDisposed) {
+      if (kDebugMode) {
       print("DEBUG - Controller already disposed, cancelling operation");
+    }
       return;
     }
     
@@ -109,13 +117,17 @@ class LoginController extends GetxController {
     isLoading.value = true;
     
     try {
+      if (kDebugMode) {
       print("DEBUG - Checking email: $emailToCheck");
+    }
       
       // Gunakan repository untuk cek email
       final response = await _authRepository.checkEmail(emailToCheck);
       
       // Debug print untuk melihat struktur respons
+      if (kDebugMode) {
       print("DEBUG - Check Email API Full Response: $response");
+    }
       
       // Jika controller sudah di-dispose, hentikan proses
       if (_isDisposed) return;
@@ -219,7 +231,9 @@ class LoginController extends GetxController {
     if (_isDisposed) return;
     
     errorMessage.value = message;
-    print("DEBUG - API Error: $message");
+    if (kDebugMode) {
+      print("DEBUG - API Error: $message");
+    }
     
     // Jika error terkait koneksi, tampilkan ConnectionErrorDialog
     if (errorMessage.value.contains('koneksi') || 
@@ -462,6 +476,157 @@ class LoginController extends GetxController {
         ),
       ),
       barrierDismissible: false, // User harus pilih salah satu tombol
+    );
+  }
+
+  /// Sign in with Google
+  Future<void> signInWithGoogle() async {
+    if (_isDisposed) return;
+
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      if (kDebugMode) {
+        print("DEBUG - Starting Google Sign-In flow");
+      }
+
+      // 1. Mulai flow Google Sign-In
+      final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
+      if (googleUser == null) {
+        // User membatalkan proses
+        isLoading.value = false;
+        if (kDebugMode) {
+          print("DEBUG - Google Sign-In cancelled by user");
+        }
+        return;
+      }
+
+      // 2. Ambil detail autentikasi dari request (idToken)
+      final googleAuth = await googleUser.authentication;
+      
+      // 3. Ambil authorization (accessToken) - Di versi 7.0+, ini terpisah
+      // Kita minta scope email dan profile secara eksplisit
+      final clientAuth = await googleUser.authorizationClient.authorizeScopes(['email', 'profile']);
+
+      // 4. Buat kredensial baru untuk Firebase
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: clientAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // 4. Sign in ke Firebase dengan kredensial Google
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? firebaseUser = userCredential.user;
+
+      if (firebaseUser != null && firebaseUser.email != null) {
+        final String email = firebaseUser.email!;
+        if (kDebugMode) {
+          print("DEBUG - Firebase Auth Success for: $email");
+        }
+
+        // 5. Cek apakah email ini sudah terdaftar di backend WANIGO
+        await _checkGoogleUserRegistration(email, firebaseUser.displayName ?? "");
+      } else {
+        throw Exception("Gagal mendapatkan data user dari Firebase");
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("ERROR - Google Sign-In Exception: $e");
+      }
+      errorMessage.value = "Gagal masuk dengan Google: $e";
+      Get.snackbar(
+        'Login Gagal',
+        errorMessage.value,
+        backgroundColor: Colors.red[100],
+        colorText: Colors.red[900],
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      if (!_isDisposed) {
+        isLoading.value = false;
+      }
+    }
+  }
+
+  /// Cek registrasi user Google di backend
+  Future<void> _checkGoogleUserRegistration(String email, String name) async {
+    try {
+      if (kDebugMode) {
+        print("DEBUG - Checking backend registration for Google user: $email");
+      }
+
+      final response = await _authRepository.checkEmail(email);
+      
+      if (_isDisposed) return;
+
+      if (response.containsKey('status') && response['status'] == 'success') {
+        final data = response['data'];
+        final bool emailExists = data != null && data.containsKey('email_exists') ? data['email_exists'] : false;
+        final String? role = emailExists && data.containsKey('role') ? data['role'] : null;
+
+        if (emailExists) {
+          if (role == 'nasabah') {
+            // Email terdaftar, lanjut ke konfirmasi login (untuk masukkan password backend)
+            Get.toNamed(Routes.loginConfirm, arguments: email);
+          } else {
+            errorMessage.value = "Email ini terdaftar sebagai '$role', bukan nasabah.";
+            Get.snackbar('Perhatian', errorMessage.value);
+          }
+        } else {
+          // Belum terdaftar, arahkan ke registrasi dengan data dari Google
+          _showGoogleRegisterDialog(email, name);
+        }
+      } else {
+        handleApiError(response['message'] ?? "Gagal memeriksa status email");
+      }
+    } catch (e) {
+      handleApiError(e.toString());
+    }
+  }
+
+  /// Dialog untuk user Google yang belum terdaftar
+  void _showGoogleRegisterDialog(String email, String name) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.person_add, size: 80, color: Colors.blue),
+              const SizedBox(height: 16),
+              const Text(
+                "Akun Belum Terdaftar",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Akun Google $email belum terdaftar di WANIGO. Mari buat akun baru sekarang!",
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                  Get.toNamed(Routes.register, arguments: email);
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: const Color(0xFF1976D2),
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text("Daftar Sekarang"),
+              ),
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text("Batal"),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

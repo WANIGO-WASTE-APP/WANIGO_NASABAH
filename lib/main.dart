@@ -9,9 +9,26 @@ import 'package:wanigo_nasabah/core/config/alice_config.dart';
 
 import 'package:wanigo_nasabah/features/home/controllers/home_controller.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
+    await Firebase.initializeApp();
+    // Initialize GoogleSignIn for version 7.0+
+    await GoogleSignIn.instance.initialize();
+    
+    if (kDebugMode) {
+      print("DEBUG - Firebase and GoogleSignIn initialized successfully");
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print("ERROR - Firebase initialization failed: $e");
+    }
+  }
+
   await initializeDateFormatting('id', null);
 
   if (kDebugMode) {
