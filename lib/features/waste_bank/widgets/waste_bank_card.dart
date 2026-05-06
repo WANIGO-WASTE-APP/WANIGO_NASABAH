@@ -28,7 +28,12 @@ class _WasteBankCardState extends State<WasteBankCard> {
   }
 
   Future<void> _calculateDistance() async {
+    print(
+        'DEBUG - WasteBankCard: Starting distance calculation for ${widget.wasteBank.name}');
+
     final currentPosition = await _locationService.getCurrentPosition();
+    print('DEBUG - WasteBankCard: Current position: $currentPosition');
+
     if (currentPosition != null && mounted) {
       final distance = _locationService.calculateDistance(
         currentPosition.latitude,
@@ -36,10 +41,19 @@ class _WasteBankCardState extends State<WasteBankCard> {
         widget.wasteBank.latitude,
         widget.wasteBank.longitude,
       );
+      print('DEBUG - WasteBankCard: Distance calculated: $distance meters');
       final formatted = _locationService.formatDistance(distance);
       setState(() {
         _formattedDistance = formatted;
       });
+    } else {
+      print(
+          'DEBUG - WasteBankCard: Cannot get position - permission denied or service disabled');
+      if (mounted) {
+        setState(() {
+          _formattedDistance = null;
+        });
+      }
     }
   }
 
@@ -65,13 +79,13 @@ class _WasteBankCardState extends State<WasteBankCard> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      if (_formattedDistance != null) ...[
-                        GlobalText(
-                            text: '$_formattedDistance dari lokasimu',
-                            variant: TextVariant.smallSemiBold,
-                            color: AppColors.gray600),
-                        const SizedBox(width: 8),
-                      ],
+                      GlobalText(
+                          text: _formattedDistance != null
+                              ? '$_formattedDistance dari lokasimu'
+                              : 'null',
+                          variant: TextVariant.smallSemiBold,
+                          color: AppColors.gray600),
+                      const SizedBox(width: 8),
                       GlobalText(
                           text: widget.wasteBank.isActive
                               ? 'Aktif'
@@ -80,36 +94,28 @@ class _WasteBankCardState extends State<WasteBankCard> {
                           color: widget.wasteBank.isActive
                               ? AppColors.green600
                               : AppColors.red600),
-                      if (widget.wasteBank.isActive &&
-                          widget.wasteBank.depositHour != null) ...[
-                        const SizedBox(width: 8),
-                        GlobalText(
-                          text: widget.wasteBank.depositHour!,
-                          variant: TextVariant.xSmallSemiBold,
-                          color: AppColors.gray600,
-                        ),
-                      ],
-                      if (widget.wasteBank.openTime != null &&
-                          widget.wasteBank.closeTime != null) ...[
-                        const SizedBox(width: 8),
-                        GlobalText(
-                          text: widget.wasteBank.openTime!.format(context),
-                          variant: TextVariant.smallSemiBold,
-                          color: AppColors.gray600,
-                        ),
-                        const SizedBox(width: 4),
-                        GlobalText(
-                          text: '-',
-                          variant: TextVariant.smallSemiBold,
-                          color: AppColors.gray600,
-                        ),
-                        const SizedBox(width: 4),
-                        GlobalText(
-                          text: widget.wasteBank.closeTime!.format(context),
-                          variant: TextVariant.smallSemiBold,
-                          color: AppColors.gray600,
-                        ),
-                      ],
+                      const SizedBox(width: 8),
+                      GlobalText(
+                        text: widget.wasteBank.openTime != null
+                            ? widget.wasteBank.openTime!.format(context)
+                            : 'null',
+                        variant: TextVariant.smallSemiBold,
+                        color: AppColors.gray600,
+                      ),
+                      const SizedBox(width: 4),
+                      GlobalText(
+                        text: '-',
+                        variant: TextVariant.smallSemiBold,
+                        color: AppColors.gray600,
+                      ),
+                      const SizedBox(width: 4),
+                      GlobalText(
+                        text: widget.wasteBank.closeTime != null
+                            ? widget.wasteBank.closeTime!.format(context)
+                            : 'null',
+                        variant: TextVariant.smallSemiBold,
+                        color: AppColors.gray600,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -126,24 +132,13 @@ class _WasteBankCardState extends State<WasteBankCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             GlobalText(
-                                text: widget.wasteBank.description,
-                                variant: TextVariant.xSmallMedium,
-                                color: AppColors.gray600,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis),
-                            if ((widget.wasteBank.insight ?? '')
-                                .trim()
-                                .isNotEmpty) ...[
-                              const SizedBox(height: 4),
-                              GlobalText(
-                                text:
-                                    'Hanya menerima sampah ${widget.wasteBank.insight}',
-                                variant: TextVariant.xSmallMedium,
-                                color: AppColors.gray600,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                              text:
+                                  'Hanya menerima sampah ${widget.wasteBank.insight ?? 'null'}',
+                              variant: TextVariant.xSmallMedium,
+                              color: AppColors.gray600,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ],
                         ),
                       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:wanigo_nasabah/features/waste_schedule/views/select_schedule_type_screen.dart';
 import 'package:wanigo_nasabah/widgets/global_empty_state.dart';
 
 class ScheduleEmptyTimetable extends StatelessWidget {
@@ -7,10 +9,14 @@ class ScheduleEmptyTimetable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlobalEmptyState(
-      iconPath: 'assets/icons/form_submission_icon.svg',
-      title: 'Belum Ada Jadwal Pemilahan',
+      iconPath: 'assets/icons/add_calendar_icon.svg',
+      title: 'Jadwal Belum Dibuat',
       description:
-          'Kamu sudah terdaftar sebagai nasabah bank sampah. Silakan buat jadwal pemilahan untuk mulai mengelola sampah.',
+          'Buat jadwal pemilahan atau setoran sampah untuk memulai proses pengelolaan sampah yang lebih teratur dan efisien',
+      buttonText: 'Buat Jadwal',
+      onButtonPressed: () {
+        Get.to(() => const SelectScheduleTypeScreen());
+      },
     );
   }
 }

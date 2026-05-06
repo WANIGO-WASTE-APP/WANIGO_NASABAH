@@ -13,7 +13,6 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
     final lastDay = DateTime(currentMonth.year, currentMonth.month + 1, 0);
     final days = <DateTime>[];
 
-    // Empty slots for days before the first day of month
     final weekdayOfFirstDay = firstDay.weekday % 7; // 0 = Sunday
     for (int i = 0; i < weekdayOfFirstDay; i++) {
       days.add(firstDay.subtract(Duration(days: weekdayOfFirstDay - i)));
@@ -49,6 +48,26 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
       'Desember'
     ];
     return months[month - 1];
+  }
+
+  Color? _getScheduleDotColor(DateTime date) {
+    for (final schedule in controller.scheduleList) {
+      final scheduleDate = DateTime(
+        schedule.tanggalMulai.year,
+        schedule.tanggalMulai.month,
+        schedule.tanggalMulai.day,
+      );
+      if (scheduleDate.year == date.year &&
+          scheduleDate.month == date.month &&
+          scheduleDate.day == date.day) {
+        if (schedule.tipeJadwal.tipeJadwal.toLowerCase().contains('setoran')) {
+          return AppColors.green600;
+        } else {
+          return AppColors.blue600;
+        }
+      }
+    }
+    return null;
   }
 
   @override
@@ -177,6 +196,7 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
                       final isCurrentMonth = date.month == currentMonth.month;
 
                       final isSelected = controller.isDateSelected(date);
+                      final scheduleDotColor = _getScheduleDotColor(date);
 
                       return Container(
                         margin: EdgeInsets.all(2.r),
@@ -186,16 +206,30 @@ class ScheduleCalendarWidget extends GetView<WasteScheduleController> {
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
-                        child: Center(
-                          child: GlobalText(
-                            text: '${date.day}',
-                            variant: TextVariant.smallBold,
-                            color: isSelected
-                                ? Colors.white
-                                : isCurrentMonth
-                                    ? AppColors.blue600
-                                    : AppColors.gray600,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GlobalText(
+                              text: '${date.day}',
+                              variant: TextVariant.smallBold,
+                              color: isSelected
+                                  ? Colors.white
+                                  : isCurrentMonth
+                                      ? AppColors.blue600
+                                      : AppColors.gray600,
+                            ),
+                            if (scheduleDotColor != null) ...[
+                              SizedBox(height: 2.h),
+                              Container(
+                                width: 6.w,
+                                height: 6.w,
+                                decoration: BoxDecoration(
+                                  color: scheduleDotColor,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       );
                     },

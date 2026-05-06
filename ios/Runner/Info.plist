@@ -59,6 +59,23 @@
                 <string>com.googleusercontent.apps.594408540101-kkqslirnol06q5pr36uuomva9g35itro</string>
             </array>
         </dict>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>fb964405202990107</string>
+            </array>
+        </dict>
     </array>
+<key>FacebookAppID</key>
+<string>964405202990107</string>
+<key>FacebookClientToken</key>
+<string>4505078eea878a0b68d196dc0c061f05</string>
+<key>FacebookDisplayName</key>
+<string>Wanigo Nasabah</string>
+<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>fbapi</string>
+  <string>fb-messenger-share-api</string>
+</array>
 </dict>
 </plist>

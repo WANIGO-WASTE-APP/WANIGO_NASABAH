@@ -7,13 +7,36 @@ import 'package:wanigo_nasabah/features/waste_bank/widgets/waste_bank_card.dart'
 import 'package:wanigo_nasabah/widgets/global_app_bar.dart';
 import 'package:wanigo_ui/wanigo_ui.dart' hide GlobalAppBar;
 
-class WasteBankSearchScreen extends StatelessWidget {
+class WasteBankSearchScreen extends StatefulWidget {
   const WasteBankSearchScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(WasteBankSearchController());
+  State<WasteBankSearchScreen> createState() => _WasteBankSearchScreenState();
+}
 
+class _WasteBankSearchScreenState extends State<WasteBankSearchScreen> {
+  final controller = Get.put(WasteBankSearchController());
+  final FocusNode _searchFocusNode = FocusNode();
+  bool _isSearchFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _isSearchFocused = _searchFocusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const GlobalAppBar(
@@ -34,7 +57,12 @@ class WasteBankSearchScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: AppColors.gray200),
+                          border: Border.all(
+                            color: _isSearchFocused
+                                ? AppColors.blue600
+                                : AppColors.gray200,
+                            width: _isSearchFocused ? 2 : 1,
+                          ),
                         ),
                         child: Row(
                           children: [
@@ -45,10 +73,17 @@ class WasteBankSearchScreen extends StatelessWidget {
                                 'assets/icons/search_icon.svg',
                                 width: 19,
                                 height: 19,
+                                colorFilter: ColorFilter.mode(
+                                  _isSearchFocused
+                                      ? AppColors.blue600
+                                      : AppColors.gray200,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                             ),
                             Expanded(
                               child: TextField(
+                                focusNode: _searchFocusNode,
                                 onChanged: controller.searchWasteBanks,
                                 decoration: const InputDecoration(
                                   hintText: 'Ketikkan nama bank sampah disini',
@@ -89,57 +124,99 @@ class WasteBankSearchScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.gray100,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Center(
-                        child: GlobalText(
-                          text: 'Terdekat',
-                          variant: TextVariant.smallMedium,
-                          color: AppColors.gray600,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: AppColors.gray100,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Center(
-                          child: GlobalText(
-                            text: 'Sampah Basah',
-                            variant: TextVariant.smallMedium,
-                            color: AppColors.gray600,
+                    Obx(() => GestureDetector(
+                          onTap: () => controller.toggleSortByDistance(),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: controller.sortByDistanceEnabled.value
+                                  ? AppColors.blue200
+                                  : AppColors.gray100,
+                              borderRadius: BorderRadius.circular(6),
+                              border: controller.sortByDistanceEnabled.value
+                                  ? Border.all(
+                                      color: AppColors.blue600, width: 1.5)
+                                  : null,
+                            ),
+                            child: Center(
+                              child: GlobalText(
+                                text: 'Terdekat',
+                                variant: TextVariant.smallMedium,
+                                color: controller.sortByDistanceEnabled.value
+                                    ? AppColors.blue700
+                                    : AppColors.gray600,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
+                        )),
                     const SizedBox(width: 8),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: AppColors.gray100,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Center(
-                          child: GlobalText(
-                            text: 'Sampah Kering',
-                            variant: TextVariant.smallMedium,
-                            color: AppColors.gray600,
+                    Obx(() => Expanded(
+                          child: GestureDetector(
+                            onTap: () => controller.setWasteTypeFilter('basah'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 8),
+                              decoration: BoxDecoration(
+                                color:
+                                    controller.wasteTypeFilter.value == 'basah'
+                                        ? AppColors.blue200
+                                        : AppColors.gray100,
+                                borderRadius: BorderRadius.circular(6),
+                                border:
+                                    controller.wasteTypeFilter.value == 'basah'
+                                        ? Border.all(
+                                            color: AppColors.blue600,
+                                            width: 1.5)
+                                        : null,
+                              ),
+                              child: Center(
+                                child: GlobalText(
+                                  text: 'Sampah Basah',
+                                  variant: TextVariant.smallMedium,
+                                  color: controller.wasteTypeFilter.value ==
+                                          'basah'
+                                      ? AppColors.blue700
+                                      : AppColors.gray600,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
+                        )),
+                    const SizedBox(width: 8),
+                    Obx(() => Expanded(
+                          child: GestureDetector(
+                            onTap: () =>
+                                controller.setWasteTypeFilter('kering'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 8),
+                              decoration: BoxDecoration(
+                                color:
+                                    controller.wasteTypeFilter.value == 'kering'
+                                        ? AppColors.blue200
+                                        : AppColors.gray100,
+                                borderRadius: BorderRadius.circular(6),
+                                border:
+                                    controller.wasteTypeFilter.value == 'kering'
+                                        ? Border.all(
+                                            color: AppColors.blue600,
+                                            width: 1.5)
+                                        : null,
+                              ),
+                              child: Center(
+                                child: GlobalText(
+                                  text: 'Sampah Kering',
+                                  variant: TextVariant.smallMedium,
+                                  color: controller.wasteTypeFilter.value ==
+                                          'kering'
+                                      ? AppColors.blue700
+                                      : AppColors.gray600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
                   ],
                 ),
                 const SizedBox(height: 16),

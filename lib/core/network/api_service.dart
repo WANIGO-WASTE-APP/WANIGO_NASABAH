@@ -535,14 +535,16 @@ class ApiService {
         print("DEBUG - Update Profile Request: name=$name, phone=$phone");
       }
 
-      final response = await _httpClient.post(
+      final response = await _httpClient
+          .post(
         '$_baseUrl/api/update-profile',
         {
           'name': name,
           'phone_number': phone,
         },
         withToken: true,
-      ).timeout(_defaultTimeout, onTimeout: () {
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
         throw Exception(
             'Timeout: Server tidak merespon dalam waktu yang ditentukan');
       });
@@ -1081,6 +1083,190 @@ class ApiService {
     } catch (e) {
       if (kDebugMode) {
         print("DEBUG - Get Deposit History API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Create Jadwal Pemilahan Sampah API
+  Future<Map<String, dynamic>> createJadwalPemilahan({
+    required String frekuensi,
+    required String waktuMulai,
+    required String tanggalMulai,
+  }) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Create Jadwal Pemilahan Request to: $_baseUrl/api/nasabah/jadwal-sampah/pemilahan");
+        print(
+            "DEBUG - Payload: frekuensi=$frekuensi, waktu_mulai=$waktuMulai, tanggal_mulai=$tanggalMulai");
+      }
+
+      final response = await _httpClient
+          .post(
+        '$_baseUrl/api/nasabah/jadwal-sampah/pemilahan',
+        {
+          'frekuensi': frekuensi,
+          'waktu_mulai': waktuMulai,
+          'tanggal_mulai': tanggalMulai,
+        },
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Create Jadwal Pemilahan API Raw Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Create Jadwal Pemilahan API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  // Create Jadwal Setoran Sampah API
+  Future<Map<String, dynamic>> createJadwalSetoran({
+    required int bankSampahId,
+    required String waktuMulai,
+    required String tanggalMulai,
+  }) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Create Jadwal Setoran Request to: $_baseUrl/api/nasabah/jadwal-sampah/setoran");
+        print(
+            "DEBUG - Payload: bank_sampah_id=$bankSampahId, waktu_mulai=$waktuMulai, tanggal_mulai=$tanggalMulai");
+      }
+
+      final response = await _httpClient
+          .post(
+        '$_baseUrl/api/nasabah/jadwal-sampah/setoran',
+        {
+          'bank_sampah_id': bankSampahId,
+          'waktu_mulai': waktuMulai,
+          'tanggal_mulai': tanggalMulai,
+        },
+        withToken: true,
+      )
+          .timeout(_defaultTimeout, onTimeout: () {
+        throw Exception(
+            'Timeout: Server tidak merespon dalam waktu yang ditentukan');
+      });
+
+      if (kDebugMode) {
+        print("DEBUG - Create Jadwal Setoran API Raw Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Create Jadwal Setoran API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  /// Get list of jadwal sampah (schedule list)
+  Future<Map<String, dynamic>> getJadwalSampahList() async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Get Jadwal Sampah List Request to: $_baseUrl/api/nasabah/jadwal-sampah");
+      }
+
+      final response = await _httpClient.get(
+        '$_baseUrl/api/nasabah/jadwal-sampah',
+        withToken: true,
+      );
+
+      if (kDebugMode) {
+        print("DEBUG - Get Jadwal Sampah List Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Get Jadwal Sampah List API Exception: $e");
+      }
+
+      return {
+        'success': false,
+        'statusMessage': e.toString(),
+      };
+    }
+  }
+
+  /// Mark jadwal sampah as completed
+  Future<Map<String, dynamic>> markJadwalCompleted(int jadwalSampahId) async {
+    try {
+      if (kDebugMode) {
+        print(
+            "DEBUG - Mark Jadwal Completed Request to: $_baseUrl/api/nasabah/jadwal-sampah/mark-completed");
+        print("DEBUG - Request Body: {\"jadwal_sampah_id\": $jadwalSampahId}");
+      }
+
+      final response = await _httpClient.post(
+        '$_baseUrl/api/nasabah/jadwal-sampah/mark-completed',
+        {
+          'jadwal_sampah_id': jadwalSampahId,
+        },
+        withToken: true,
+      );
+
+      if (kDebugMode) {
+        print("DEBUG - Mark Jadwal Completed Response: $response");
+      }
+
+      final Map<String, dynamic> standardizedResponse = {
+        'success':
+            response['success'] == true || response['status'] == 'success',
+        'data': response['data'],
+        'statusMessage': response['message'],
+      };
+
+      return standardizedResponse;
+    } catch (e) {
+      if (kDebugMode) {
+        print("DEBUG - Mark Jadwal Completed API Exception: $e");
       }
 
       return {

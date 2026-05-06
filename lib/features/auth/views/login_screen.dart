@@ -575,13 +575,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(width: 24),
                             _buildSocialButton(
                               icon: 'assets/icons/facebook_icon.svg',
-                              onTap: () {
-                                Get.snackbar(
-                                  'Facebook Login',
-                                  'Fitur ini akan segera hadir',
-                                  snackPosition: SnackPosition.BOTTOM,
-                                );
-                              },
+                              onTap: () => _loginController.signInWithFacebook(),
                             ),
                           ],
                         )),

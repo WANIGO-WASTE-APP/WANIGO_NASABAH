@@ -54,11 +54,17 @@ class _WasteBankDetailScreenState extends State<WasteBankDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/login_ads.png',
+              Container(
                 width: double.infinity,
                 height: 180,
-                fit: BoxFit.cover,
+                color: AppColors.gray200,
+                child: Center(
+                  child: Icon(
+                    Icons.store,
+                    size: 64,
+                    color: AppColors.gray400,
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -82,12 +88,16 @@ class _WasteBankDetailScreenState extends State<WasteBankDetailScreen> {
                         const SizedBox(width: 8),
                         DetailInfoBadge(
                           iconPath: 'assets/icons/nasabah_icon.svg',
-                          text: '${wasteBank.nasabahCount ?? 0} nasabah',
+                          text: wasteBank.nasabahCount != null
+                              ? '${wasteBank.nasabahCount} nasabah'
+                              : 'null',
                         ),
                         const SizedBox(width: 8),
                         DetailInfoBadge(
                           iconPath: 'assets/icons/tonne_icon.svg',
-                          text: '${wasteBank.tonaseCount ?? 0} ton sampah',
+                          text: wasteBank.tonaseCount != null
+                              ? '${wasteBank.tonaseCount} ton sampah'
+                              : 'null',
                         ),
                       ],
                     ),

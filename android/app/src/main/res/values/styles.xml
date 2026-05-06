@@ -15,4 +15,9 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+  <string name="app_name">wanigo-nasabah</string>
+  <string name="facebook_app_id">964405202990107</string>
+  <string name="facebook_client_token">4505078eea878a0b68d196dc0c061f05</string>
+  <string name="fb_login_protocol_scheme">fb964405202990107</string>
 </resources>

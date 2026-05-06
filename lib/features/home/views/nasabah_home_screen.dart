@@ -119,12 +119,15 @@ class NasabahHomeScreen extends GetView<HomeController> {
                                         ShadowVariant.medium),
                                   ),
                                   padding: EdgeInsets.all(12.r),
-                                  child: CalendarProfile(
-                                    schedule: CalendarScheduleModel.today(
-                                      message:
-                                          'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
-                                    ),
-                                  ),
+                                  child: Obx(() => CalendarProfile(
+                                        schedule: CalendarScheduleModel.today(
+                                          message:
+                                              'Jadwal Pemilahan/Penyetoran Sampah Anda Belum Dibuat.',
+                                        ),
+                                        schedules: controller.hasSchedules.value
+                                            ? controller.scheduleList.toList()
+                                            : null,
+                                      )),
                                 ),
                               ),
                             ),

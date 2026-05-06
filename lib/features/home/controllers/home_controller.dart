@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:wanigo_nasabah/core/network/api_service.dart';
 import 'package:wanigo_nasabah/data/models/auth_models.dart';
+import 'package:wanigo_nasabah/data/models/schedule_list_model.dart';
 import 'package:wanigo_nasabah/data/repositories/auth_repository.dart';
 import 'package:wanigo_nasabah/data/models/waste_bank_model.dart';
 import 'package:wanigo_nasabah/routes/app_routes.dart';
@@ -34,6 +36,10 @@ class HomeController extends GetxController {
   // Address and Bank Name state
   final RxString address = ''.obs;
   final RxString bankSampahName = ''.obs;
+
+  // Schedule list
+  final RxList<ScheduleItemModel> scheduleList = <ScheduleItemModel>[].obs;
+  final RxBool hasSchedules = false.obs;
 
   // Bottom Navigation Index
   final RxInt currentIndex = 0.obs;
@@ -100,6 +106,26 @@ class HomeController extends GetxController {
         }
       } catch (e) {
         if (kDebugMode) print("DEBUG - Error fetching nasabah profile: $e");
+      }
+
+      // Fetch schedule list
+      try {
+        if (kDebugMode) print("DEBUG - HomeController: Fetching Schedule List");
+        final apiService = ApiService();
+        final response = await apiService.getJadwalSampahList();
+
+        if (response['success'] == true && response['data'] != null) {
+          final List<dynamic> data = response['data'];
+          scheduleList.value =
+              data.map((item) => ScheduleItemModel.fromJson(item)).toList();
+          hasSchedules.value = scheduleList.isNotEmpty;
+        } else {
+          hasSchedules.value = false;
+          scheduleList.clear();
+        }
+      } catch (e) {
+        if (kDebugMode) print("DEBUG - Error fetching schedule list: $e");
+        hasSchedules.value = false;
       }
 
       // Fetch member bank data

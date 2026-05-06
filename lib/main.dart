@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,44 +14,75 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  try {
-    await Firebase.initializeApp();
-    // Initialize GoogleSignIn for version 7.0+
-    await GoogleSignIn.instance.initialize();
-    
-    if (kDebugMode) {
-      print("DEBUG - Firebase and GoogleSignIn initialized successfully");
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print("ERROR - Firebase initialization failed: $e");
-    }
-  }
+void main() {
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  await initializeDateFormatting('id', null);
+      try {
+        await Firebase.initializeApp();
+        await GoogleSignIn.instance.initialize();
 
-  if (kDebugMode) {
-    print("DEBUG - Starting Wanigo Nasabah App");
-  }
-
-  // Set log level untuk GetX
-  Get.config(
-    enableLog: true,
-    logWriterCallback: (String text, {bool isError = false}) {
-      if (kDebugMode) {
-        if (isError) {
-          print("ERROR - $text");
-        } else {
-          print("GetX - $text");
+        if (kDebugMode) {
+          print("DEBUG - Firebase and GoogleSignIn initialized successfully");
         }
+      } catch (e) {
+        if (kDebugMode) {
+          print("ERROR - Firebase initialization failed: $e");
+        }
+      }
+
+      await initializeDateFormatting('id', null);
+
+      if (kDebugMode) {
+        print("DEBUG - Starting Wanigo Nasabah App");
+      }
+
+      // Set log level untuk GetX
+      Get.config(
+        enableLog: true,
+        logWriterCallback: (String text, {bool isError = false}) {
+          if (kDebugMode) {
+            if (isError) {
+              print("ERROR - $text");
+            } else {
+              print("GetX - $text");
+            }
+          }
+        },
+      );
+
+      // Setup global error handlers untuk catch async errors
+      FlutterError.onError = (FlutterErrorDetails details) {
+        if (kDebugMode) {
+          print("");
+          print("==============================================");
+          print("FLUTTER ERROR (onError):");
+          print("Exception: ${details.exception}");
+          print("Stack Trace:");
+          print(details.stack);
+          print("==============================================");
+          print("");
+        }
+        // Tetap panggil handler default agar error tetap terlihat di console
+        FlutterError.presentError(details);
+      };
+
+      runApp(const MyApp());
+    },
+    (error, stackTrace) {
+      if (kDebugMode) {
+        print("");
+        print("==============================================");
+        print("ASYNC ERROR (runZonedGuarded):");
+        print("Error: $error");
+        print("Stack Trace:");
+        print(stackTrace);
+        print("==============================================");
+        print("");
       }
     },
   );
-
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

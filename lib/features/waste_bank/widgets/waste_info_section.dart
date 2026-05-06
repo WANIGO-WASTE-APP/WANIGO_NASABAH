@@ -39,12 +39,12 @@ class WasteInfoSection extends StatelessWidget {
           const SizedBox(height: 12),
           ContactInfoItem(
             iconPath: 'assets/icons/phone_icon.svg',
-            text: wasteBank.phone ?? '-',
+            text: wasteBank.phone ?? 'null',
           ),
           const SizedBox(height: 4),
           ContactInfoItem(
             iconPath: 'assets/icons/email_icon.svg',
-            text: wasteBank.email ?? '-',
+            text: wasteBank.email ?? 'null',
           ),
           const SizedBox(height: 12),
           Container(
@@ -80,16 +80,22 @@ class WasteInfoSection extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const ScheduleSectionItem(
+                    ScheduleSectionItem(
                       title: 'Jadwal Operasional',
-                      subtitle: 'Senin - Jumat',
-                      time: '08.00 - 16.00',
+                      subtitle: wasteBank.openTime != null &&
+                              wasteBank.closeTime != null
+                          ? 'Buka'
+                          : 'null',
+                      time: wasteBank.openTime != null &&
+                              wasteBank.closeTime != null
+                          ? '${wasteBank.openTime!.format(context)} - ${wasteBank.closeTime!.format(context)}'
+                          : 'null',
                     ),
                     const SizedBox(width: 16),
                     ScheduleSectionItem(
                       title: 'Jadwal Setoran Sampah',
-                      subtitle: wasteBank.depositTime ?? 'Setiap Bulan',
-                      time: wasteBank.depositHour ?? '10:00',
+                      subtitle: wasteBank.depositTime ?? 'null',
+                      time: wasteBank.depositHour ?? 'null',
                     ),
                   ],
                 ),

@@ -550,11 +550,13 @@ class HttpClient {
   }
 
   // Handle DioException helper
-  Map<String, dynamic> _handleDioException(DioException e, String defaultErrorMessage) {
+  Map<String, dynamic> _handleDioException(
+      DioException e, String defaultErrorMessage) {
     if (kDebugMode) {
       print("DEBUG - DioException handled: ${e.type}, message: ${e.message}");
       if (e.response != null) {
-        print("DEBUG - DioException response status: ${e.response?.statusCode}");
+        print(
+            "DEBUG - DioException response status: ${e.response?.statusCode}");
         print("DEBUG - DioException response data: ${e.response?.data}");
       }
     }
@@ -708,14 +710,19 @@ class HttpClient {
               break;
             case 422:
               errorMessage = 'Validasi gagal';
-              if (responseJson.containsKey('errors') && responseJson['errors'] is Map) {
-                final Map<String, dynamic> errors = responseJson['errors'];
-                if (errors.isNotEmpty) {
+              if (responseJson.containsKey('errors') &&
+                  responseJson['errors'] is Map) {
+                final Map<String, dynamic> errors =
+                    Map<String, dynamic>.from(responseJson['errors']);
+
+                // Hindari Bad state: No element (jangan akses .first jika kosong)
+                if (errors.isNotEmpty && errors.values.isNotEmpty) {
                   // Ambil pesan error pertama dari field pertama yang bermasalah
                   final firstFieldErrors = errors.values.first;
                   if (firstFieldErrors is List && firstFieldErrors.isNotEmpty) {
                     errorMessage = firstFieldErrors.first.toString();
-                  } else if (firstFieldErrors is String) {
+                  } else if (firstFieldErrors is String &&
+                      firstFieldErrors.trim().isNotEmpty) {
                     errorMessage = firstFieldErrors;
                   }
                 }
